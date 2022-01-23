@@ -1,6 +1,9 @@
 import os from 'os'
 import path from 'path'
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
+import { bootstrap as nestBootstrap } from './nest/main'
+import { INestApplication } from '@nestjs/common'
+import { Demo } from './nest/src/demo'
 
 // https://stackoverflow.com/questions/42524606/how-to-get-windows-version-using-node-js
 const isWin7 = os.release().startsWith('6.1')
@@ -12,13 +15,25 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let win: BrowserWindow | null = null
+let nestApp: INestApplication
 
 async function createWindow() {
   win = new BrowserWindow({
+    icon: path.join(__dirname, '../renderer/public/images/logo_32.ico'),
+    center: true,
+    width: 1366,
+    height: 768,
+    minWidth: 1366,
+    minHeight: 768,
+    // frame: false, //无框
+    // transparent: false, //透明
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
     },
   })
+
+  // win.setMenu(null)
 
   if (app.isPackaged) {
     win.loadFile(path.join(__dirname, '../renderer/index.html'))
@@ -29,6 +44,18 @@ async function createWindow() {
     win.loadURL(url)
     win.webContents.openDevTools()
   }
+
+  ipcMain.on('indexMsg', async(event,msg) => {
+    console.log('msg-1: ', msg)
+    nestApp = await nestBootstrap()
+    console.log('start nestApp:', await nestApp.get(Demo).getHello())
+  })
+
+  ipcMain.on('indexMsg-2', async(event, msg) => {
+    console.log('msg-2: ', msg)
+    const res = await nestApp.close()
+    console.log('close nestApp:', res)
+  })
 }
 
 app.whenReady().then(createWindow)

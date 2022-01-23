@@ -1,10 +1,7 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
+  <div class="top-bar">
+    drag
+  </div>
   <div class="logo-box">
     <img style="height:140px;" src="./assets/electron.png" alt="Electron logo">
     <span/>
@@ -17,8 +14,24 @@ import HelloWorld from './components/HelloWorld.vue'
     Place static files into the <code>src/renderer/public</code> folder
     <img style="width:90px;" :src="'./images/node.png'" />
   </div>
+  <div class="space-x-2">
+    <button class="rounded-md p-2 bg-dark-50 text-light-50" @click="send()">启动</button>
+    <button class="rounded-md p-2 bg-dark-50 text-light-50" @click="send2()">停止</button>
+  </div>
 </template>
 
+<script setup lang="ts">
+// This starter template is using Vue 3 <script setup> SFCs
+// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
+import HelloWorld from './components/HelloWorld.vue'
+
+const send = () => {
+  window.ipcRenderer.send('indexMsg','启动')
+}
+const send2 = () => {
+  window.ipcRenderer.send('indexMsg-2','停止')
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -26,7 +39,6 @@ import HelloWorld from './components/HelloWorld.vue'
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 .logo-box {
@@ -51,5 +63,10 @@ import HelloWorld from './components/HelloWorld.vue'
   margin: 0 4px;
   border-radius: 4px;
   color: #304455;
+}
+.top-bar {
+  -webkit-app-region: drag;
+  height: 2rem;
+  width: 100%;
 }
 </style>
