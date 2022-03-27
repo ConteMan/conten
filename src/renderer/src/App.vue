@@ -1,72 +1,65 @@
 <template>
-  <div class="top-bar">
-    drag
+  <div ref="dragBar" class="top-bar h-4 w-full">
+    <span></span>
   </div>
-  <div class="logo-box">
-    <img style="height:140px;" src="./assets/electron.png" alt="Electron logo">
-    <span/>
-    <img style="height:140px;" alt="Vite logo" src="./assets/vite.svg" />
-    <span/>
-    <img style="height:140px;" alt="Vue logo" src="./assets/vue.png" />
+  <div class="flex flex-col items-center mt-4">
+    <div class="p-2"> HTTP Server </div>
+    <div class="space-x-2">
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="start()">Start</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="stop()">Stop</span>
+    </div>
   </div>
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-  <div class="static-public">
-    Place static files into the <code>src/renderer/public</code> folder
-    <img style="width:90px;" :src="'./images/node.png'" />
+  <div class="flex flex-col items-center mt-4">
+    <div class="p-2"> Dialog </div>
+    <div class="space-x-2">
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="openFolder()">Open Folder</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="getUserDataPath()">Get UserData Path</span>
+    </div>
   </div>
-  <div class="space-x-2">
-    <button class="rounded-md p-2 bg-dark-50 text-light-50" @click="send()">启动</button>
-    <button class="rounded-md p-2 bg-dark-50 text-light-50" @click="send2()">停止</button>
+  <div class="flex flex-col mt-8 px-4" v-html="showText">
   </div>
 </template>
 
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, watch } from 'vue'
+import { useMousePressed } from '@vueuse/core'
 
-const send = () => {
-  window.ipcRenderer.send('indexMsg','启动')
+const showText = ref('')
+const dragBar = ref(null)
+
+const { pressed } = useMousePressed({ target: dragBar })
+
+watch(pressed, (newValue) => {
+  window.ipcRenderer.send('indexMsg', { type: 'drag-bar-pressed', data: newValue })
+})
+
+const start = () => {
+  window.ipcRenderer.send('indexMsg', { type: 'start', data: null })
 }
-const send2 = () => {
-  window.ipcRenderer.send('indexMsg-2','停止')
+const stop = () => {
+  window.ipcRenderer.send('indexMsg', { type: 'stop', data: null })
 }
+const openFolder = () => {
+  window.ipcRenderer.send('indexMsg', { type: 'open-folder', data: null })
+}
+const getUserDataPath = () => {
+  window.ipcRenderer.send('indexMsg', { type: 'get-user-data-path', data: null })
+}
+
+window.ipcRenderer.on('indexMsg', (event, arg) => {
+  console.log(arg)
+  switch (arg.type) {
+    case 'get-user-data-path':
+      showText.value = showText.value + '<br>' + arg.data
+      break
+    default:
+      break
+  }
+})
+
 </script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-.logo-box {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-}
-
-.logo-box span {
-  width: 74px;
-}
-
-.static-public {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.static-public code {
-  background-color: #eee;
-  padding: 2px 4px;
-  margin: 0 4px;
-  border-radius: 4px;
-  color: #304455;
-}
 .top-bar {
   -webkit-app-region: drag;
-  height: 2rem;
-  width: 100%;
 }
 </style>

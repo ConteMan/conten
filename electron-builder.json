@@ -1,6 +1,6 @@
 {
-  "appId": "YouAppID@qq.com",
-  "asar": true,
+  "appId": "real.conteman@gmail.com",
+  "asar": false,
   "directories": {
     "output": "release/${version}"
   },
@@ -8,6 +8,7 @@
     "dist"
   ],
   "mac": {
+    "icon": "./dist/public/images/logo_512.png",
     "artifactName": "${productName}_${version}.${ext}",
     "target": [
       "dmg"

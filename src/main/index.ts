@@ -1,9 +1,9 @@
 import os from 'os'
 import path from 'path'
-import { app, BrowserWindow, ipcMain } from 'electron'
-import { bootstrap as nestBootstrap } from './nest/main'
-import { INestApplication } from '@nestjs/common'
-import { Demo } from './nest/src/demo'
+import fs from 'fs'
+const initSqlJs = require('sql.js')
+import { app, BrowserWindow, ipcMain, dialog, globalShortcut, Tray, Menu } from 'electron'
+
 
 // https://stackoverflow.com/questions/42524606/how-to-get-windows-version-using-node-js
 const isWin7 = os.release().startsWith('6.1')
@@ -15,22 +15,55 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let win: BrowserWindow | null = null
-let nestApp: INestApplication
+let tray = null
+
+let dragBarPressed = false
+let windowMovingInterval: NodeJS.Timeout | null = null
+let windowMoving = false
+
+async function getSQLiteData() {
+  const fullPath = path.join(__dirname, '../public/db/sql.db')
+  const fileBuffer = fs.readFileSync(fullPath);
+
+  const SQL = await initSqlJs()
+  const db = new SQL.Database(fileBuffer)
+  
+  const res = await db.exec('SELECT name,hired_on FROM employees ORDER BY hired_on;')
+  return JSON.stringify(res)
+}
 
 async function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(__dirname, '../renderer/public/images/logo_32.ico'),
+    show: false,
+    icon: path.join(__dirname, '../public/images/logo_32.ico'),
     center: true,
     width: 1366,
     height: 768,
-    minWidth: 1366,
-    minHeight: 768,
+    // minWidth: 1366,
+    // minHeight: 768,
     // frame: false, //无框
     // transparent: false, //透明
     titleBarStyle: 'hidden',
+    focusable: true,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
     },
+  })
+
+  if (process.platform === 'darwin') {
+    app.dock.setIcon(path.join(__dirname, '../public/images/logo_32.png'))
+  }
+
+  win.once('ready-to-show', () => {
+    win?.show()
+  })
+
+  win.on('will-move', () => {
+    console.log('move >', win?.getContentBounds())
+  })
+
+  win.on('blur', () => {
+    win?.setAlwaysOnTop(false)
   })
 
   // win.setMenu(null)
@@ -45,20 +78,87 @@ async function createWindow() {
     win.webContents.openDevTools()
   }
 
-  ipcMain.on('indexMsg', async(event,msg) => {
-    console.log('msg-1: ', msg)
-    nestApp = await nestBootstrap()
-    console.log('start nestApp:', await nestApp.get(Demo).getHello())
-  })
-
-  ipcMain.on('indexMsg-2', async(event, msg) => {
-    console.log('msg-2: ', msg)
-    const res = await nestApp.close()
-    console.log('close nestApp:', res)
+  // 消息监听
+  ipcMain.on('indexMsg', async(event, msg) => {
+    console.log('msg: ', msg)
+    
+    if (msg) {
+      const { type, data } = msg
+      switch (type) {
+        case 'start':
+          event.reply('indexMsg', { type: 'get-user-data-path', data: await await getSQLiteData() })
+          break
+        case 'stop':
+          break
+        case 'open-folder':
+          dialog.showOpenDialog({})
+          break
+        case 'get-user-data-path':
+            event.reply('indexMsg', { type: 'get-user-data-path', data: await app.getPath('userData') })
+          break
+        case 'drag-bar-pressed':
+          dragBarPressed = data
+          // if (!data) {
+          //   win?.setPosition(20, 100)
+          //   win?.setSize(200, 768)
+          // }
+          console.log('dragBarPressed:', dragBarPressed)
+          break
+        default:
+          break
+      }
+    }
   })
 }
 
-app.whenReady().then(createWindow)
+app.once('ready', () => {
+  app.setName('Contea')
+})
+
+app.whenReady().then(() => {
+  createWindow()
+
+  // Register a 'CommandOrControl+X' shortcut listener.
+  const ret = globalShortcut.register('Alt+X', () => {
+    console.log('Alt+X is pressed')
+    win?.show()
+    win?.moveTop()
+  })
+
+  if (!ret) {
+    console.log('registration failed')
+  }
+
+  // Check whether a shortcut is registered.
+  console.log(globalShortcut.isRegistered('CommandOrControl+X'))
+
+  tray = new Tray(path.join(__dirname, '../public/images/logo_16.png'))
+ 
+  console.log('app.getName() >', app.getName())
+
+  if (process.platform === 'darwin') {
+    const template = [
+      {
+        label: app.getName(),
+        submenu: [
+          { label: 'About Contea', role: 'about' },
+          { type: 'separator' },
+          { label: '隐藏', role: 'hide' },
+          { type: 'separator' },
+          {
+            label: '退出',
+            accelerator: 'Command+Q',
+            click() {
+              app.quit()
+            },
+          },
+        ],
+      },
+    ]
+  
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template as any))
+  }
+})
 
 app.on('window-all-closed', () => {
   win = null
@@ -82,6 +182,14 @@ app.on('activate', () => {
   } else {
     createWindow()
   }
+})
+
+app.on('will-quit', () => {
+  // Unregister a shortcut.
+  globalShortcut.unregister('CommandOrControl+X')
+
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
 })
 
 // @TODO
