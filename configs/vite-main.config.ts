@@ -1,11 +1,17 @@
 import { join } from 'path'
 import { builtinModules } from 'module'
 import { defineConfig } from 'vite'
+import esmodule from 'vite-plugin-esmodule'
 import pkg from '../package.json'
 
 export default defineConfig({
   mode: process.env.NODE_ENV,
   root: join(__dirname, '../src/main'),
+  plugins: [
+    esmodule([
+      'koa',
+    ]),
+  ],
   build: {
     outDir: '../../dist/main',
     lib: {
@@ -17,6 +23,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'electron',
+        'koa',
         ...builtinModules,
         ...Object.keys((pkg as Record<string, any>).dependencies || {}),
       ],

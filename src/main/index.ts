@@ -1,8 +1,13 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
-const initSqlJs = require('sql.js')
 import { app, BrowserWindow, ipcMain, dialog, globalShortcut, Tray, Menu } from 'electron'
+
+import type http from 'http'
+import type koa from 'koa'
+import Server from './modules/server/koa'
+
+const initSqlJs = require('sql.js')
 
 
 // https://stackoverflow.com/questions/42524606/how-to-get-windows-version-using-node-js
@@ -15,11 +20,15 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let win: BrowserWindow | null = null
+let koaApp: koa | null = null
+let httpServer: http.Server | null = null
+let ServerInstance: Server | null = null
 let tray = null
 
 let dragBarPressed = false
 let windowMovingInterval: NodeJS.Timeout | null = null
 let windowMoving = false
+
 
 async function getSQLiteData() {
   const fullPath = path.join(__dirname, '../public/db/sql.db')
@@ -86,9 +95,20 @@ async function createWindow() {
       const { type, data } = msg
       switch (type) {
         case 'start':
-          event.reply('indexMsg', { type: 'get-user-data-path', data: await await getSQLiteData() })
+          if (!ServerInstance) {
+            ServerInstance = new Server()
+            const { app, server } = await ServerInstance.start()
+            koaApp = app
+            httpServer = server
+          }
+          event.reply('indexMsg', { type, data: !!ServerInstance })
           break
         case 'stop':
+          if (ServerInstance) {
+            const res = await ServerInstance?.stop()
+          }
+          ServerInstance = null
+          event.reply('indexMsg', { type, data: !!ServerInstance })
           break
         case 'open-folder':
           dialog.showOpenDialog({})
@@ -133,10 +153,9 @@ app.whenReady().then(() => {
   console.log(globalShortcut.isRegistered('CommandOrControl+X'))
 
   tray = new Tray(path.join(__dirname, '../public/images/logo_16.png'))
- 
-  console.log('app.getName() >', app.getName())
 
-  if (process.platform === 'darwin') {
+  const isMac = process.platform === 'darwin'
+  if (isMac) {
     const template = [
       {
         label: app.getName(),
@@ -153,6 +172,63 @@ app.whenReady().then(() => {
             },
           },
         ],
+      },
+      {
+        label: 'Edit',
+        submenu: [
+          { role: 'undo' },
+          { role: 'redo' },
+          { type: 'separator' },
+          { role: 'cut' },
+          { role: 'copy' },
+          { role: 'paste' },
+          ...(isMac ? [
+            { role: 'pasteAndMatchStyle' },
+            { role: 'delete' },
+            { role: 'selectAll' },
+            { type: 'separator' },
+            {
+              label: 'Speech',
+              submenu: [
+                { role: 'startSpeaking' },
+                { role: 'stopSpeaking' }
+              ]
+            }
+          ] : [
+            { role: 'delete' },
+            { type: 'separator' },
+            { role: 'selectAll' }
+          ])
+        ]
+      },
+      {
+        label: 'View',
+        submenu: [
+          { role: 'reload' },
+          { role: 'forceReload' },
+          { role: 'toggleDevTools' },
+          { type: 'separator' },
+          { role: 'resetZoom' },
+          { role: 'zoomIn' },
+          { role: 'zoomOut' },
+          { type: 'separator' },
+          { role: 'togglefullscreen' }
+        ]
+      },
+      {
+        label: 'Window',
+        submenu: [
+          { role: 'minimize' },
+          { role: 'zoom' },
+          ...(isMac ? [
+            { type: 'separator' },
+            { role: 'front' },
+            { type: 'separator' },
+            { role: 'window' }
+          ] : [
+            { role: 'close' }
+          ])
+        ]
       },
     ]
   

@@ -1,6 +1,6 @@
 {
-  "appId": "real.conteman@gmail.com",
-  "asar": false,
+  "appId": "me.conteman.contea",
+  "asar": true,
   "directories": {
     "output": "release/${version}"
   },
@@ -8,22 +8,11 @@
     "dist"
   ],
   "mac": {
-    "icon": "./dist/public/images/logo_512.png",
+    "icon": "./dist/public/images/icon.icns",
     "artifactName": "${productName}_${version}.${ext}",
     "target": [
       "dmg"
     ]
-  },
-  "win": {
-    "target": [
-      {
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
-      }
-    ],
-    "artifactName": "${productName}_${version}.${ext}"
   },
   "nsis": {
     "oneClick": false,
