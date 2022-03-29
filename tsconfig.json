@@ -10,13 +10,18 @@
     "sourceMap": true,
     "baseUrl": "./",
     "strict": true,
-    "paths": {},
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "typeRoots": [
       "./node_modules/@types/",
       "./types",
-      "./types.d.ts"
+      "./types.d.ts",
+      "./src/main/server/db/*.d.ts"
     ],
+    "paths": {
+      "~/*": [
+        "src/*"
+      ],
+    }
   }
 }

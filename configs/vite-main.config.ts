@@ -1,12 +1,22 @@
-import { join } from 'path'
+import { join, resolve } from 'path'
 import { builtinModules } from 'module'
 import { defineConfig } from 'vite'
 import esmodule from 'vite-plugin-esmodule'
 import pkg from '../package.json'
 
+export const r = (...args: string[]) => resolve(__dirname, '..', ...args)
+
 export default defineConfig({
   mode: process.env.NODE_ENV,
   root: join(__dirname, '../src/main'),
+  resolve: {
+    alias: [
+      {
+        find: '~/',
+        replacement: `${r('src')}/`,
+      },
+    ]
+  },
   plugins: [
     esmodule([
       'koa',

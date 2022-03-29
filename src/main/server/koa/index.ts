@@ -1,20 +1,28 @@
 import type http from 'http'
 import koa from 'koa'
+import { PrismaClient } from '@prisma/client'
 
 class Server {
   public app: koa
   public server: http.Server | null
+  public prisma: PrismaClient
 
   constructor() {
     this.app = new koa()
     this.server = null
+    this.prisma = new PrismaClient()
+  }
+  
+  async findUser() {
+    return await this.prisma.user.findMany()
   }
 
-  async start() {
+  async start(port = '3000') {
+    await this.prisma.$connect()
     this.app.use(async (ctx, next) => {
-      ctx.body = 'Hello World'
+      ctx.body = await this.findUser()
     })
-    this.server = this.app.listen(3000)
+    this.server = this.app.listen(port)
 
     return { app: this.app, server: this.server }
   }
