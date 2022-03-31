@@ -1,11 +1,21 @@
 {
   "appId": "me.conteman.contea",
-  "asar": true,
+  "asar": false,
   "directories": {
     "output": "release/${version}"
   },
   "files": [
-    "dist"
+    "dist",
+    {
+      "from": "node_modules/.prisma",
+      "to": "node_modules/.prisma",
+      "filter": ["**/*"]
+    },
+    {
+      "from": ".env",
+      "to": ".env",
+      "filter": ["**/*"]
+    }
   ],
   "mac": {
     "icon": "./dist/public/images/icon.icns",

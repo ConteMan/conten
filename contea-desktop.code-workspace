@@ -9,7 +9,8 @@
 			"asar",
 			"esmodule",
 			"icns",
-			"nsis"
+			"nsis",
+			"togglefullscreen"
 		]
 	}
 }

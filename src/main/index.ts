@@ -10,7 +10,6 @@ import type http from 'http'
 import type koa from 'koa'
 import Server from './server/koa'
 
-
 // https://stackoverflow.com/questions/42524606/how-to-get-windows-version-using-node-js
 const isWin7 = os.release().startsWith('6.1')
 if (isWin7) app.disableHardwareAcceleration()
@@ -20,7 +19,7 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-let win: BrowserWindow | null = null
+global.win = null
 let store: Store | null = null
 
 let koaApp: koa | null = null
@@ -284,15 +283,3 @@ app.on('will-quit', () => {
   // Unregister all shortcuts.
   globalShortcut.unregisterAll()
 })
-
-// @TODO
-// auto update
-/* if (app.isPackaged) {
-  app.whenReady()
-    .then(() => import('electron-updater'))
-    .then(({ autoUpdater }) => autoUpdater.checkForUpdatesAndNotify())
-    .catch((e) =>
-      // maybe you need to record some log files.
-      console.error('Failed check update:', e)
-    )
-} */

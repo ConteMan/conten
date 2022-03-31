@@ -15,8 +15,7 @@
     "typeRoots": [
       "./node_modules/@types/",
       "./types",
-      "./types.d.ts",
-      "./src/main/server/db/*.d.ts"
+      "./types/global.d.ts"
     ],
     "paths": {
       "~/*": [

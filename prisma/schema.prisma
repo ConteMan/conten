@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
+  url      = "mongodb://127.0.0.1:27017/contea_desktop?readPreference=primary&serverSelectionTimeoutMS=2000&ssl=false"
 }
 
 model User {

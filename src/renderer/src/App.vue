@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useMousePressed } from '@vueuse/core'
+import { isObject } from './utils'
 
 const showText = ref('')
 const dragBar = ref(null)
@@ -48,6 +49,7 @@ window.ipcRenderer.on('indexMsg', (event, arg) => {
       showText.value = showText.value + '<br>' + arg.data
       break
     default:
+      showText.value = showText.value + '<br>' + (isObject(arg.data) ? JSON.stringify(arg.data) : arg.data)
       break
   }
 })
