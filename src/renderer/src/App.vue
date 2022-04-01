@@ -16,8 +16,10 @@
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user-data-path')">Get UserData Path</span>
     </div>
     <div class="space-x-2 mt-2">
-      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="getStore()">Get Store</span>
-      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="getStorePath()">Get Store Path</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStore', 'server')">Get Store</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('overwriteStore')">Overwrite Store</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('changeDB')">Change DB</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStorePath')">Get Store Path</span>
     </div>
   </div>
   <div class="flex flex-col mt-8 px-4" v-html="showText">
@@ -54,15 +56,9 @@ window.ipcRenderer.on('indexMsg', (event, arg) => {
   }
 })
 
-const getStore = async() => {
-  window.ipcRenderer.invoke('getStore', 'server').then(res => {
+const invoke = async(command: string, key: any = '') => {
+    window.ipcRenderer.invoke(command, key).then(res => {
     showText.value = showText.value + '<br>' + JSON.stringify(res)
-  })
-}
-
-const getStorePath = async() => {
-  window.ipcRenderer.invoke('getStorePath').then(res => {
-    showText.value = showText.value + '<br>' + res
   })
 }
 </script>

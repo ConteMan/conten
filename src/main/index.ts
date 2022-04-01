@@ -1,16 +1,18 @@
 import os from 'os'
 import path from 'path'
-import fs from 'fs'
 import { app, BrowserWindow, ipcMain, dialog, globalShortcut, Tray, Menu } from 'electron'
 
-import type Store from 'electron-store'
+import { ConfigEnum } from './config/enum'
+
 import { init as storeInit } from './store'
 
 import type http from 'http'
 import type koa from 'koa'
 import Server from './server/koa'
 
-// https://stackoverflow.com/questions/42524606/how-to-get-windows-version-using-node-js
+global.win = null
+global.store = null
+
 const isWin7 = os.release().startsWith('6.1')
 if (isWin7) app.disableHardwareAcceleration()
 
@@ -19,9 +21,6 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-global.win = null
-let store: Store | null = null
-
 let koaApp: koa | null = null
 let httpServer: http.Server | null = null
 let ServerInstance: Server | null = null
@@ -29,8 +28,6 @@ let ServerInstance: Server | null = null
 let tray = null
 
 let dragBarPressed = false
-let windowMovingInterval: NodeJS.Timeout | null = null
-let windowMoving = false
 
 function shortcutsInit() {
   // Register a 'CommandOrControl+X' shortcut listener.
@@ -179,17 +176,26 @@ function ipcInit() {
     }
   })
 
-  ipcMain.handle('getStore', (event, key) => {
-    return store?.get(key)
+  ipcMain.handle('overwriteStore', async(event, key) => {
+    return (await storeInit(ConfigEnum.DEFAULT_NAME, true))?.store
+  })
+
+  ipcMain.handle('changeDB', async(event, key) => {
+    await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb.url', 'mongodb+srv://ConteMan:uiHiUdpa52tssPok@conteworld.xudmc.mongodb.net/test?authSource=admin&replicaSet=atlas-8yezaw-shard-0&readPreference=primary&ssl=true')
+    return (await global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb.url'))
+  })
+
+  ipcMain.handle('getStore', async(event, key) => {
+    return await global.store?.[ConfigEnum.DEFAULT_NAME].store
   })
 
   ipcMain.handle('getStorePath', (event, key) => {
-    return store?.path
+    return global.store?.[ConfigEnum.DEFAULT_NAME]?.path
   })
 }
 
 function appInit () {
-  store = storeInit('config')
+  storeInit(ConfigEnum.DEFAULT_NAME)
   shortcutsInit()
   trayInit()
   menuInit()

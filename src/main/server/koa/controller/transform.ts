@@ -16,6 +16,7 @@ async function v2ex(data: any) {
     const aDoms = $('#Top .tools a')
     const username = aDoms.length > 0 && aDoms.eq(1).attr('href') ? aDoms.eq(1).attr('href') as string : ''
 
+    console.log('global.prisma:', global.prisma)
     const userRes = await global.prisma?.user.create({ data: { name: username } })
 
     return { username, userRes }
