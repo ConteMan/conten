@@ -8,3 +8,6 @@ tmp
 **/.tmp
 release
 .vscode
+
+src/**/auto-imports.d.ts
+src/**/components.d.ts
