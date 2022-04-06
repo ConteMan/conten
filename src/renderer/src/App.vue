@@ -6,7 +6,7 @@
     :date-locale="dateZhCN"
   >
     <n-notification-provider>
-      <n-message-provider>
+      <n-message-provider placement="top-right">
         <AppContent />
       </n-message-provider>
     </n-notification-provider>

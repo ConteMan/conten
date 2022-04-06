@@ -5,17 +5,7 @@
     "output": "release/${version}"
   },
   "files": [
-    "dist",
-    {
-      "from": "node_modules/.prisma",
-      "to": "node_modules/.prisma",
-      "filter": ["**/*"]
-    },
-    {
-      "from": ".env",
-      "to": ".env",
-      "filter": ["**/*"]
-    }
+    "dist"
   ],
   "mac": {
     "icon": "./dist/public/images/icon.icns",

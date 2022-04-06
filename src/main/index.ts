@@ -5,10 +5,13 @@ import { app, BrowserWindow, ipcMain, dialog, globalShortcut, Tray, Menu } from 
 import { ConfigEnum } from './config/enum'
 
 import { init as storeInit } from './store'
+import { sendRendererMessage } from './modules/message'
+import TestClass from './modules/test/test'
 
 import type http from 'http'
 import type koa from 'koa'
 import Server from './server/koa'
+import { connectMongoDB } from './modules/db'
 
 global.win = null
 global.store = null
@@ -148,6 +151,7 @@ function ipcInit() {
             httpServer = server
           }
           event.reply('indexMsg', { type, data: !!ServerInstance })
+          sendRendererMessage('success', '启动成功')
           break
         case 'stop-koa':
           if (ServerInstance) {
@@ -170,6 +174,10 @@ function ipcInit() {
           // }
           console.log('dragBarPressed:', dragBarPressed)
           break
+        case 'get-user': {
+          const data = await TestClass.getUser()
+          event.reply('indexMsg', { type: 'get-user', data })
+        }
         default:
           break
       }
@@ -196,6 +204,7 @@ function ipcInit() {
 
 function appInit () {
   storeInit(ConfigEnum.DEFAULT_NAME)
+  connectMongoDB()
   shortcutsInit()
   trayInit()
   menuInit()

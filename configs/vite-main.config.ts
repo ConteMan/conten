@@ -36,8 +36,6 @@ export default defineConfig({
         'koa',
         ...builtinModules,
         ...Object.keys((pkg as Record<string, any>).dependencies || {}),
-        '@prisma/client',
-        '.prisma/client'
       ],
       output: {
         entryFileNames: '[name].cjs',
