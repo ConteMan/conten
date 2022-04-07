@@ -3,6 +3,12 @@
     <span></span>
   </div>
   <div class="flex flex-col items-start mt-4">
+    <div class="p-2"> System </div>
+    <div class="space-x-2">
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('pin-top')">Pin Top</span>
+    </div>
+  </div>
+  <div class="flex flex-col items-start mt-4">
     <div class="p-2"> HTTP Server </div>
     <div class="space-x-2">
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('start-koa')">Start Koa</span>

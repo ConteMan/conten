@@ -177,6 +177,7 @@ function ipcInit() {
         case 'get-user': {
           const data = await TestClass.getUser()
           event.reply('indexMsg', { type: 'get-user', data })
+          break;
         }
         default:
           break
@@ -199,6 +200,12 @@ function ipcInit() {
 
   ipcMain.handle('getStorePath', (event, key) => {
     return global.store?.[ConfigEnum.DEFAULT_NAME]?.path
+  })
+
+  ipcMain.handle('pin-top', async(event, key) => {
+    const isTop = global.win?.isAlwaysOnTop()
+    await global.win?.setAlwaysOnTop(!isTop)
+    return global.win?.isAlwaysOnTop()
   })
 }
 
@@ -224,6 +231,7 @@ async function createWindow() {
     // transparent: false, //透明
     titleBarStyle: 'hidden',
     focusable: true,
+    alwaysOnTop: false,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
     },
@@ -239,10 +247,6 @@ async function createWindow() {
 
   win.on('will-move', () => {
     console.log('move >', win?.getContentBounds())
-  })
-
-  win.on('blur', () => {
-    win?.setAlwaysOnTop(false)
   })
 
   // win.setMenu(null)
