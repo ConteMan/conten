@@ -1,7 +1,4 @@
 <template>
-  <div ref="dragBar" class="top-bar h-4 w-full">
-    <span></span>
-  </div>
   <div class="flex flex-col items-start mt-4">
     <div class="p-2"> System </div>
     <div class="space-x-2">
@@ -39,22 +36,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useMousePressed } from '@vueuse/core'
 import { isObject } from '../../utils'
 
 const showText = ref('')
-const dragBar = ref(null)
-
-const { pressed } = useMousePressed({ target: dragBar })
 
 const command = (type = '', data: any = null) => {
   window.ipcRenderer.send('indexMsg', { type, data })
 }
-
-watch(pressed, (newValue) => {
-  command('drag-bar-pressed', newValue)
-})
 
 window.ipcRenderer.on('indexMsg', (event, arg) => {
   console.log(arg)
@@ -74,8 +62,3 @@ const invoke = async(command: string, key: any = '') => {
   })
 }
 </script>
-<style>
-.top-bar {
-  -webkit-app-region: drag;
-}
-</style>

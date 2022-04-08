@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 
 import 'virtual:windi.css'
+import './style/index.css'
 
 createApp(App)
   .use(router)

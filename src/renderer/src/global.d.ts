@@ -1,6 +1,3 @@
-
-export { }
-
 declare global {
   interface Window {
     // Expose some Api through preload script
@@ -9,3 +6,5 @@ declare global {
     removeLoading: () => void
   }
 }
+
+export { }

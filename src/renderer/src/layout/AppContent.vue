@@ -2,7 +2,9 @@
 <div class="flex w-full h-screen">
   <div
     class="w-min-[calc(24px+72px)] h-screen"
-    :style="{ width: `${sideWidth}px`, 'min-width': `${sideMinWidth}px`, 'max-width': `${sideMaxWidth}px` }">
+    :style="{ width: `${sideWidth}px`, 'min-width': `${sideMinWidth}px`, 'max-width': `${sideMaxWidth}px` }"
+  >
+    <Dragbar />
     <div class="mt-[100px]">
       <div class="nav-container mt-4 flex flex-col items-end py-2 text-white font-bold space-y-3">
         <template v-for="item in navList" :key="item.path">
@@ -20,6 +22,7 @@
     <span></span>
   </div>
   <div class="flex-grow px-4">
+    <Dragbar />
     <router-view />
   </div>
 </div>

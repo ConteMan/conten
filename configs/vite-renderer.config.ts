@@ -19,7 +19,7 @@ export default defineConfig({
     alias: [
       {
         find: '@renderer/',
-        replacement: join(__dirname, '../src/renderer'),
+        replacement: `${r('src/renderer/src')}/`,
       },
     ],
   },
@@ -27,6 +27,11 @@ export default defineConfig({
     vue(),
 
     Components({
+      dirs: [
+        r('src/renderer/src/components'),
+      ],
+      // generate `components.d.ts` for ts support with Volar
+      dts: true,
       resolvers: [ NaiveUiResolver() ]
     }),
 
