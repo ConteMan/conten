@@ -1,14 +1,35 @@
 import { ConfigEnum } from './enum'
 
-export const config = {
+export interface DB {
+  url: string
+  selected?: boolean
+}
+
+export interface ConfigDetail {
+  server: {
+    port: number | string
+  },
+  db: {
+    mongodb: DB[] | []
+  }
+}
+
+export interface Config {
+  [ConfigEnum.DEFAULT_NAME]: ConfigDetail
+}
+
+export const config: Config = {
   [ConfigEnum.DEFAULT_NAME]: {
     server: {
       port: 3000
     },
     db: {
-      mongodb: {
-        url: "mongodb://127.0.0.1:27017/contea_desktop?readPreference=primary&serverSelectionTimeoutMS=2000&ssl=false"
-      }
-    }
-  }
+      mongodb: [
+        {
+        url: "mongodb://127.0.0.1:27017/contea_desktop?readPreference=primary&serverSelectionTimeoutMS=2000&ssl=false",
+        selected: true
+        },
+      ],
+    },
+  },
 }

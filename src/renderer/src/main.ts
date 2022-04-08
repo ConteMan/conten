@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
+import 'vue-json-pretty/lib/styles.css';
 import 'virtual:windi.css'
 import './style/index.css'
 

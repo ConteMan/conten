@@ -5,7 +5,7 @@ import { app, BrowserWindow, ipcMain, dialog, globalShortcut, Tray, Menu } from 
 import { ConfigEnum } from './config/enum'
 
 import { init as storeInit } from './store'
-import { sendRendererMessage } from './modules/message'
+import { sendRendererMessage, messageDeal } from './modules/message'
 import TestClass from './modules/test/test'
 
 import type http from 'http'
@@ -211,7 +211,6 @@ function ipcInit() {
 
 function appInit () {
   storeInit(ConfigEnum.DEFAULT_NAME)
-  connectMongoDB()
   shortcutsInit()
   trayInit()
   menuInit()
@@ -269,6 +268,8 @@ app.once('ready', () => {
 app.whenReady().then(() => {
   appInit()
   createWindow()
+  connectMongoDB()
+  messageDeal()
 })
 
 app.on('window-all-closed', () => {

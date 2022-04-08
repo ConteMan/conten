@@ -1,13 +1,19 @@
+import type { DB } from '~/main/config'
 import { getStore } from '~/main/store'
 import { MongoClient } from 'mongodb'
 import { sendRendererMessage } from '~/main/modules/message'
 
 export function connectMongoDB(url: string = '') {
   const store = getStore()
-  if (!url)
-    url = store.get('db.mongodb.url', '')
   if (!url) {
-    sendRendererMessage('error', 'MongoDB url is empty')
+    const dbArray: DB[] = store.get('db.mongodb', [])
+    if (dbArray.length) {
+      const selectedDB = dbArray.find((item: DB) => item.selected)
+      url = selectedDB?.url || ''
+    }
+  }
+  if (!url) {
+    sendRendererMessage('error', 'NO AVAILABLE DB')
     return false
   }
   try {
@@ -18,4 +24,8 @@ export function connectMongoDB(url: string = '') {
     return false
   }
   return true
+}
+
+export async function getMongoClient() {
+  return await global.mongoClient
 }

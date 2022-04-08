@@ -1,8 +1,8 @@
 <template>
-<div class="flex w-full h-screen">
+<div class="flex w-full h-screen max-h-screen">
   <div
-    class="w-min-[calc(24px+72px)] h-screen"
-    :style="{ width: `${sideWidth}px`, 'min-width': `${sideMinWidth}px`, 'max-width': `${sideMaxWidth}px` }"
+    class="h-screen max-h-screen"
+    :style="{ width: `${sideWidth}px`, 'min-width': `${sideWidth}px`, 'max-width': `${sideWidth}px` }"
   >
     <Dragbar />
     <div class="mt-[100px]">
@@ -18,17 +18,25 @@
       </div>
     </div>
   </div>
+
   <div ref="resizeRef" class="flex-grow-0 w-[2px] bg-light-200 cursor-col-resize hover:(bg-gray-200) active:(bg-gray-200)">
     <span></span>
   </div>
-  <div class="flex-grow px-4">
+
+  <div class="flex-grow px-4 h-screen max-h-screen overflow-auto">
     <Dragbar />
-    <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" v-if="$route.meta.keepAlive" />
+        </keep-alive>
+        <component :is="Component" v-if="!$route.meta.keepAlive" />
+      </router-view>
   </div>
 </div>
 </template>
+
 <script lang="ts" setup>
-import { useMessage, MessageReactive, MessageType } from 'naive-ui'
+import { useMessage, MessageType } from 'naive-ui'
 
 const navList = [
   {
@@ -38,6 +46,10 @@ const navList = [
   {
     name: '设置',
     path: '/setting',
+  },
+  {
+    name: '状态',
+    path: '/status',
   }
 ]
 
@@ -48,7 +60,7 @@ const data = reactive({
   sideMinWidth: 96,
   clientStartX: 0,
 })
-const { sideWidth, sideMinWidth, sideMaxWidth } = toRefs(data)
+const { sideWidth } = toRefs(data)
 
 const moveHandle = (nowClientX: number) => {
   const computedX = nowClientX - data.clientStartX;
@@ -89,7 +101,6 @@ const types: MessageType[] = [
   'loading',
   'default'
 ]
-let msgReactive: MessageReactive | null = null
 const message = useMessage()
 
 // 消息通知
@@ -100,6 +111,11 @@ window.ipcRenderer.on('message', (event, arg) => {
     type: types[type],
     duration: 5000
   })
+})
+
+const route = useRoute()
+watch(() => route.meta, (meta) => {
+  console.log('[app content] > keep alive >', meta.keepAlive)
 })
 </script>
 

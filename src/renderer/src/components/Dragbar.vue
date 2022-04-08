@@ -1,17 +1,17 @@
 <template>
-  <div ref="dragBarRef" class="drag w-full h-[40px]">
+  <div ref="dragBarRef" class="drag w-full h-[32px]">
     <span></span>
   </div>
 </template>
 <script setup lang="ts">
 import { useMousePressed } from '@vueuse/core'
-import { sendToRenderer } from '@renderer/utils/ipcMessage'
+import { sendToMain } from '@renderer/utils/ipcMessage'
 
 const dragBarRef = ref(null)
 
 const { pressed } = useMousePressed({ target: dragBarRef })
 
 watch(pressed, (newValue) => {
-  sendToRenderer('drag-bar-pressed', newValue)
+  sendToMain('drag-bar-pressed', newValue)
 })
 </script>
