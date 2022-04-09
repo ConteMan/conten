@@ -1,6 +1,6 @@
 import { getMongoClient } from "../modules/db"
 
-export const getStatus = async() => {
+const getStatus = async() => {
   const mongodbClient = await getMongoClient()
   let mongodb: any
   if (mongodbClient) {
@@ -12,3 +12,10 @@ export const getStatus = async() => {
     mongodb,
   } 
 }
+
+const receiveStatus = async(status: any) => {
+  console.log('status: ', status)
+  return { status }
+}
+
+export { getStatus, receiveStatus }

@@ -1,20 +1,13 @@
 import os from 'os'
-import path from 'path'
-import { app, BrowserWindow, ipcMain, dialog, globalShortcut, Tray, Menu } from 'electron'
-
-import { ConfigEnum } from './config/enum'
+import { app, BrowserWindow } from 'electron'
 
 import { init as storeInit } from './store'
-import { sendRendererMessage, messageDeal } from './modules/message'
-import TestClass from './modules/test/test'
-
-import type http from 'http'
-import type koa from 'koa'
-import Server from './server/koa'
-import { connectMongoDB } from './modules/db'
-
-global.win = null
-global.store = null
+import { shortcutsInit, unregister } from './modules/shortcuts'
+import { trayInit } from './modules/tray'
+import { menuInit } from './modules/menu'
+import { dbInit } from './modules/db'
+import { messageInit } from './modules/message'
+import { windowInit } from './modules/window'
 
 const isWin7 = os.release().startsWith('6.1')
 if (isWin7) app.disableHardwareAcceleration()
@@ -24,252 +17,18 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-let koaApp: koa | null = null
-let httpServer: http.Server | null = null
-let ServerInstance: Server | null = null
 
-let tray = null
+app.whenReady().then(() => {
+  app.setName('Contea')
 
-let dragBarPressed = false
-
-function shortcutsInit() {
-  // Register a 'CommandOrControl+X' shortcut listener.
-  const ret = globalShortcut.register('Alt+X', () => {
-    console.log('Alt+X is pressed')
-    win?.show()
-    win?.moveTop()
-  })
-
-  if (!ret) {
-    console.log('registration failed')
-  }
-
-  // Check whether a shortcut is registered.
-  console.log(globalShortcut.isRegistered('CommandOrControl+X'))
-}
-
-function trayInit() {
-  tray = new Tray(path.join(__dirname, '../public/images/logo_16.png'))
-}
-
-function menuInit() {
-  const isMac = process.platform === 'darwin'
-  if (isMac) {
-    const template = [
-      {
-        label: app.getName(),
-        submenu: [
-          { label: 'About Contea', role: 'about' },
-          { type: 'separator' },
-          { label: '隐藏', role: 'hide' },
-          { type: 'separator' },
-          {
-            label: '退出',
-            accelerator: 'Command+Q',
-            click() {
-              app.quit()
-            },
-          },
-        ],
-      },
-      {
-        label: 'Edit',
-        submenu: [
-          { role: 'undo' },
-          { role: 'redo' },
-          { type: 'separator' },
-          { role: 'cut' },
-          { role: 'copy' },
-          { role: 'paste' },
-          ...(isMac ? [
-            { role: 'pasteAndMatchStyle' },
-            { role: 'delete' },
-            { role: 'selectAll' },
-            { type: 'separator' },
-            {
-              label: 'Speech',
-              submenu: [
-                { role: 'startSpeaking' },
-                { role: 'stopSpeaking' }
-              ]
-            }
-          ] : [
-            { role: 'delete' },
-            { type: 'separator' },
-            { role: 'selectAll' }
-          ])
-        ]
-      },
-      {
-        label: 'View',
-        submenu: [
-          { role: 'reload' },
-          { role: 'forceReload' },
-          { role: 'toggleDevTools' },
-          { type: 'separator' },
-          { role: 'resetZoom' },
-          { role: 'zoomIn' },
-          { role: 'zoomOut' },
-          { type: 'separator' },
-          { role: 'togglefullscreen' }
-        ]
-      },
-      {
-        label: 'Window',
-        submenu: [
-          { role: 'minimize' },
-          { role: 'zoom' },
-          ...(isMac ? [
-            { type: 'separator' },
-            { role: 'front' },
-            { type: 'separator' },
-            { role: 'window' }
-          ] : [
-            { role: 'close' }
-          ])
-        ]
-      },
-    ]
-  
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template as any))
-  }
-}
-
-function ipcInit() {
-  // 消息监听
-  ipcMain.on('indexMsg', async(event, msg) => {
-    console.log('msg: ', msg)
-    
-    if (msg) {
-      const { type, data } = msg
-      switch (type) {
-        case 'start-koa':
-          if (!ServerInstance) {
-            ServerInstance = new Server()
-            const { app, server } = await ServerInstance.start()
-            koaApp = app
-            httpServer = server
-          }
-          event.reply('indexMsg', { type, data: !!ServerInstance })
-          sendRendererMessage('success', '启动成功')
-          break
-        case 'stop-koa':
-          if (ServerInstance) {
-            const res = await ServerInstance?.stop()
-          }
-          ServerInstance = null
-          event.reply('indexMsg', { type, data: !!ServerInstance })
-          break
-        case 'open-folder':
-          dialog.showOpenDialog({})
-          break
-        case 'get-user-data-path':
-            event.reply('indexMsg', { type: 'get-user-data-path', data: await app.getPath('userData') })
-          break
-        case 'drag-bar-pressed':
-          dragBarPressed = data
-          // if (!data) {
-          //   win?.setPosition(20, 100)
-          //   win?.setSize(200, 768)
-          // }
-          console.log('dragBarPressed:', dragBarPressed)
-          break
-        case 'get-user': {
-          const data = await TestClass.getUser()
-          event.reply('indexMsg', { type: 'get-user', data })
-          break;
-        }
-        default:
-          break
-      }
-    }
-  })
-
-  ipcMain.handle('overwriteStore', async(event, key) => {
-    return (await storeInit(ConfigEnum.DEFAULT_NAME, true))?.store
-  })
-
-  ipcMain.handle('changeDB', async(event, key) => {
-    await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb.url', 'mongodb+srv://ConteMan:uiHiUdpa52tssPok@conteworld.xudmc.mongodb.net/test?authSource=admin&replicaSet=atlas-8yezaw-shard-0&readPreference=primary&ssl=true')
-    return (await global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb.url'))
-  })
-
-  ipcMain.handle('getStore', async(event, key) => {
-    return await global.store?.[ConfigEnum.DEFAULT_NAME].store
-  })
-
-  ipcMain.handle('getStorePath', (event, key) => {
-    return global.store?.[ConfigEnum.DEFAULT_NAME]?.path
-  })
-
-  ipcMain.handle('pin-top', async(event, key) => {
-    const isTop = global.win?.isAlwaysOnTop()
-    await global.win?.setAlwaysOnTop(!isTop)
-    return global.win?.isAlwaysOnTop()
-  })
-}
-
-function appInit () {
-  storeInit(ConfigEnum.DEFAULT_NAME)
+  storeInit()
   shortcutsInit()
   trayInit()
   menuInit()
-  ipcInit()
-}
+  dbInit()
+  messageInit()
 
-async function createWindow() {
-  win = new BrowserWindow({
-    show: false,
-    icon: path.join(__dirname, '../public/images/logo_32.ico'),
-    center: true,
-    width: 1366,
-    height: 768,
-    // minWidth: 1366,
-    // minHeight: 768,
-    // frame: false, //无框
-    // transparent: false, //透明
-    titleBarStyle: 'hidden',
-    focusable: true,
-    alwaysOnTop: false,
-    webPreferences: {
-      preload: path.join(__dirname, '../preload/index.cjs'),
-    },
-  })
-
-  if (process.platform === 'darwin') {
-    app.dock.setIcon(path.join(__dirname, '../public/images/logo_32.png'))
-  }
-
-  win.once('ready-to-show', () => {
-    win?.show()
-  })
-
-  win.on('will-move', () => {
-    console.log('move >', win?.getContentBounds())
-  })
-
-  // win.setMenu(null)
-
-  if (app.isPackaged) {
-    win.loadFile(path.join(__dirname, '../renderer/index.html'))
-  } else {
-    const pkg = await import('../../package.json')
-    const url = `http://${pkg.env.HOST || '127.0.0.1'}:${pkg.env.PORT}`
-
-    win.loadURL(url)
-    win.webContents.openDevTools()
-  }
-}
-
-app.once('ready', () => {
-  app.setName('Contea')
-})
-
-app.whenReady().then(() => {
-  appInit()
-  createWindow()
-  connectMongoDB()
-  messageDeal()
+  windowInit()
 })
 
 app.on('window-all-closed', () => {
@@ -292,14 +51,10 @@ app.on('activate', () => {
   if (allWindows.length) {
     allWindows[0].focus()
   } else {
-    createWindow()
+    windowInit()
   }
 })
 
 app.on('will-quit', () => {
-  // Unregister a shortcut.
-  globalShortcut.unregister('CommandOrControl+X')
-
-  // Unregister all shortcuts.
-  globalShortcut.unregisterAll()
+  unregister()
 })

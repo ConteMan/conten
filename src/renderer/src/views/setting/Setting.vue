@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+import { invokeToMain } from '@renderer/utils/ipcMessage'
+
 const data = reactive({
   formValue: {
     user: {

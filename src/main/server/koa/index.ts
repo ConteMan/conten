@@ -1,46 +1,47 @@
 import type http from 'http'
 import koa from 'koa'
 import koaBody from 'koa-body'
-import { MongoClient } from 'mongodb'
 
-import { sendRendererMessage } from '~/main/modules/message'
 import router from './router'
-import { ConfigEnum } from '../../config/enum'
 import { getStore } from '~/main/store'
 
-class Server {
-  public app: koa
-  public server: http.Server | null
-  private store: Record<string, any> | null
+let app: koa | null = null
+let server: http.Server | null = null
 
-  constructor() {
-    this.app = new koa()
-    this.server = null
-    this.store = getStore()
-  }
-
-
-
-  async start(port: number | string | undefined = undefined) {
+async function start(port: number | string | undefined = undefined) {
+  try {
+    app = new koa()
+  
+    const store = getStore()
     if (!port) {
-      port = await this.store?.get('server.port', 3333) as number
+      port = await store?.get('server.port', 3333) as number
     }
-
-    this.app.use(koaBody())
-    this.app.use(router.routes()).use(router.allowedMethods())
-
-    this.server = this.app.listen(port)
-
-    return { app: this.app, server: this.server }
+  
+    app.use(koaBody())
+    app.use(router.routes()).use(router.allowedMethods())
+  
+    server = app.listen(port)
+    return true
   }
-
-  async stop() {
-    if (this.server) {
-      return await this.server?.close()
-    } else {
-      return false
-    }
+  catch(e) {
+    return false
   }
 }
 
-export default Server
+async function stop() {
+  if (server) {
+    console.log('server stop')
+    try {
+      await server?.close()
+      return true
+    }
+    catch(e) {
+      return false
+    }
+  } else {
+    return false
+  }
+}
+
+
+export { start, stop }

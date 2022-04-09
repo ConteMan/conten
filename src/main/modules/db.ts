@@ -1,7 +1,11 @@
 import type { DB } from '~/main/config'
 import { getStore } from '~/main/store'
 import { MongoClient } from 'mongodb'
-import { sendRendererMessage } from '~/main/modules/message'
+import { sendToRenderer } from '~/main/modules/message'
+
+export function dbInit() {
+  return connectMongoDB()
+}
 
 export function connectMongoDB(url: string = '') {
   const store = getStore()
@@ -13,14 +17,14 @@ export function connectMongoDB(url: string = '') {
     }
   }
   if (!url) {
-    sendRendererMessage('error', 'NO AVAILABLE DB')
+    sendToRenderer('error', 'NO AVAILABLE DB')
     return false
   }
   try {
     global.mongoClient = new MongoClient(url);
     global.mongoClient.connect()
   } catch (error) {
-    sendRendererMessage('error', error)
+    sendToRenderer('error', error)
     return false
   }
   return true
