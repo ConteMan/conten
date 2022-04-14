@@ -1,6 +1,8 @@
 import os from 'os'
 import { app, BrowserWindow } from 'electron'
 
+import { ConfigEnum } from './config/enum'
+
 import { init as storeInit } from './store'
 import { shortcutsInit, unregister } from './modules/shortcuts'
 import { trayInit } from './modules/tray'
@@ -18,10 +20,11 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 
-app.whenReady().then(() => {
+app.whenReady().then(async() => {
   app.setName('Contea')
 
-  storeInit()
+  await storeInit()
+  await storeInit(ConfigEnum.EXTENSION_COMMAND)
   shortcutsInit()
   trayInit()
   menuInit()

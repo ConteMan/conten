@@ -66,13 +66,9 @@ async function messageInit() {
     }
   })
 
-  ipcMain.handle('overwriteStore', async(event, key) => {
-    return (await storeInit(ConfigEnum.DEFAULT_NAME, true))?.store
-  })
-
-  ipcMain.handle('changeDB', async(event, key) => {
-    await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb.url', 'mongodb+srv://ConteMan:uiHiUdpa52tssPok@conteworld.xudmc.mongodb.net/test?authSource=admin&replicaSet=atlas-8yezaw-shard-0&readPreference=primary&ssl=true')
-    return (await global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb.url'))
+  ipcMain.handle('set-command', async(event, key) => {
+    await global.store?.[ConfigEnum.EXTENSION_COMMAND].set('inbox', ['command'])
+    return (await global.store?.[ConfigEnum.EXTENSION_COMMAND].get('inbox'))
   })
 
   ipcMain.handle('getStore', async(event, key) => {

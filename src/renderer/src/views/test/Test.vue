@@ -3,6 +3,7 @@
     <div class="p-2"> System </div>
     <div class="space-x-2">
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('pin-top')">Pin Top</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="toggleDark()">{{ isDark ? 'Dark' : 'Light' }}</span>
     </div>
   </div>
   <div class="flex flex-col items-start mt-4">
@@ -21,7 +22,7 @@
     <div class="space-x-2 mt-4">
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStore', 'server')">Get Store</span>
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('overwriteStore')">Overwrite Store</span>
-      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('changeDB')">Change DB</span>
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('set-command')">Set Command</span>
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStorePath')">Get Store Path</span>
     </div>
   </div>
@@ -36,7 +37,9 @@
 </template>
 
 <script setup lang="ts">
+import { useDark, useToggle, useMediaQuery } from '@vueuse/core'
 import { isObject } from '../../utils'
+import { useSystemState } from '../../store/system'
 
 const showText = ref('')
 
@@ -61,4 +64,17 @@ const invoke = async(command: string, key: any = '') => {
     showText.value = showText.value + '<br>' + JSON.stringify(res)
   })
 }
+
+const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
+watch(prefersDark, (newVal) => {
+  isDark.value = newVal
+})
+
+const systemState = useSystemState()
+const isDark = useDark({
+  onChanged(dark: boolean) {
+    systemState.toggleDark(dark)
+  }
+})
+const toggleDark = useToggle(isDark)
 </script>

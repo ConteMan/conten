@@ -14,8 +14,14 @@ export interface ConfigDetail {
   }
 }
 
+export interface ExtensionCommandDetail {
+  inbox: string[],
+  doing: string[]
+}
+
 export interface Config {
   [ConfigEnum.DEFAULT_NAME]: ConfigDetail
+  [ConfigEnum.EXTENSION_COMMAND]: ExtensionCommandDetail
 }
 
 export const config: Config = {
@@ -32,4 +38,8 @@ export const config: Config = {
       ],
     },
   },
+  [ConfigEnum.EXTENSION_COMMAND]: {
+    inbox: [],
+    doing: [],
+  }
 }

@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div ref="resizeRef" class="flex-grow-0 w-[2px] bg-light-200 cursor-col-resize hover:(bg-gray-200) active:(bg-gray-200)">
+  <div ref="resizeRef" class="drag-line flex-grow-0 w-[1px] cursor-col-resize">
     <span></span>
   </div>
 
@@ -124,6 +124,16 @@ watch(() => route.meta, (meta) => {
   cursor: col-resize;
 }
 .active {
-  color: black;
+  color: rgba(163, 0, 0, 0.9);
+}
+.drag-line {
+  opacity: 0.1;
+  transition: opacity 0.2s linear;
+  background-color: rgba(163, 0, 0, 0.92);
+}
+.drag-line:hover {
+  opacity: 1;
+  transition: opacity 0.2s linear 0.2s;
+  background-color: rgba(163, 0, 0, 0.92);
 }
 </style>
