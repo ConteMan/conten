@@ -23,14 +23,16 @@
     <span></span>
   </div>
 
-  <div class="flex-grow px-4 h-screen max-h-screen overflow-auto">
+  <div class="flex-grow h-screen max-h-screen overflow-hidden">
     <Dragbar />
+    <div class="h-[calc(100%-32px)] overflow-auto px-4">
       <router-view v-slot="{ Component }">
         <keep-alive>
           <component :is="Component" v-if="$route.meta.keepAlive" />
         </keep-alive>
         <component :is="Component" v-if="!$route.meta.keepAlive" />
       </router-view>
+    </div>
   </div>
 </div>
 </template>

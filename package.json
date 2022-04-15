@@ -1,7 +1,7 @@
 {
   "name": "contea-desktop",
   "productName": "Contea",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/main/index.cjs",
   "author": "ConteMan <real.conteman@gmail.com>",
   "license": "MIT",

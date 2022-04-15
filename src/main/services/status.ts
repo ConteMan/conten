@@ -1,10 +1,7 @@
-import { getMongoClient } from "../modules/db"
-
 const getStatus = async() => {
-  const mongodbClient = await getMongoClient()
   let mongodb: any
-  if (mongodbClient) {
-    const { hosts, metadata } = mongodbClient?.options
+  if (global.mongoClient) {
+    const { hosts, metadata } = global.mongoClient?.options
     mongodb = { hosts, metadata }
   }
 

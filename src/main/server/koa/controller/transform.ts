@@ -16,7 +16,6 @@ async function v2ex(data: any) {
     const aDoms = $('#Top .tools a')
     const username = aDoms.length > 0 && aDoms.eq(1).attr('href') ? aDoms.eq(1).attr('href') as string : ''
 
-    console.log('global.mongoClient:', global.mongoClient)
     const userRes = await global.mongoClient?.db('contea_desktop').collection('user').insertOne({ username })
 
     return { username, userRes }

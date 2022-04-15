@@ -7,10 +7,15 @@ export function dbInit() {
   return connectMongoDB()
 }
 
-export function connectMongoDB(url: string = '') {
-  const store = getStore()
+export async function connectMongoDB(url: string = '') {
+  const store = await getStore()
+  if (!store) {
+    sendToRenderer('error', 'NO AVAILABLE DB 1')
+    return false
+  }
+
   if (!url) {
-    const dbArray: DB[] = store.get('db.mongodb', [])
+    const dbArray = store.get('db.mongodb', []) as DB[]
     if (dbArray.length) {
       const selectedDB = dbArray.find((item: DB) => item.selected)
       url = selectedDB?.url || ''
@@ -23,6 +28,7 @@ export function connectMongoDB(url: string = '') {
   try {
     global.mongoClient = new MongoClient(url);
     global.mongoClient.connect()
+    console.log('Connected to MongoDB!')
   } catch (error) {
     sendToRenderer('error', error)
     return false
@@ -31,5 +37,18 @@ export function connectMongoDB(url: string = '') {
 }
 
 export async function getMongoClient() {
-  return await global.mongoClient
+  return global.mongoClient
+}
+
+export async function reconnect() {
+  try {
+    await global.mongoClient?.close()
+    await connectMongoDB()
+    sendToRenderer('success', 'Reconnected to MongoDB!')
+    return true
+  }
+  catch(e) {
+    sendToRenderer('error', e)
+    return false
+  }
 }

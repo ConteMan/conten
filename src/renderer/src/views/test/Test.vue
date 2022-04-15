@@ -32,8 +32,7 @@
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user')">Get</span>
     </div>
   </div>
-  <div class="flex flex-col mt-8" v-html="showText">
-  </div>
+  <pre class="flex flex-col mt-8 overflow-y-auto" v-html="showText" />
 </template>
 
 <script setup lang="ts">
@@ -54,14 +53,14 @@ window.ipcRenderer.on('indexMsg', (event, arg) => {
       showText.value = showText.value + '<br>' + arg.data
       break
     default:
-      showText.value = showText.value + '<br>' + (isObject(arg.data) ? JSON.stringify(arg.data) : arg.data)
+      showText.value = showText.value + '<br>' + (isObject(arg.data) ? JSON.stringify(arg.data, null, 2) : arg.data)
       break
   }
 })
 
 const invoke = async(command: string, key: any = '') => {
     window.ipcRenderer.invoke(command, key).then(res => {
-    showText.value = showText.value + '<br>' + JSON.stringify(res)
+    showText.value = showText.value + '<br>' + JSON.stringify(res, null, 2)
   })
 }
 

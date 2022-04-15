@@ -6,6 +6,6 @@ import { MongoClient } from 'mongodb'
 declare global {
   var win: BrowserWindow | null
   var mongoClient: MongoClient | null
-  var store: Record<string, Record<string, any>> | null
+  var store: Record<string, ElectronStore> | null
   var koaApp: koa | null
 }

@@ -1,12 +1,16 @@
 import { app, ipcMain, dialog } from "electron"
 
+import { DB } from "~/main/config"
 import { ConfigEnum } from '~/main/config/enum'
-import { init as storeInit } from '~/main/store'
 import { start as koaStart, stop as koaStop } from "~/main/server/koa"
-import { getStatus, receiveStatus } from "~/main/services/status"
+import { getStatus } from "~/main/services/status"
+import { getStoreDetail } from "~/main/store"
+import { isObject } from "~/main/utils"
 import TestService from '~/main/services/test/test'
+import { reconnect } from "~/main/modules/db"
 
 function sendToRenderer(type: string, data: any) {
+  console.log('sendToRenderer: ', type, data)
   const message = {
     type,
     data,
@@ -15,17 +19,9 @@ function sendToRenderer(type: string, data: any) {
 }
 
 async function messageInit() {
-  const messages = {
-    'get-status': getStatus(),
-  }
-  
-  ipcMain.handle('get-status', async(event, data) => {
-    return await messages['get-status']
-  })
-
   // 消息监听
   ipcMain.on('indexMsg', async(event, msg) => {
-    console.log('msg: ', msg)
+    console.log('indexMsg: ', msg)
     
     if (msg) {
       const { type, data } = msg
@@ -83,6 +79,39 @@ async function messageInit() {
     const isTop = global.win?.isAlwaysOnTop()
     await global.win?.setAlwaysOnTop(!isTop)
     return global.win?.isAlwaysOnTop()
+  })
+
+  ipcMain.handle('get-status', async() => {
+    return await getStatus()
+  })
+
+  ipcMain.handle('save-settings', async(event, data) => {
+    try {
+      if (!isObject(data)) {
+        data = JSON.parse(data)
+      }
+      const newDBUrl = data.mongodb?.[0].url
+      if (newDBUrl) {
+        const oldSetting = global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb') as DB[]
+        const oldUrl = oldSetting ? oldSetting?.find((item: any) => item.selected)?.url : ''
+        await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb', data.mongodb)
+        if (newDBUrl !== oldUrl) {
+          await reconnect()
+        }
+        sendToRenderer('success', `保存成功`)
+        return true
+      }
+      return false
+    }
+    catch(e) {
+      console.log(e)
+      sendToRenderer('error', `保存失败`)
+    }
+    return true
+  })
+
+  ipcMain.handle('get-settings', async(event, key) => {
+    return await getStoreDetail()
   })
 }
 

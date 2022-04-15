@@ -32,3 +32,12 @@ export function getStore(name = ConfigEnum.DEFAULT_NAME) {
     return global.store[name]
   }
 }
+
+export async function getStoreDetail(name = ConfigEnum.DEFAULT_NAME) {
+  if (!global.store || !global.store[name]) {
+    const res = await init(name)
+    return res ? res.store : false
+  } else {
+    return global.store[name].store
+  }
+}

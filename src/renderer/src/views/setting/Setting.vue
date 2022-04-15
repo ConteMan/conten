@@ -2,48 +2,79 @@
   <div>
     <div class="text-[14px]">
       <span class="text-gray-400">[</span>
-      系统设置
+      数据库
       <span class="text-gray-400">]</span>
     </div>
     <hr class="mt-4 mb-2"/>
-    <n-form
-      ref="formRef"
-      size="small"
-      :model="formValue"
+
+    <n-dynamic-input
+      v-model:value="database"
+      :on-create="onCreate"
+      :min="1"
+      :max="3"
+      show-sort-button
     >
-      <div class="w-[40%]">
-        <n-form-item
-          label="姓名"
-          path="user.name"
-        >
-          <n-input v-model:value="formValue.user.name" placeholder="输入姓名" />
-        </n-form-item>
-        <n-form-item label="年龄" path="user.age">
-          <n-input v-model:value="formValue.user.age" placeholder="输入年龄" />
-        </n-form-item>
-        <n-form-item label="电话号码" path="user.phone">
-          <n-input v-model:value="formValue.phone" placeholder="电话号码" />
-        </n-form-item>
-      </div>
-    </n-form>
+      <template #default="{ value, index }">
+        <div class="flex items-center w-full">
+          <div class="w-[140px]" :class="{ 'text-red-400': index === 0}">MongoDB {{ `[ ${index + 1} ]` }} : </div>
+          <n-input class="" v-model:value="value.url" type="text" />
+        </div>
+      </template>
+    </n-dynamic-input>
   </div>
+
+  <div class="mt-8">
+    <n-button
+      class=""
+      size="small"
+      type="primary"
+      @click="onSave"> Save </n-button>
+  </div>
+
+  <pre class="mt-10" v-html="JSON.stringify(database, null, 2)" />
 </template>
 
 <script setup lang="ts">
+import { onBeforeRouteUpdate } from 'vue-router';
 import { invokeToMain } from '@renderer/utils/ipcMessage'
 
-const data = reactive({
-  formValue: {
-    user: {
-      name: '',
-      age: '',
-    },
-    phone: '',
-  },
-  formShowLabel: true,
-  formItemShowLabel: true,
-}) 
-const { formValue } = toRefs(data)
+interface dbItem {
+  url: string
+  selected: boolean
+}
 
-const formRef = ref(null)
+const data = reactive({
+  database: [{
+    selected: true,
+    url: '',
+  }] as dbItem[],
+}) 
+const { database } = toRefs(data)
+
+const getSetting = async() => {
+  const res = await invokeToMain('get-settings')
+  console.log(res)
+  data.database = res.db.mongodb
+}
+getSetting()
+
+const onCreate = () => {
+  return {
+    isSelected: false,
+    url: '',
+  }
+}
+
+watch(database, () => {
+  database.value.map((item, index) => {
+    item.selected = index === 0
+  })
+})
+
+const onSave = async() => {
+  const saveSetting = {
+    mongodb: toRaw(data.database),
+  }
+  await invokeToMain('save-settings', JSON.stringify(saveSetting))
+}
 </script>
