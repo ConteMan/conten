@@ -9,6 +9,8 @@ import { isObject } from "~/main/utils"
 import TestService from '~/main/services/test/test'
 import { reconnect } from "~/main/modules/db"
 
+import User from '~/main/models/user'
+
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
   const message = {
@@ -112,6 +114,23 @@ async function messageInit() {
 
   ipcMain.handle('get-settings', async(event, key) => {
     return await getStoreDetail()
+  })
+
+  ipcMain.handle('sqlite3-create', async() => {
+    try {
+      if (!User) return false
+      await User.sync()
+      await User.create({ firstName: 'John', lastName: 'Hancock' })
+
+      const users = await User.findAll()
+      sendToRenderer('success', `sqlite3-create ${JSON.stringify(users)}`)
+      return users
+    }
+    catch(e) {
+      console.log('sqlite3-create: ', e)
+    }
+    sendToRenderer('error', `sqlite3-create 保存失败`)
+    return false
   })
 }
 

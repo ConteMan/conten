@@ -1,14 +1,17 @@
 import os from 'os'
 import { app, BrowserWindow } from 'electron'
 
+import './modules/init'
+import './modules/sqlite3'
+
 import { ConfigEnum } from './config/enum'
 
 import { init as storeInit } from './store'
 import { shortcutsInit, unregister } from './modules/shortcuts'
 import { trayInit } from './modules/tray'
 import { menuInit } from './modules/menu'
-import { dbInit } from './modules/db'
 import { messageInit } from './modules/message'
+import { dbInit } from './modules/db'
 import { windowInit } from './modules/window'
 
 const isWin7 = os.release().startsWith('6.1')
@@ -28,8 +31,8 @@ app.whenReady().then(async() => {
   shortcutsInit()
   trayInit()
   menuInit()
-  dbInit()
   messageInit()
+  dbInit()
 
   windowInit()
 })

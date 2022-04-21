@@ -1,26 +1,34 @@
-import type http from 'http'
 import koa from 'koa'
 import koaBody from 'koa-body'
 
 import router from './router'
 import { getStore } from '~/main/store'
-
-let app: koa | null = null
-let server: http.Server | null = null
+import { Socket } from 'net'
 
 async function start(port: number | string | undefined = undefined) {
   try {
-    app = new koa()
+    global.koaApp = new koa()
   
     const store = getStore()
-    if (!port) {
-      port = await store?.get('server.port', 3333) as number
+    if (!port && store) {
+      port = await store.get('server.port', 3333) as number
     }
   
-    app.use(koaBody())
-    app.use(router.routes()).use(router.allowedMethods())
+    global.koaApp.use(koaBody())
+    global.koaApp.use(router.routes()).use(router.allowedMethods())
   
-    server = app.listen(port)
+    global.server = global.koaApp.listen(port)
+
+    global.server.on("connection", socket => {
+      if (!global.serverSockets) {
+        global.serverSockets = new Set()
+      }
+      global.serverSockets.add(socket);
+        socket.on("close", () => {
+          serverSockets.delete(socket);
+        });
+    });
+
     return true
   }
   catch(e) {
@@ -28,11 +36,19 @@ async function start(port: number | string | undefined = undefined) {
   }
 }
 
+function destroySockets(sockets: Set<Socket>) {
+    for (const socket of sockets.values()) {
+        socket.destroy();
+    }
+}
+
 async function stop() {
-  if (server) {
-    console.log('server stop')
+  if (global.server) {
     try {
-      await server?.close()
+      destroySockets(global.serverSockets)
+      await global.server?.close(() => {
+        global.server = null
+      })
       return true
     }
     catch(e) {

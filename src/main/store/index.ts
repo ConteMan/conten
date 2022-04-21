@@ -2,7 +2,7 @@ import Store from 'electron-store'
 import { config } from '../config'
 import { ConfigEnum } from '../config/enum'
 
-export async function init(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, overwrite = false) {
+export function init(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, overwrite = false) {
   try {
     if (!global.store) {
       global.store = { [name]: new Store({name, clearInvalidConfig: false}) }
@@ -33,9 +33,9 @@ export function getStore(name = ConfigEnum.DEFAULT_NAME) {
   }
 }
 
-export async function getStoreDetail(name = ConfigEnum.DEFAULT_NAME) {
+export function getStoreDetail(name = ConfigEnum.DEFAULT_NAME) {
   if (!global.store || !global.store[name]) {
-    const res = await init(name)
+    const res = init(name)
     return res ? res.store : false
   } else {
     return global.store[name].store

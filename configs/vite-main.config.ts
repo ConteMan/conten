@@ -18,9 +18,7 @@ export default defineConfig({
     ]
   },
   plugins: [
-    esmodule([
-      'koa',
-    ]),
+    esmodule([]),
   ],
   build: {
     outDir: '../../dist/main',
@@ -33,7 +31,6 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'electron',
-        'koa',
         ...builtinModules,
         ...Object.keys((pkg as Record<string, any>).dependencies || {}),
       ],
