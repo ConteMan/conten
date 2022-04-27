@@ -42,6 +42,10 @@ import { useMessage, MessageType } from 'naive-ui'
 
 const navList = [
   {
+    name: '面板',
+    path: '/dashboard',
+  },
+  {
     name: '实验',
     path: '/test',
   },

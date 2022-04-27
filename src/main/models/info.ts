@@ -1,12 +1,18 @@
 const { DataTypes } = require('sequelize')
 
-const User = global.sequelize?.define('user', {
-  first_name: {
+const Info = global.sequelize?.define('info', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+
+  type_name: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  last_name: {
-    type: DataTypes.STRING
+  data: {
+    type: DataTypes.JSON,
   }
 }, {
   createdAt: 'created_at',
@@ -16,4 +22,4 @@ const User = global.sequelize?.define('user', {
   deletedAt: 'deleted_at',
 });
 
-export default User
+export default Info

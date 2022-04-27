@@ -18,7 +18,9 @@ export default defineConfig({
     ]
   },
   plugins: [
-    esmodule([]),
+    esmodule([
+      'node-fetch'
+    ]),
   ],
   build: {
     outDir: '../../dist/main',

@@ -8,6 +8,7 @@ import { getStoreDetail } from "~/main/store"
 import { isObject } from "~/main/utils"
 import TestService from '~/main/services/test/test'
 import { reconnect } from "~/main/modules/db"
+import { getWeather } from "~/main/services/weather"
 
 import User from '~/main/models/user'
 
@@ -119,8 +120,8 @@ async function messageInit() {
   ipcMain.handle('sqlite3-create', async() => {
     try {
       if (!User) return false
-      await User.sync()
-      await User.create({ firstName: 'John', lastName: 'Hancock' })
+      await User.sync({ force: true })
+      await User.create({ first_name: 'John', last_name: 'Hancock' })
 
       const users = await User.findAll()
       sendToRenderer('success', `sqlite3-create ${JSON.stringify(users)}`)
@@ -131,6 +132,10 @@ async function messageInit() {
     }
     sendToRenderer('error', `sqlite3-create 保存失败`)
     return false
+  })
+
+  ipcMain.handle('get-weather', async(event, key) => {
+    return await getWeather()
   })
 }
 

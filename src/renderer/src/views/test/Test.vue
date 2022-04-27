@@ -33,6 +33,12 @@
       <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user')">Get</span>
     </div>
   </div>
+  <div class="flex flex-col items-start mt-4">
+    <div class="p-2"> Weather </div>
+    <div class="space-x-2">
+      <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-weather')">Get Weather</span>
+    </div>
+  </div>
   <pre class="flex flex-col mt-8 overflow-y-auto" v-html="showText" />
 </template>
 

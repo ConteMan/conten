@@ -5,7 +5,13 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Root',
-    redirect: '/test',
+    redirect: '/dashboard',
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('../views/dashboard/Dashboard.vue'),
+    meta: { title: '', keepAlive: false },
   },
   {
     path: '/test',
