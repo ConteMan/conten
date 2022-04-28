@@ -2,7 +2,7 @@ import Store from 'electron-store'
 import { config } from '../config'
 import { ConfigEnum } from '../config/enum'
 
-export function init(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, overwrite = false) {
+export function storeInit(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, overwrite = false) {
   try {
     if (!global.store) {
       global.store = { [name]: new Store({name, clearInvalidConfig: false}) }
@@ -11,7 +11,7 @@ export function init(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, overwrite = fal
       global.store[name] = new Store({name, clearInvalidConfig: false})
     }
     if (!global.store[name].size) {
-      global.store[name].set(JSON.stringify(config[name]))
+      global.store[name].set(config[name] as object)
     } else {
       if (overwrite) {
         global.store[name].clear()
@@ -27,7 +27,7 @@ export function init(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, overwrite = fal
 
 export function getStore(name = ConfigEnum.DEFAULT_NAME) {
   if (!global.store || !global.store[name]) {
-    return init(name)
+    return storeInit(name)
   } else {
     return global.store[name]
   }
@@ -35,7 +35,7 @@ export function getStore(name = ConfigEnum.DEFAULT_NAME) {
 
 export function getStoreDetail(name = ConfigEnum.DEFAULT_NAME) {
   if (!global.store || !global.store[name]) {
-    const res = init(name)
+    const res = storeInit(name)
     return res ? res.store : false
   } else {
     return global.store[name].store

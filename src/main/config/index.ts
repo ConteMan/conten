@@ -11,6 +11,14 @@ export interface ConfigDetail {
   },
   db: {
     mongodb: DB[] | []
+  },
+  win: {
+    bounds: {
+      x: number
+      y: number
+      width: number
+      height: number
+    }
   }
 }
 
@@ -32,11 +40,19 @@ export const config: Config = {
     db: {
       mongodb: [
         {
-        url: "mongodb://127.0.0.1:27017/contea_desktop?readPreference=primary&serverSelectionTimeoutMS=2000&ssl=false",
+        url: "",
         selected: true
         },
       ],
     },
+    win: {
+      bounds: {
+        x: 0,
+        y: 0,
+        width: 800,
+        height: 600
+      }
+    }
   },
   [ConfigEnum.EXTENSION_COMMAND]: {
     inbox: [],

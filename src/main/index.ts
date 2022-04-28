@@ -1,12 +1,7 @@
 import os from 'os'
 import { app, BrowserWindow } from 'electron'
 
-import './modules/init'
-import './modules/sqlite3'
-
-import { ConfigEnum } from './config/enum'
-
-import { init as storeInit } from './store'
+import { storeInit } from './store'
 import { shortcutsInit, unregister } from './modules/shortcuts'
 import { trayInit } from './modules/tray'
 import { menuInit } from './modules/menu'
@@ -22,12 +17,10 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-
 app.whenReady().then(async() => {
   app.setName('Contea')
 
-  await storeInit()
-  await storeInit(ConfigEnum.EXTENSION_COMMAND)
+  storeInit()
   shortcutsInit()
   trayInit()
   menuInit()
@@ -46,7 +39,6 @@ app.on('window-all-closed', () => {
 
 app.on('second-instance', () => {
   if (win) {
-    // someone tried to run a second instance, we should focus our window.
     if (win.isMinimized()) win.restore()
     win.focus()
   }

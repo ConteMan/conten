@@ -7,7 +7,7 @@ import { getStatus } from "~/main/services/status"
 import { getStoreDetail } from "~/main/store"
 import { isObject } from "~/main/utils"
 import TestService from '~/main/services/test/test'
-import { reconnect } from "~/main/modules/db"
+import { reconnectMongoDB } from "~/main/modules/db"
 import { getWeather } from "~/main/services/weather"
 
 import User from '~/main/models/user'
@@ -99,7 +99,7 @@ async function messageInit() {
         const oldUrl = oldSetting ? oldSetting?.find((item: any) => item.selected)?.url : ''
         await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb', data.mongodb)
         if (newDBUrl !== oldUrl) {
-          await reconnect()
+          await reconnectMongoDB()
         }
         sendToRenderer('success', `保存成功`)
         return true

@@ -1,14 +1,19 @@
 import type { DB } from '~/main/config'
-import { getStore } from '~/main/store'
+import { app } from 'electron'
+import path from 'path'
 import { MongoClient } from 'mongodb'
+import { getStore } from '~/main/store'
 import { sendToRenderer } from '~/main/modules/message'
+const { Sequelize } = require('sequelize')
 
 export function dbInit() {
-  return connectMongoDB()
+  connectSqlite3()
+  connectMongoDB()
+  return true
 }
 
 export async function connectMongoDB(url: string = '') {
-  const store = await getStore()
+  const store = getStore()
   if (!store) {
     sendToRenderer('error', 'NO AVAILABLE DB 1')
     return false
@@ -40,7 +45,7 @@ export async function getMongoClient() {
   return global.mongoClient
 }
 
-export async function reconnect() {
+export async function reconnectMongoDB() {
   try {
     await global.mongoClient?.close()
     await connectMongoDB()
@@ -52,3 +57,22 @@ export async function reconnect() {
     return false
   }
 }
+
+export function connectSqlite3(dbPath: string = '') {
+  try {
+    if(!dbPath)
+      dbPath = path.join(app.getPath('userData'), 'sqlite3.db')
+    
+    const sequelize = new Sequelize({
+      dialect: 'sqlite',
+      storage: dbPath,
+    });
+    
+    global.sequelize = sequelize
+    return true
+  }
+  catch(e) {
+    return false
+  }
+}
+
