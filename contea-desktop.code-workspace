@@ -13,6 +13,7 @@
 			"icns",
 			"nsis",
 			"persistedstate",
+			"TINYINT",
 			"togglefullscreen"
 		]
 	}

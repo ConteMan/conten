@@ -9,8 +9,7 @@ import { isObject } from "~/main/utils"
 import TestService from '~/main/services/test/test'
 import { reconnectMongoDB } from "~/main/modules/db"
 import { getWeather } from "~/main/services/weather"
-
-import User from '~/main/models/user'
+import { getUser } from "~/main/services/user"
 
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
@@ -41,10 +40,6 @@ async function messageInit() {
           event.reply('indexMsg', { type, data: res })
           break
         }
-        case 'open-folder': {
-          dialog.showOpenDialog({})
-          break
-        }
         case 'get-user-data-path': {
           event.reply('indexMsg', { type: 'get-user-data-path', data: await app.getPath('userData') })
           break
@@ -63,11 +58,6 @@ async function messageInit() {
           break
       }
     }
-  })
-
-  ipcMain.handle('set-command', async(event, key) => {
-    await global.store?.[ConfigEnum.EXTENSION_COMMAND].set('inbox', ['command'])
-    return (await global.store?.[ConfigEnum.EXTENSION_COMMAND].get('inbox'))
   })
 
   ipcMain.handle('getStore', async(event, key) => {
@@ -117,15 +107,20 @@ async function messageInit() {
     return await getStoreDetail()
   })
 
+  ipcMain.handle('sqlite3', async() => {
+    try {
+      const user = await getUser()
+      return user
+    }
+    catch(e) {
+      console.log('sqlite3: ', e)
+    }
+    return false
+  })
+
   ipcMain.handle('sqlite3-create', async() => {
     try {
-      if (!User) return false
-      await User.sync({ force: true })
-      await User.create({ first_name: 'John', last_name: 'Hancock' })
-
-      const users = await User.findAll()
-      sendToRenderer('success', `sqlite3-create ${JSON.stringify(users)}`)
-      return users
+      return true
     }
     catch(e) {
       console.log('sqlite3-create: ', e)

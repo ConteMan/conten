@@ -37,6 +37,8 @@ async function start(port: number | string | undefined = undefined) {
 }
 
 function destroySockets(sockets: Set<Socket>) {
+    if (!sockets || sockets.size <= 0)
+      return
     for (const socket of sockets.values()) {
         socket.destroy();
     }

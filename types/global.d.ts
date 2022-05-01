@@ -13,5 +13,5 @@ declare global {
   var sequelize: Sequelize | null
   var koaApp: koa | null
   var server: http.Server | null
-  var serverSockets: Set<T>
+  var serverSockets: Set<Socket>
 }

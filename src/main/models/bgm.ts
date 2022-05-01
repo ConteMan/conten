@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize'
 
-console.log('>>> model user')
+console.log('>>> model bgm')
 
-const User = global.sequelize?.define('user', {
+const Bgm = global.sequelize?.define('bgm', {
   first_name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -11,6 +11,8 @@ const User = global.sequelize?.define('user', {
     type: DataTypes.STRING
   }
 }, {
+  tableName: 'bgm',
+
   createdAt: 'created_at',
   updatedAt: 'updated_at',
 
@@ -18,4 +20,4 @@ const User = global.sequelize?.define('user', {
   deletedAt: 'deleted_at',
 });
 
-export default User
+export default Bgm

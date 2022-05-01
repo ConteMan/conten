@@ -1,6 +1,8 @@
 import os from 'os'
 import { app, BrowserWindow } from 'electron'
 
+import './modules/init'
+
 import { storeInit } from './store'
 import { shortcutsInit, unregister } from './modules/shortcuts'
 import { trayInit } from './modules/tray'
@@ -8,6 +10,7 @@ import { menuInit } from './modules/menu'
 import { messageInit } from './modules/message'
 import { dbInit } from './modules/db'
 import { windowInit } from './modules/window'
+
 
 const isWin7 = os.release().startsWith('6.1')
 if (isWin7) app.disableHardwareAcceleration()
@@ -17,15 +20,15 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-app.whenReady().then(async() => {
+app.whenReady().then(() => {
   app.setName('Contea')
 
   storeInit()
   shortcutsInit()
   trayInit()
   menuInit()
-  messageInit()
   dbInit()
+  messageInit()
 
   windowInit()
 })

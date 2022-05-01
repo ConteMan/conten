@@ -7,8 +7,8 @@ import { sendToRenderer } from '~/main/modules/message'
 const { Sequelize } = require('sequelize')
 
 export function dbInit() {
-  connectSqlite3()
-  connectMongoDB()
+  // connectSqlite3()
+  // connectMongoDB()
   return true
 }
 
@@ -72,6 +72,7 @@ export function connectSqlite3(dbPath: string = '') {
     return true
   }
   catch(e) {
+    console.log('connectSqlite3', e)
     return false
   }
 }

@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron'
+import { app } from 'electron'
 import path from 'path'
 const { Sequelize } = require('sequelize')
 
@@ -11,11 +11,4 @@ const sequelize = new Sequelize({
 
 global.sequelize = sequelize
 
-ipcMain.handle('sqlite3', async event => {
-  try {
-    await sequelize.authenticate();
-    return JSON.stringify([null, 1])
-  } catch (error: any) {
-    return JSON.stringify([error.message, null])
-  }
-})
+console.log('>>> sequelize')
