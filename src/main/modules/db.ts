@@ -4,11 +4,14 @@ import path from 'path'
 import { MongoClient } from 'mongodb'
 import { getStore } from '~/main/store'
 import { sendToRenderer } from '~/main/modules/message'
-const { Sequelize } = require('sequelize')
+import { Sequelize } from 'sequelize'
 
-export function dbInit() {
+import RequestCacheModel from '~/main/models/requestCache'
+
+export async function dbInit() {
   // connectSqlite3()
   // connectMongoDB()
+  await sqlite3Init()
   return true
 }
 
@@ -77,3 +80,6 @@ export function connectSqlite3(dbPath: string = '') {
   }
 }
 
+async function sqlite3Init() {
+  await RequestCacheModel.sync()
+}

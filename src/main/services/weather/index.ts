@@ -1,12 +1,27 @@
 import { getWeather as cmaWeather } from "./cma"
+import requestCache from '~/main/services/requestCache'
 
-const getWeather = async (source = 'cma') => {
+const getWeather = async (source = 'cma', refresh = false) => {
+  if (!refresh) {
+    const cacheName = `weather-${source}`
+    const cache = await requestCache.get(cacheName)
+    console.log(`>>> getWeather: ${cache ? JSON.stringify(cache) : null}`)
+    if (cache)
+      return cache
+  }
+
+  let data: any
   switch (source) {
     case 'cma':
-      return await cmaWeather()
     default:
-      return null
+      data = await cmaWeather()
   }
+
+  if (!data)
+    return null
+
+  const cacheRes = await requestCache.set(`weather-${source}`, data)
+  return cacheRes
 }
 
 export { getWeather }

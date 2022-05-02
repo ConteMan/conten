@@ -20,14 +20,14 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async() => {
   app.setName('Contea')
 
   storeInit()
   shortcutsInit()
   trayInit()
   menuInit()
-  dbInit()
+  await dbInit()
   messageInit()
 
   windowInit()

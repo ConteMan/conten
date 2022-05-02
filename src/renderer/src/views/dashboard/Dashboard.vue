@@ -6,7 +6,7 @@
           {{ weatherData.location.name }}
         </span>
         <span class="weather-data-time ml-2 text-xs text-gray-400 italic invisible">
-          {{ weatherData.lastUpdate }}
+          {{ weatherData.lastUpdate }} <span class="text-gray-200">{{ dayjs(weatherExpired).format('HH:mm') }}</span>
         </span>
       </div>
       <div>
@@ -24,15 +24,19 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+
 const data = reactive({
   weatherData: null as any,
+  weatherExpired: null as any,
   showDayWeather: false,
 })
-const { weatherData, showDayWeather } = toRefs(data)
+const { weatherData, weatherExpired, showDayWeather } = toRefs(data)
 
 const init = async() => {
   const weatherRes = await window.ipcRenderer.invoke('get-weather')
-  data.weatherData = weatherRes
+  data.weatherData = weatherRes?.data
+  data.weatherExpired = weatherRes?.expired
 }
 
 const changeShowDayWeather = () => {

@@ -10,7 +10,7 @@ declare global {
   var win: BrowserWindow | null
   var store: Record<string, ElectronStore> | null
   var mongoClient: MongoClient | null
-  var sequelize: Sequelize | null
+  var sequelize: Sequelize
   var koaApp: koa | null
   var server: http.Server | null
   var serverSockets: Set<Socket>
