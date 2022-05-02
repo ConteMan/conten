@@ -5,7 +5,7 @@
         <span class="font-bold cursor-pointer select-none" @click="changeShowDayWeather()">
           {{ weatherData.location.name }}
         </span>
-        <span class="ml-2 text-xs text-gray-400 italic">
+        <span class="weather-data-time ml-2 text-xs text-gray-400 italic invisible">
           {{ weatherData.lastUpdate }}
         </span>
       </div>
@@ -41,3 +41,11 @@ const changeShowDayWeather = () => {
 
 init()
 </script>
+
+<style lang="less">
+.weather-card:hover {
+  .weather-data-time {
+    visibility: visible;
+  }
+}
+</style>

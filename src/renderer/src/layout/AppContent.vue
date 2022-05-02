@@ -61,9 +61,9 @@ const navList = [
 
 const resizeRef = ref<HTMLDivElement | null>(null)
 const data = reactive({
-  sideWidth: 120,
+  sideWidth: 82,
   sideMaxWidth: 240,
-  sideMinWidth: 96,
+  sideMinWidth: 82,
   clientStartX: 0,
 })
 const { sideWidth } = toRefs(data)
@@ -130,16 +130,16 @@ watch(() => route.meta, (meta) => {
   cursor: col-resize;
 }
 .active {
-  color: rgba(163, 0, 0, 0.9);
+  color: rgba(163, 0, 0);
 }
 .drag-line {
   opacity: 0.1;
   transition: opacity 0.2s linear;
-  background-color: rgba(163, 0, 0, 0.92);
+  background-color: rgb(118, 118, 118);
 }
 .drag-line:hover {
   opacity: 1;
   transition: opacity 0.2s linear 0.2s;
-  background-color: rgba(163, 0, 0, 0.92);
+  background-color: rgba(163, 0, 0);
 }
 </style>

@@ -12,6 +12,7 @@ export async function windowInit() {
     return false
 
   const { x, y, width, height } = configStore.get('win.bounds') as ConfigDetail['win']['bounds']
+
   win = new BrowserWindow({
     show: false,
     icon: path.join(__dirname, '../public/images/logo_32.ico'),
@@ -19,12 +20,13 @@ export async function windowInit() {
     y,
     width,
     height,
-    // center: true,
-    // minWidth: 1366,
-    // minHeight: 768,
-    // frame: false, //无框
-    // transparent: false, //透明
-    titleBarStyle: 'hidden',
+    frame: false, //无框
+    transparent: false, //透明
+    titleBarStyle: 'customButtonsOnHover', //自定义按钮，鼠标悬浮展示
+    trafficLightPosition: {
+      x: 16,
+      y: 8,
+    },
     focusable: true,
     alwaysOnTop: false,
     webPreferences: {
@@ -63,6 +65,6 @@ export async function windowInit() {
     const url = `http://${pkg.env.HOST || '127.0.0.1'}:${pkg.env.PORT}`
 
     win.loadURL(url)
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools()
   }
 }
