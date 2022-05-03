@@ -5,7 +5,6 @@ const getWeather = async (source = 'cma', refresh = false) => {
   if (!refresh) {
     const cacheName = `weather-${source}`
     const cache = await requestCache.get(cacheName)
-    console.log(`>>> getWeather: ${cache ? JSON.stringify(cache) : null}`)
     if (cache)
       return cache
   }

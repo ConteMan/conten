@@ -1,7 +1,10 @@
 <template>
-<div class="flex w-full h-screen max-h-screen">
+<div
+  class="flex w-full h-screen max-h-screen"
+  :class="{ 'cursor-col-resize-important': onResize }"
+>
   <div
-    class="h-screen max-h-screen"
+    class="h-screen max-h-screen sidebar-container"
     :style="{ width: `${sideWidth}px`, 'min-width': `${sideWidth}px`, 'max-width': `${sideWidth}px` }"
   >
     <Dragbar />
@@ -19,8 +22,8 @@
     </div>
   </div>
 
-  <div ref="resizeRef" class="drag-line flex-grow-0 w-[1px] cursor-col-resize">
-    <span></span>
+  <div ref="resizeRef" class="flex-grow-0 flex justify-center w-[5px] cursor-col-resize">
+    <div class="drag-line h-full w-[1px]"></div>
   </div>
 
   <div class="flex-grow h-screen max-h-screen overflow-hidden">
@@ -65,36 +68,40 @@ const data = reactive({
   sideMaxWidth: 240,
   sideMinWidth: 82,
   clientStartX: 0,
+  onResize: false,
 })
-const { sideWidth } = toRefs(data)
+const { sideWidth, onResize } = toRefs(data)
 
 const moveHandle = (nowClientX: number) => {
-  const computedX = nowClientX - data.clientStartX;
-  let changeWidth = data.sideWidth + computedX;
+  const computedX = nowClientX - data.clientStartX
+  let changeWidth = data.sideWidth + computedX
 
   if (changeWidth < data.sideMinWidth) {
-    changeWidth = data.sideMinWidth;
+    changeWidth = data.sideMinWidth
+    data.clientStartX = data.sideMinWidth
+  } else if (changeWidth > data.sideMaxWidth) {
+    changeWidth = data.sideMaxWidth
+    data.clientStartX = data.sideMaxWidth
+  } else {
+    data.clientStartX = nowClientX
   }
-
-  if (changeWidth > data.sideMaxWidth) {
-    changeWidth = data.sideMaxWidth;
-  }
-  data.sideWidth = changeWidth;
-  data.clientStartX = nowClientX;
+  data.sideWidth = changeWidth
 }
 
 onMounted(() => {
   resizeRef.value?.addEventListener('mousedown', (e) => {
-    data.clientStartX = e.clientX;
+    data.clientStartX = e.clientX
+    data.onResize = true
     e.preventDefault()
 
     document.onmousemove = e => {
-      moveHandle(e.clientX);
+      moveHandle(e.clientX)
     }
 
     document.onmouseup = e => {
-      document.onmouseup = null;
-      document.onmousemove = null;
+      data.onResize = false
+      document.onmouseup = null
+      document.onmousemove = null
     };
   })
 })
@@ -125,21 +132,18 @@ watch(() => route.meta, (meta) => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .cursor-col-resize {
   cursor: col-resize;
+}
+.cursor-col-resize-important {
+  cursor: col-resize !important;
 }
 .active {
   color: rgba(163, 0, 0);
 }
 .drag-line {
-  opacity: 0.1;
-  transition: opacity 0.2s linear;
-  background-color: rgb(118, 118, 118);
-}
-.drag-line:hover {
-  opacity: 1;
-  transition: opacity 0.2s linear 0.2s;
-  background-color: rgba(163, 0, 0);
+  opacity: 0.5;
+  background-color: rgb(166, 166, 166);
 }
 </style>

@@ -25,7 +25,7 @@ class RequestCache {
     }
   }
 
-  async set(name: string, data: object, expiredSeconds: number = 6) {
+  async set(name: string, data: object, expiredSeconds: number = 600) {
     try {
       const expired = dayjs().add(expiredSeconds, 'second').toDate()
       const [cache, created] = await RequestCacheModel.findOrCreate({
