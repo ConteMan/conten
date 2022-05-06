@@ -1,0 +1,718 @@
+{
+  "name": "contea-desktop",
+  "version": "0.0.6",
+  "license": "MIT",
+  "dependencies": {
+    "@koa/router": {
+      "versionDefault": "^10.1.1",
+      "version": "10.1.1",
+      "resolved": "https://registry.npmmirror.com/@koa/router/-/router-10.1.1.tgz",
+      "integrity": "sha512-ORNjq5z4EmQPriKbR0ER3k4Gh7YGNhWDL7JBW+8wXDrHLbWYKYSJaOJ9aN06npF5tbTxe2JBOsurpJDAvjiXKw==",
+      "dependencies": {
+        "debug": "^4.1.1",
+        "http-errors": "^1.7.3",
+        "koa-compose": "^4.1.0",
+        "methods": "^1.1.2",
+        "path-to-regexp": "^6.1.0"
+      },
+      "engines": {
+        "node": ">= 8.0.0"
+      }
+    },
+    "cheerio": {
+      "versionDefault": "^1.0.0-rc.10",
+      "version": "1.0.0-rc.10",
+      "resolved": "https://registry.npmmirror.com/cheerio/-/cheerio-1.0.0-rc.10.tgz",
+      "integrity": "sha512-g0J0q/O6mW8z5zxQ3A8E8J1hUgp4SMOvEoW/x84OwyHKe/Zccz83PVT4y5Crcr530FV6NgmKI1qvGTKVl9XXVw==",
+      "dependencies": {
+        "cheerio-select": "^1.5.0",
+        "dom-serializer": "^1.3.2",
+        "domhandler": "^4.2.0",
+        "htmlparser2": "^6.1.0",
+        "parse5": "^6.0.1",
+        "parse5-htmlparser2-tree-adapter": "^6.0.1",
+        "tslib": "^2.2.0"
+      },
+      "engines": {
+        "node": ">= 6"
+      }
+    },
+    "electron-store": {
+      "versionDefault": "^8.0.1",
+      "version": "8.0.1",
+      "resolved": "https://registry.npmmirror.com/electron-store/-/electron-store-8.0.1.tgz",
+      "integrity": "sha512-ZyLvNywiqSpbwC/pp89O/AycVWY/UJIkmtyzF2Bd0Nm/rLmcFc0NTGuLdg6+LE8mS8qsiK5JMoe4PnrecLHH5w==",
+      "dependencies": {
+        "conf": "^10.0.3",
+        "type-fest": "^1.0.2"
+      }
+    },
+    "fs-extra": {
+      "versionDefault": "^10.1.0",
+      "version": "10.1.0",
+      "resolved": "https://registry.npmmirror.com/fs-extra/-/fs-extra-10.1.0.tgz",
+      "integrity": "sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==",
+      "dependencies": {
+        "graceful-fs": "^4.2.0",
+        "jsonfile": "^6.0.1",
+        "universalify": "^2.0.0"
+      },
+      "engines": {
+        "node": ">=12"
+      }
+    },
+    "koa": {
+      "versionDefault": "^2.13.4",
+      "version": "2.13.4",
+      "resolved": "https://registry.npmmirror.com/koa/-/koa-2.13.4.tgz",
+      "integrity": "sha512-43zkIKubNbnrULWlHdN5h1g3SEKXOEzoAlRsHOTFpnlDu8JlAOZSMJBLULusuXRequboiwJcj5vtYXKB3k7+2g==",
+      "dependencies": {
+        "accepts": "^1.3.5",
+        "cache-content-type": "^1.0.0",
+        "content-disposition": "~0.5.2",
+        "content-type": "^1.0.4",
+        "cookies": "~0.8.0",
+        "debug": "^4.3.2",
+        "delegates": "^1.0.0",
+        "depd": "^2.0.0",
+        "destroy": "^1.0.4",
+        "encodeurl": "^1.0.2",
+        "escape-html": "^1.0.3",
+        "fresh": "~0.5.2",
+        "http-assert": "^1.3.0",
+        "http-errors": "^1.6.3",
+        "is-generator-function": "^1.0.7",
+        "koa-compose": "^4.1.0",
+        "koa-convert": "^2.0.0",
+        "on-finished": "^2.3.0",
+        "only": "~0.0.2",
+        "parseurl": "^1.3.2",
+        "statuses": "^1.5.0",
+        "type-is": "^1.6.16",
+        "vary": "^1.1.2"
+      },
+      "engines": {
+        "node": "^4.8.4 || ^6.10.1 || ^7.10.1 || >= 8.1.4"
+      }
+    },
+    "koa-body": {
+      "versionDefault": "^5.0.0",
+      "version": "5.0.0",
+      "resolved": "https://registry.npmmirror.com/koa-body/-/koa-body-5.0.0.tgz",
+      "integrity": "sha512-nHwEODrQGiyKBILCWO8QSS40C87cKr2cp3y/Cw8u9Z8w5t0CdSkGm3+y9WK5BIAlPpo9tTw5RtSbxpVyG79vmw==",
+      "dependencies": {
+        "@types/formidable": "^2.0.4",
+        "co-body": "^5.1.1",
+        "formidable": "^2.0.1"
+      }
+    },
+    "mongodb": {
+      "versionDefault": "^4.5.0",
+      "version": "4.5.0",
+      "resolved": "https://registry.npmmirror.com/mongodb/-/mongodb-4.5.0.tgz",
+      "integrity": "sha512-A2l8MjEpKojnhbCM0MK3+UOGUSGvTNNSv7AkP1fsT7tkambrkkqN/5F2y+PhzsV0Nbv58u04TETpkaSEdI2zKA==",
+      "dependencies": {
+        "bson": "^4.6.2",
+        "denque": "^2.0.1",
+        "mongodb-connection-string-url": "^2.5.2",
+        "socks": "^2.6.2"
+      },
+      "engines": {
+        "node": ">=12.9.0"
+      },
+      "optionalDependencies": {
+        "saslprep": "^1.0.3"
+      }
+    },
+    "sequelize": {
+      "versionDefault": "^6.19.0",
+      "version": "6.19.0",
+      "resolved": "https://registry.npmmirror.com/sequelize/-/sequelize-6.19.0.tgz",
+      "integrity": "sha512-B3oGIdpYBERDjRDm74h7Ky67f6ZLcmBXOA7HscYObiOSo4pD7VBc9mtm44wNV7unc0uk8I1d30nbZBTQCE377A==",
+      "dependencies": {
+        "@types/debug": "^4.1.7",
+        "@types/validator": "^13.7.1",
+        "debug": "^4.3.3",
+        "dottie": "^2.0.2",
+        "inflection": "^1.13.2",
+        "lodash": "^4.17.21",
+        "moment": "^2.29.1",
+        "moment-timezone": "^0.5.34",
+        "pg-connection-string": "^2.5.0",
+        "retry-as-promised": "^5.0.0",
+        "semver": "^7.3.5",
+        "sequelize-pool": "^7.1.0",
+        "toposort-class": "^1.0.1",
+        "uuid": "^8.3.2",
+        "validator": "^13.7.0",
+        "wkx": "^0.5.0"
+      },
+      "engines": {
+        "node": ">=10.0.0"
+      },
+      "peerDependenciesMeta": {
+        "ibm_db": {
+          "optional": true
+        },
+        "mariadb": {
+          "optional": true
+        },
+        "mysql2": {
+          "optional": true
+        },
+        "pg": {
+          "optional": true
+        },
+        "pg-hstore": {
+          "optional": true
+        },
+        "snowflake-sdk": {
+          "optional": true
+        },
+        "sqlite3": {
+          "optional": true
+        },
+        "tedious": {
+          "optional": true
+        }
+      }
+    },
+    "sqlite3": {
+      "versionDefault": "^5.0.4",
+      "version": "5.0.5",
+      "resolved": "https://registry.npmmirror.com/sqlite3/-/sqlite3-5.0.5.tgz",
+      "integrity": "sha512-ZZFOMW31IOMbUeSiL23TuWSjNyS7Z83EDJ80HJxCe78OZ+5BJT6IhAwAUnQgPsUl5z+Er0DGx7VjuTP7PKPNcg==",
+      "hasInstallScript": true,
+      "dependencies": {
+        "@mapbox/node-pre-gyp": "^1.0.0",
+        "node-addon-api": "^4.2.0",
+        "tar": "^6.1.11"
+      },
+      "optionalDependencies": {
+        "node-gyp": "8.x"
+      },
+      "peerDependencies": {
+        "node-gyp": "8.x"
+      },
+      "peerDependenciesMeta": {
+        "node-gyp": {
+          "optional": true
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/koa": {
+      "versionDefault": "^2.13.4",
+      "version": "2.13.4",
+      "resolved": "https://registry.npmmirror.com/@types/koa/-/koa-2.13.4.tgz",
+      "integrity": "sha512-dfHYMfU+z/vKtQB7NUrthdAEiSvnLebvBjwHtfFmpZmB7em2N3WVQdHgnFq+xvyVgxW5jKDmjWfLD3lw4g4uTw==",
+      "dev": true,
+      "dependencies": {
+        "@types/accepts": "*",
+        "@types/content-disposition": "*",
+        "@types/cookies": "*",
+        "@types/http-assert": "*",
+        "@types/http-errors": "*",
+        "@types/keygrip": "*",
+        "@types/koa-compose": "*",
+        "@types/node": "*"
+      }
+    },
+    "@types/koa__router": {
+      "versionDefault": "^8.0.11",
+      "version": "8.0.11",
+      "resolved": "https://registry.npmmirror.com/@types/koa__router/-/koa__router-8.0.11.tgz",
+      "integrity": "sha512-WXgKWpBsbS14kzmzD9LeFapOIa678h7zvUHxDwXwSx4ETKXhXLVUAToX6jZ/U7EihM7qwyD9W/BZvB0MRu7MTQ==",
+      "dev": true,
+      "dependencies": {
+        "@types/koa": "*"
+      }
+    },
+    "@types/node": {
+      "versionDefault": "^17.0.23",
+      "version": "17.0.25",
+      "resolved": "https://registry.npmmirror.com/@types/node/-/node-17.0.25.tgz",
+      "integrity": "sha512-wANk6fBrUwdpY4isjWrKTufkrXdu1D2YHCot2fD/DfWxF5sMrVSA+KN7ydckvaTCh0HiqX9IVl0L5/ZoXg5M7w=="
+    },
+    "@types/sqlite3": {
+      "versionDefault": "^3.1.8",
+      "version": "3.1.8",
+      "resolved": "https://registry.npmmirror.com/@types/sqlite3/-/sqlite3-3.1.8.tgz",
+      "integrity": "sha512-sQMt/qnyUWnqiTcJXm5ZfNPIBeJ/DVvJDwxw+0tAxPJvadzfiP1QhryO1JOR6t1yfb8NpzQb/Rud06mob5laIA==",
+      "dev": true,
+      "dependencies": {
+        "@types/node": "*"
+      }
+    },
+    "@vitejs/plugin-vue": {
+      "versionDefault": "^2.0.1",
+      "version": "2.3.1",
+      "resolved": "https://registry.npmmirror.com/@vitejs/plugin-vue/-/plugin-vue-2.3.1.tgz",
+      "integrity": "sha512-YNzBt8+jt6bSwpt7LP890U1UcTOIZZxfpE5WOJ638PNxSEKOqAi0+FSKS0nVeukfdZ0Ai/H7AFd6k3hayfGZqQ==",
+      "dev": true,
+      "engines": {
+        "node": ">=12.0.0"
+      },
+      "peerDependencies": {
+        "vite": "^2.5.10",
+        "vue": "^3.2.25"
+      }
+    },
+    "@vueuse/core": {
+      "versionDefault": "^8.2.0",
+      "version": "8.3.1",
+      "resolved": "https://registry.npmmirror.com/@vueuse/core/-/core-8.3.1.tgz",
+      "integrity": "sha512-WiXUgVyPG9elGx3G8UV8g+zqbEJ2hYacrPICogAxDdW6hnxxcUFdF7FtvDroJ/DxWmo2pg8XNNz07ybfnZyJbw==",
+      "dev": true,
+      "dependencies": {
+        "@vueuse/metadata": "8.3.1",
+        "@vueuse/shared": "8.3.1",
+        "vue-demi": "*"
+      },
+      "peerDependencies": {
+        "@vue/composition-api": "^1.1.0",
+        "vue": "^2.6.0 || ^3.2.0"
+      },
+      "peerDependenciesMeta": {
+        "@vue/composition-api": {
+          "optional": true
+        },
+        "vue": {
+          "optional": true
+        }
+      }
+    },
+    "chalk": {
+      "versionDefault": "^5.0.0",
+      "version": "5.0.1",
+      "resolved": "https://registry.npmmirror.com/chalk/-/chalk-5.0.1.tgz",
+      "integrity": "sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==",
+      "dev": true,
+      "engines": {
+        "node": "^12.17.0 || ^14.13 || >=16.0.0"
+      }
+    },
+    "dayjs": {
+      "versionDefault": "^1.11.1",
+      "version": "1.11.1",
+      "resolved": "https://registry.npmmirror.com/dayjs/-/dayjs-1.11.1.tgz",
+      "integrity": "sha512-ER7EjqVAMkRRsxNCC5YqJ9d9VQYuWdGt7aiH2qA5R5wt8ZmWaP2dLUSIK6y/kVzLMlmh1Tvu5xUf4M/wdGJ5KA==",
+      "dev": true
+    },
+    "electron": {
+      "versionDefault": "^18.1.0",
+      "version": "18.1.0",
+      "resolved": "https://registry.npmmirror.com/electron/-/electron-18.1.0.tgz",
+      "integrity": "sha512-P55wdHNTRMo7a/agC84ZEZDYEK/pTBcQdlp8lFbHcx3mO4Kr+Im/J5p2uQgiuXtown31HqNh2paL3V0p+E6rpQ==",
+      "dev": true,
+      "hasInstallScript": true,
+      "dependencies": {
+        "@electron/get": "^1.13.0",
+        "@types/node": "^16.11.26",
+        "extract-zip": "^1.0.3"
+      },
+      "bin": {
+        "electron": "cli.js"
+      },
+      "engines": {
+        "node": ">= 8.6"
+      }
+    },
+    "electron-builder": {
+      "versionDefault": "^23.0.8",
+      "version": "23.0.8",
+      "resolved": "https://registry.npmmirror.com/electron-builder/-/electron-builder-23.0.8.tgz",
+      "integrity": "sha512-7WxdR4+l+VL4QN/K6NdqRQg7+cbIka4By1+4eN8odMPySSTI5d6nrV8R+SSRt9MXeWVdWlW8RCX5Pk6L0oaRug==",
+      "dev": true,
+      "dependencies": {
+        "@types/yargs": "^17.0.1",
+        "app-builder-lib": "23.0.8",
+        "builder-util": "23.0.8",
+        "builder-util-runtime": "9.0.2",
+        "chalk": "^4.1.1",
+        "dmg-builder": "23.0.8",
+        "fs-extra": "^10.0.0",
+        "is-ci": "^3.0.0",
+        "lazy-val": "^1.0.5",
+        "read-config-file": "6.2.0",
+        "update-notifier": "^5.1.0",
+        "yargs": "^17.0.1"
+      },
+      "bin": {
+        "electron-builder": "cli.js",
+        "install-app-deps": "install-app-deps.js"
+      },
+      "engines": {
+        "node": ">=14.0.0"
+      }
+    },
+    "less": {
+      "versionDefault": "^4.1.2",
+      "version": "4.1.2",
+      "resolved": "https://registry.npmmirror.com/less/-/less-4.1.2.tgz",
+      "integrity": "sha512-EoQp/Et7OSOVu0aJknJOtlXZsnr8XE8KwuzTHOLeVSEx8pVWUICc8Q0VYRHgzyjX78nMEyC/oztWFbgyhtNfDA==",
+      "dev": true,
+      "dependencies": {
+        "copy-anything": "^2.0.1",
+        "parse-node-version": "^1.0.1",
+        "tslib": "^2.3.0"
+      },
+      "bin": {
+        "lessc": "bin/lessc"
+      },
+      "engines": {
+        "node": ">=6"
+      },
+      "optionalDependencies": {
+        "errno": "^0.1.1",
+        "graceful-fs": "^4.1.2",
+        "image-size": "~0.5.0",
+        "make-dir": "^2.1.0",
+        "mime": "^1.4.1",
+        "needle": "^2.5.2",
+        "source-map": "~0.6.0"
+      }
+    },
+    "naive-ui": {
+      "versionDefault": "^2.27.0",
+      "version": "2.28.2",
+      "resolved": "https://registry.npmmirror.com/naive-ui/-/naive-ui-2.28.2.tgz",
+      "integrity": "sha512-7vRmTZ+2L8Bo62FAfQHLiQPm4HO1u/sPo/4qy2Iy48UrtCh5FhoxbnCxQO+pRqVNafmnY8TDB+qJ3WiGGYmg1A==",
+      "dev": true,
+      "dependencies": {
+        "@css-render/plugin-bem": "^0.15.9",
+        "@css-render/vue3-ssr": "^0.15.9",
+        "@types/lodash": "^4.14.181",
+        "@types/lodash-es": "^4.17.6",
+        "async-validator": "^4.0.7",
+        "css-render": "^0.15.9",
+        "date-fns": "^2.28.0",
+        "date-fns-tz": "^1.3.3",
+        "evtd": "^0.2.3",
+        "highlight.js": "^11.5.0",
+        "lodash": "^4.17.21",
+        "lodash-es": "^4.17.21",
+        "seemly": "^0.3.3",
+        "treemate": "^0.3.11",
+        "vdirs": "^0.1.8",
+        "vfonts": "^0.0.3",
+        "vooks": "^0.2.12",
+        "vueuc": "^0.4.32"
+      },
+      "peerDependencies": {
+        "vue": "^3.0.0"
+      }
+    },
+    "node-fetch": {
+      "versionDefault": "^3.2.3",
+      "version": "3.2.3",
+      "resolved": "https://registry.npmmirror.com/node-fetch/-/node-fetch-3.2.3.tgz",
+      "integrity": "sha512-AXP18u4pidSZ1xYXRDPY/8jdv3RAozIt/WLNR/MBGZAz+xjtlr90RvCnsvHQRiXyWliZF/CpytExp32UU67/SA==",
+      "dev": true,
+      "dependencies": {
+        "data-uri-to-buffer": "^4.0.0",
+        "fetch-blob": "^3.1.4",
+        "formdata-polyfill": "^4.0.10"
+      },
+      "engines": {
+        "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+      }
+    },
+    "pinia": {
+      "versionDefault": "^2.0.13",
+      "version": "2.0.13",
+      "resolved": "https://registry.npmmirror.com/pinia/-/pinia-2.0.13.tgz",
+      "integrity": "sha512-B7rSqm1xNpwcPMnqns8/gVBfbbi7lWTByzS6aPZ4JOXSJD4Y531rZHDCoYWBwLyHY/8hWnXljgiXp6rRyrofcw==",
+      "dev": true,
+      "dependencies": {
+        "@vue/devtools-api": "^6.1.4",
+        "vue-demi": "*"
+      },
+      "peerDependencies": {
+        "@vue/composition-api": "^1.4.0",
+        "typescript": ">=4.4.4",
+        "vue": "^2.6.14 || ^3.2.0"
+      },
+      "peerDependenciesMeta": {
+        "@vue/composition-api": {
+          "optional": true
+        },
+        "typescript": {
+          "optional": true
+        }
+      }
+    },
+    "pinia-plugin-persistedstate": {
+      "versionDefault": "^1.5.1",
+      "version": "1.5.1",
+      "resolved": "https://registry.npmmirror.com/pinia-plugin-persistedstate/-/pinia-plugin-persistedstate-1.5.1.tgz",
+      "integrity": "sha512-X0jKWvA3kbpYe8RuIyLaZDEAFvsv3+QmBkMzInBHl0O57+eVJjswXHnIWeFAeFjktrE0cJbGHw2sBMgkcleySQ==",
+      "dev": true,
+      "peerDependencies": {
+        "pinia": "^2.0.0"
+      }
+    },
+    "ts-node": {
+      "versionDefault": "^10.7.0",
+      "version": "10.7.0",
+      "resolved": "https://registry.npmmirror.com/ts-node/-/ts-node-10.7.0.tgz",
+      "integrity": "sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==",
+      "dev": true,
+      "dependencies": {
+        "@cspotcode/source-map-support": "0.7.0",
+        "@tsconfig/node10": "^1.0.7",
+        "@tsconfig/node12": "^1.0.7",
+        "@tsconfig/node14": "^1.0.0",
+        "@tsconfig/node16": "^1.0.2",
+        "acorn": "^8.4.1",
+        "acorn-walk": "^8.1.1",
+        "arg": "^4.1.0",
+        "create-require": "^1.1.0",
+        "diff": "^4.0.1",
+        "make-error": "^1.1.1",
+        "v8-compile-cache-lib": "^3.0.0",
+        "yn": "3.1.1"
+      },
+      "bin": {
+        "ts-node": "dist/bin.js",
+        "ts-node-cwd": "dist/bin-cwd.js",
+        "ts-node-esm": "dist/bin-esm.js",
+        "ts-node-script": "dist/bin-script.js",
+        "ts-node-transpile-only": "dist/bin-transpile.js",
+        "ts-script": "dist/bin-script-deprecated.js"
+      },
+      "peerDependencies": {
+        "@swc/core": ">=1.2.50",
+        "@swc/wasm": ">=1.2.50",
+        "@types/node": "*",
+        "typescript": ">=2.7"
+      },
+      "peerDependenciesMeta": {
+        "@swc/core": {
+          "optional": true
+        },
+        "@swc/wasm": {
+          "optional": true
+        }
+      }
+    },
+    "typescript": {
+      "versionDefault": "^4.5.4",
+      "version": "4.6.3",
+      "resolved": "https://registry.npmmirror.com/typescript/-/typescript-4.6.3.tgz",
+      "integrity": "sha512-yNIatDa5iaofVozS/uQJEl3JRWLKKGJKh6Yaiv0GLGSuhpFJe7P3SbHZ8/yjAHRQwKRoA6YZqlfjXWmVzoVSMw==",
+      "dev": true,
+      "bin": {
+        "tsc": "bin/tsc",
+        "tsserver": "bin/tsserver"
+      },
+      "engines": {
+        "node": ">=4.2.0"
+      }
+    },
+    "unplugin-auto-import": {
+      "versionDefault": "^0.7.1",
+      "version": "0.7.1",
+      "resolved": "https://registry.npmmirror.com/unplugin-auto-import/-/unplugin-auto-import-0.7.1.tgz",
+      "integrity": "sha512-9865OV9eP99PNxHR2mtTDExeN01m4M9boT5U2BtIwsU1wDRsaFIYWLwcCBEjvXzXfTTC2NNMskhHGVAMfL2WgA==",
+      "dev": true,
+      "dependencies": {
+        "@antfu/utils": "^0.5.1",
+        "@rollup/pluginutils": "^4.2.0",
+        "local-pkg": "^0.4.1",
+        "magic-string": "^0.26.1",
+        "resolve": "^1.22.0",
+        "unplugin": "^0.6.1"
+      },
+      "engines": {
+        "node": ">=14"
+      },
+      "peerDependencies": {
+        "@vueuse/core": "*"
+      },
+      "peerDependenciesMeta": {
+        "@vueuse/core": {
+          "optional": true
+        }
+      }
+    },
+    "unplugin-vue-components": {
+      "versionDefault": "^0.19.3",
+      "version": "0.19.3",
+      "resolved": "https://registry.npmmirror.com/unplugin-vue-components/-/unplugin-vue-components-0.19.3.tgz",
+      "integrity": "sha512-z/kpYJnqrJuWglDNs7fy0YRHr41oLc07y2TkP3by6DqPb1GG9xGC9SFigeFwd4J7GVTqyFVsnjoeup7uK7I2dA==",
+      "dev": true,
+      "dependencies": {
+        "@antfu/utils": "^0.5.0",
+        "@rollup/pluginutils": "^4.2.0",
+        "chokidar": "^3.5.3",
+        "debug": "^4.3.4",
+        "fast-glob": "^3.2.11",
+        "local-pkg": "^0.4.1",
+        "magic-string": "^0.26.1",
+        "minimatch": "^5.0.1",
+        "resolve": "^1.22.0",
+        "unplugin": "^0.6.1"
+      },
+      "engines": {
+        "node": ">=14"
+      },
+      "peerDependencies": {
+        "@babel/parser": "^7.15.8",
+        "@babel/traverse": "^7.15.4",
+        "vue": "2 || 3"
+      },
+      "peerDependenciesMeta": {
+        "@babel/parser": {
+          "optional": true
+        },
+        "@babel/traverse": {
+          "optional": true
+        }
+      }
+    },
+    "vite": {
+      "versionDefault": "^2.7.10",
+      "version": "2.9.5",
+      "resolved": "https://registry.npmmirror.com/vite/-/vite-2.9.5.tgz",
+      "integrity": "sha512-dvMN64X2YEQgSXF1lYabKXw3BbN6e+BL67+P3Vy4MacnY+UzT1AfkHiioFSi9+uiDUiaDy7Ax/LQqivk6orilg==",
+      "dev": true,
+      "dependencies": {
+        "esbuild": "^0.14.27",
+        "postcss": "^8.4.12",
+        "resolve": "^1.22.0",
+        "rollup": "^2.59.0"
+      },
+      "bin": {
+        "vite": "bin/vite.js"
+      },
+      "engines": {
+        "node": ">=12.2.0"
+      },
+      "optionalDependencies": {
+        "fsevents": "~2.3.2"
+      },
+      "peerDependencies": {
+        "less": "*",
+        "sass": "*",
+        "stylus": "*"
+      },
+      "peerDependenciesMeta": {
+        "less": {
+          "optional": true
+        },
+        "sass": {
+          "optional": true
+        },
+        "stylus": {
+          "optional": true
+        }
+      }
+    },
+    "vite-plugin-esmodule": {
+      "versionDefault": "^1.2.5",
+      "version": "1.2.5",
+      "resolved": "https://registry.npmmirror.com/vite-plugin-esmodule/-/vite-plugin-esmodule-1.2.5.tgz",
+      "integrity": "sha512-dIAUOX4T6G3djQHWEWa+PJyRfcI+6jkhHBB2fIdsr/2D0mqSG7w74B2gfkEL9rnAml1golWF/BZUrfvEVWOq4Q==",
+      "dev": true,
+      "dependencies": {
+        "vite-plugin-optimizer": "^1.3.2",
+        "webpack": "^5.x.x"
+      }
+    },
+    "vite-plugin-resolve": {
+      "versionDefault": "^2.0.7",
+      "version": "2.0.7",
+      "resolved": "https://registry.npmmirror.com/vite-plugin-resolve/-/vite-plugin-resolve-2.0.7.tgz",
+      "integrity": "sha512-eJ7m801udC/pKpuPwkACtKeOlBvinS50q0KflKRYnIspbb9Q9zKAo2ItSgyImoAak3jbg7kivn/j+FFQD74VxA==",
+      "dev": true
+    },
+    "vite-plugin-windicss": {
+      "versionDefault": "^1.6.3",
+      "version": "1.8.4",
+      "resolved": "https://registry.npmmirror.com/vite-plugin-windicss/-/vite-plugin-windicss-1.8.4.tgz",
+      "integrity": "sha512-LSZAO8BZn3x406GRbYX5t5ONXXJVdqiQtN1qrznLA/Dy5/NzZVhfcrL6N1qEYYO7HsCDT4pLAjTzObvDnM9Y8A==",
+      "dev": true,
+      "dependencies": {
+        "@windicss/plugin-utils": "1.8.4",
+        "debug": "^4.3.4",
+        "kolorist": "^1.5.1",
+        "windicss": "^3.5.1"
+      },
+      "peerDependencies": {
+        "vite": "^2.0.1"
+      }
+    },
+    "vue": {
+      "versionDefault": "^3.2.26",
+      "version": "3.2.33",
+      "resolved": "https://registry.npmmirror.com/vue/-/vue-3.2.33.tgz",
+      "integrity": "sha512-si1ExAlDUrLSIg/V7D/GgA4twJwfsfgG+t9w10z38HhL/HA07132pUQ2KuwAo8qbCyMJ9e6OqrmWrOCr+jW7ZQ==",
+      "dev": true,
+      "dependencies": {
+        "@vue/compiler-dom": "3.2.33",
+        "@vue/compiler-sfc": "3.2.33",
+        "@vue/runtime-dom": "3.2.33",
+        "@vue/server-renderer": "3.2.33",
+        "@vue/shared": "3.2.33"
+      }
+    },
+    "vue-json-pretty": {
+      "versionDefault": "^2.0.6",
+      "version": "2.0.6",
+      "resolved": "https://registry.npmmirror.com/vue-json-pretty/-/vue-json-pretty-2.0.6.tgz",
+      "integrity": "sha512-aVdxw8ZRGR/Uj8GEaJ1/W2Ks/MdCfv5t2HRbbd+ICp3nL7msKRLN+1qOkSzaMvDygbDPxGhwUHBxZz8nxP+r3A==",
+      "dev": true,
+      "engines": {
+        "node": ">= 10.0.0",
+        "npm": ">= 5.0.0"
+      },
+      "peerDependencies": {
+        "vue": ">=3.0.0"
+      }
+    },
+    "vue-router": {
+      "versionDefault": "^4.0.14",
+      "version": "4.0.14",
+      "resolved": "https://registry.npmmirror.com/vue-router/-/vue-router-4.0.14.tgz",
+      "integrity": "sha512-wAO6zF9zxA3u+7AkMPqw9LjoUCjSxfFvINQj3E/DceTt6uEz1XZLraDhdg2EYmvVwTBSGlLYsUw8bDmx0754Mw==",
+      "dev": true,
+      "dependencies": {
+        "@vue/devtools-api": "^6.0.0"
+      },
+      "peerDependencies": {
+        "vue": "^3.2.0"
+      }
+    },
+    "vue-tsc": {
+      "versionDefault": "^0.34.10",
+      "version": "0.34.10",
+      "resolved": "https://registry.npmmirror.com/vue-tsc/-/vue-tsc-0.34.10.tgz",
+      "integrity": "sha512-rWU4SjDqk9ylQN2hbnyP+rEu8W2a712DWUmciX6rDnId1m8sN/cuypTKjWjHHjaBLWNKULoEakRTOvrQ4ainhw==",
+      "dev": true,
+      "dependencies": {
+        "@volar/vue-typescript": "0.34.10"
+      },
+      "bin": {
+        "vue-tsc": "bin/vue-tsc.js"
+      },
+      "peerDependencies": {
+        "typescript": "*"
+      }
+    },
+    "windicss": {
+      "versionDefault": "^3.4.3",
+      "version": "3.5.1",
+      "resolved": "https://registry.npmmirror.com/windicss/-/windicss-3.5.1.tgz",
+      "integrity": "sha512-E1hYZATcZFci/XhGS0sJAMRxULjnK+glNukE78Ku7xeb3jxgMY55fFOdIrav+GjQCsgR+IZxPq9/DwmO6eyc4Q==",
+      "dev": true,
+      "bin": {
+        "windicss": "cli/index.js"
+      },
+      "engines": {
+        "node": ">= 12"
+      }
+    }
+  }
+}

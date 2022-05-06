@@ -1,4 +1,4 @@
-import { app, ipcMain, dialog } from "electron"
+import { app, ipcMain } from "electron"
 
 import { DB } from "~/main/config"
 import { ConfigEnum } from '~/main/config/enum'
@@ -11,6 +11,7 @@ import { reconnectMongoDB } from "~/main/modules/db"
 import { getWeather } from "~/main/services/weather"
 import { getUser } from "~/main/services/user"
 import { getConfigsByGroup, setConfig } from '~/main/services/config'
+import { getPackageInfo } from "~/main/services/package"
 
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
@@ -165,6 +166,10 @@ async function messageInit() {
     catch(e) {
       return false
     }
+  })
+
+  ipcMain.handle('get-package-info', async(event, data) => {
+    return getPackageInfo()
   })
 }
 
