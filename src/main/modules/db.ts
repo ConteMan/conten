@@ -7,6 +7,8 @@ import { sendToRenderer } from '~/main/modules/message'
 import { Sequelize } from 'sequelize'
 
 import RequestCacheModel from '~/main/models/requestCache'
+import ConfigModel from '~/main/models/config'
+import { dbDefault } from '~/main/config/db'
 
 export async function dbInit() {
   // connectSqlite3()
@@ -82,4 +84,7 @@ export function connectSqlite3(dbPath: string = '') {
 
 async function sqlite3Init() {
   await RequestCacheModel.sync()
+  await ConfigModel.sync()
+
+  await dbDefault()
 }

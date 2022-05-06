@@ -1,76 +1,42 @@
 <template>
-  <div>
-    <div class="text-[14px] mb-4">
-      <span class="text-gray-400">[</span>
-      数据库
-      <span class="text-gray-400">]</span>
+  <div class="h-full w-full flex">
+    <div class="h-full w-[120px] pt-[112px] space-y-2 border-r border-gray-200">
+      <div
+        v-for="itemModule in modules"
+        :key="itemModule.code"
+        class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
+        :class="{ 'font-bold text-red-600': currentModule === itemModule.code }"
+        @click="() => data.currentModule = itemModule.code"
+      >
+        <span>
+          {{ itemModule.name }}
+        </span>
+      </div>
     </div>
-
-    <n-dynamic-input
-      v-model:value="database"
-      :on-create="onCreate"
-      :min="1"
-      :max="3"
-      show-sort-button
-    >
-      <template #default="{ value, index }">
-        <div class="flex items-center w-full">
-          <div class="w-[140px]" :class="{ 'text-red-400': index === 0}">MongoDB {{ `[ ${index + 1} ]` }} : </div>
-          <n-input size="small" v-model:value="value.url" type="text" />
-        </div>
-      </template>
-    </n-dynamic-input>
-  </div>
-
-  <div class="mt-8">
-    <n-button
-      class=""
-      size="tiny"
-      type="primary"
-      @click="onSave"> Save </n-button>
+  
+    <div class="h-full w-[calc(100%-120px)] p-4 pt-8">
+      <DBModule v-if="currentModule === 'db'" />
+      <WakaTimeModule v-if="currentModule === 'wakatime'" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { invokeToMain } from '@renderer/utils/ipcMessage'
+  import DBModule from './modules/DB.vue'
+  import WakaTimeModule from './modules/WakeTime.vue'
 
-interface dbItem {
-  url: string
-  selected: boolean
-}
-
-const data = reactive({
-  database: [{
-    selected: true,
-    url: '',
-  }] as dbItem[],
-}) 
-const { database } = toRefs(data)
-
-const getSetting = async() => {
-  const res = await invokeToMain('get-settings')
-  console.log(res)
-  data.database = res.db.mongodb
-}
-getSetting()
-
-const onCreate = () => {
-  return {
-    isSelected: false,
-    url: '',
-  }
-}
-
-watch(database, () => {
-  database.value.map((item, index) => {
-    item.selected = index === 0
+  const modules = [
+    {
+      name: '数据库',
+      code: 'db',
+    },
+    {
+      name: 'WakaTime',
+      code: 'wakatime',
+    }
+  ]
+  const data = reactive({
+    currentModule: 'db',
   })
-})
-
-const onSave = async() => {
-  const saveSetting = {
-    mongodb: toRaw(data.database),
-  }
-  await invokeToMain('save-settings', JSON.stringify(saveSetting))
-}
+  const { currentModule } = toRefs(data)
 </script>

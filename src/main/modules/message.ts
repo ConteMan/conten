@@ -10,6 +10,7 @@ import TestService from '~/main/services/test/test'
 import { reconnectMongoDB } from "~/main/modules/db"
 import { getWeather } from "~/main/services/weather"
 import { getUser } from "~/main/services/user"
+import { getConfigsByGroup, setConfig } from '~/main/services/config'
 
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
@@ -131,6 +132,39 @@ async function messageInit() {
 
   ipcMain.handle('get-weather', async(event, key) => {
     return await getWeather()
+  })
+
+  ipcMain.handle('get-configs', async(event, data) => {
+    try {
+      if (!isObject(data)) {
+        data = JSON.parse(data)
+      }
+      const { group_key } = data
+      return await getConfigsByGroup(group_key)
+    }
+    catch(e) {
+      return false
+    }
+  })
+
+  ipcMain.handle('save-configs', async(event, data) => {
+    try {
+      if (!isObject(data)) {
+        data = JSON.parse(data)
+      }
+      for (const item of data) {
+        const saveData = {
+          group_key: item.group_key,
+          key: item.key,
+          value: item.value,
+        }
+        await setConfig(saveData)
+      }
+      return true
+    }
+    catch(e) {
+      return false
+    }
   })
 }
 

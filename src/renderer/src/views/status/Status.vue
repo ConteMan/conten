@@ -1,5 +1,5 @@
 <template>
-  <div class="">    
+  <div class="p-4 pt-8">    
     <div class="group">
       <div class="text-[14px] mb-2">
         <span class="text-gray-400">[</span>

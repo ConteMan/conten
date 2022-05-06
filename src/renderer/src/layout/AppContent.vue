@@ -8,27 +8,26 @@
     :style="{ width: `${sideWidth}px`, 'min-width': `${sideWidth}px`, 'max-width': `${sideWidth}px` }"
   >
     <Dragbar />
-    <div class="mt-[100px]">
-      <div class="nav-container mt-4 flex flex-col items-end py-2 text-white font-bold space-y-3">
-        <template v-for="item in navList" :key="item.path">
-          <div
-            class="cursor-pointer text-gray-400 px-2 hover:(underline decoration-2 underline-offset-4)"
-            :class="{ active: $route.path === item.path }" @click="$router.push({ path: item.path })"
-          >
-            {{ item.name }}
-          </div>
-        </template>
+    <div class="mt-[80px]">
+      <div class="nav-container flex flex-col items-end space-y-2">
+        <div
+          v-for="item in navList" :key="item.path"
+          class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
+          :class="{ 'font-bold text-red-600': $route.path === item.path }"
+          @click="$router.push({ path: item.path })"
+        >
+          {{ item.name }}
+        </div>
       </div>
     </div>
   </div>
 
-  <div ref="resizeRef" class="flex-grow-0 flex justify-center w-[5px] cursor-col-resize">
-    <div class="drag-line h-full w-[1px]"></div>
+  <div ref="resizeRef" class="flex-grow-0 flex justify-center w-[1px] cursor-col-resize">
+    <div class="h-full w-[1px] bg-gray-200"></div>
   </div>
 
   <div class="flex-grow h-screen max-h-screen overflow-hidden">
-    <Dragbar />
-    <div class="h-[calc(100%-32px)] overflow-auto px-4">
+    <div class="h-full overflow-auto">
       <router-view v-slot="{ Component }">
         <keep-alive>
           <component :is="Component" v-if="$route.meta.keepAlive" />
@@ -56,10 +55,6 @@ const navList = [
     name: '设置',
     path: '/setting',
   },
-  {
-    name: '状态',
-    path: '/status',
-  }
 ]
 
 const resizeRef = ref<HTMLDivElement | null>(null)
@@ -138,12 +133,5 @@ watch(() => route.meta, (meta) => {
 }
 .cursor-col-resize-important {
   cursor: col-resize !important;
-}
-.active {
-  color: rgba(163, 0, 0);
-}
-.drag-line {
-  opacity: 0.5;
-  background-color: rgb(166, 166, 166);
 }
 </style>
