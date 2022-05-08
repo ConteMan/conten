@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="weatherData"
-    class="weather-card p-2 border border-gray-200"
+    class="weather-card p-2"
   >
     <div>
       <span class="font-bold cursor-pointer select-none" @click="changeShowDayWeather()">

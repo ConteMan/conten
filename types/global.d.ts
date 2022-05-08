@@ -1,4 +1,4 @@
-import type { BrowserWindow } from 'electron'
+import type { BrowserWindow, BrowserView } from 'electron'
 import type ElectronStore from 'electron-store'
 import type { MongoClient } from 'mongodb'
 import type { Sequelize } from 'sequelize/types'
@@ -8,6 +8,8 @@ import type { Socket } from 'net'
 
 declare global {
   var win: BrowserWindow | null
+  var wins: Record<string, BrowserWindow>
+  var views: Record<string, BrowserView>
   var store: Record<string, ElectronStore> | null
   var mongoClient: MongoClient | null
   var sequelize: Sequelize

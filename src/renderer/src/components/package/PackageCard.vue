@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="packageInfo"
-    class="package-card p-2 border border-gray-200"
+    class="package-card p-2"
   >
     <div
       class="font-semibold cursor-pointer select-none mb-2"

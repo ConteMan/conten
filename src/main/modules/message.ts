@@ -1,4 +1,4 @@
-import { app, ipcMain } from "electron"
+import { app, ipcMain, BrowserView } from "electron"
 
 import { DB } from "~/main/config"
 import { ConfigEnum } from '~/main/config/enum'
@@ -12,6 +12,7 @@ import { getWeather } from "~/main/services/weather"
 import { getUser } from "~/main/services/user"
 import { getConfigsByGroup, setConfig } from '~/main/services/config'
 import { getPackageInfo } from "~/main/services/package"
+import { viewWindowInit } from "~/main/modules/window"
 
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
@@ -170,6 +171,44 @@ async function messageInit() {
 
   ipcMain.handle('get-package-info', async(event, data) => {
     return getPackageInfo()
+  })
+
+  ipcMain.handle('init-view-window', async(event, data) => {
+    await viewWindowInit()
+  })
+
+  ipcMain.handle('get-view-cookie', async(event, data) => {
+    const cookies = await global.wins.view.getBrowserView()?.webContents.session.cookies.get({})
+    return cookies
+  })
+
+  ipcMain.handle('hide-view-window', async(event, data) => {
+    await global.wins.view.hide()
+    return true
+  })
+
+  ipcMain.handle('run-script-in-view-window', async(event, data) => {
+    try {
+      const script = `
+        fetch("https://api.juejin.cn/growth_api/v1/check_in", {
+          headers: {
+            cookie: document.cookie
+          },
+          method: 'POST',
+          credentials: 'include'
+        }).then(resp => resp.json())
+      `
+      const result = await global.wins.view.getBrowserView()?.webContents.executeJavaScript(script, true)
+      return result
+    }
+    catch(e) {
+      console.log('>>> run-script-in-view-window', e)
+      return false
+    }
+  })
+
+  ipcMain.on('run-script-in-view-window-reply', async(event, msg) => {
+    console.log('>>> run-script-in-view-window-reply: ', msg)
   })
 }
 
