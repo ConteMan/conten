@@ -14,6 +14,7 @@ import { getConfigsByGroup, setConfig } from '~/main/services/config'
 import { getPackageInfo } from "~/main/services/package"
 import { viewWindowInit } from "~/main/modules/window"
 import { execScript } from "~/main/services/juejin"
+import WakaTime from '~/main/services/wakatime'
 
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
@@ -192,8 +193,8 @@ async function messageInit() {
     return execScript()
   })
 
-  ipcMain.on('run-script-in-view-window-reply', async(event, msg) => {
-    console.log('>>> run-script-in-view-window-reply: ', msg)
+  ipcMain.handle('wakatime-summaries', async(event, msg) => {
+    return await WakaTime.getData()
   })
 }
 

@@ -26,6 +26,23 @@ async function getConfigsByGroup(group: string, mode: 'all' | 'value' = 'value')
   }
 }
 
+async function getConfigByKey(key: string = '') {
+  try {
+    if (!key)
+      return null
+
+    const config = await ConfigModel.findOne({
+      where: {
+        key,
+      }
+    })
+    return config?.toJSON()
+  }
+  catch(e) {
+    return null
+  }
+}
+
 async function setConfig(data: any) {
   try {
     const { group_key, key, value } = data
@@ -51,4 +68,4 @@ async function setConfig(data: any) {
   }
 }
 
-export { getConfigsByGroup, setConfig }
+export { getConfigsByGroup, getConfigByKey, setConfig }

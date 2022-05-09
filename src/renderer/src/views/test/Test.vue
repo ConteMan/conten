@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4">
+  <div class="px-4 pb-8">
     <div class="flex flex-col items-start">
       <div class="p-2"> System </div>
       <div class="space-x-2">
@@ -45,6 +45,12 @@
       <div class="p-2"> Weather </div>
       <div class="space-x-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-weather')">Get CMA Weather</span>
+      </div>
+    </div>
+    <div class="flex flex-col items-start mt-4">
+      <div class="p-2"> WakaTime </div>
+      <div class="space-x-2">
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('wakatime-summaries')">Summaries</span>
       </div>
     </div>
   </div>
