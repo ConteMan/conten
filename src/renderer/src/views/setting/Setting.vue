@@ -1,10 +1,10 @@
 <template>
   <div class="h-full w-full flex">
-    <div class="h-full w-[120px] pt-[112px] space-y-2 border-r border-gray-200">
+    <div class="h-full w-[120px] pt-[80px] space-y-2">
       <div
         v-for="itemModule in modules"
         :key="itemModule.code"
-        class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
+        class="px-2 cursor-pointer text-left hover:(underline decoration-2 underline-offset-4)"
         :class="{ 'font-bold text-red-600': currentModule === itemModule.code }"
         @click="() => data.currentModule = itemModule.code"
       >
@@ -14,7 +14,7 @@
       </div>
     </div>
   
-    <div class="h-full w-[calc(100%-120px)] p-4 pt-8">
+    <div class="h-full w-[calc(100%-120px)] p-4">
       <DBModule v-if="currentModule === 'db'" />
       <WakaTimeModule v-if="currentModule === 'wakatime'" />
     </div>

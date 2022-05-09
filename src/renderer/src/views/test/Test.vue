@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 pt-8">
+  <div class="px-4">
     <div class="flex flex-col items-start">
       <div class="p-2"> System </div>
       <div class="space-x-2">

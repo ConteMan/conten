@@ -22,7 +22,7 @@
     </n-dynamic-input>
   </div>
 
-  <div class="mt-8">
+  <div class="fixed bottom-0 py-4">
     <n-button
       class=""
       size="tiny"

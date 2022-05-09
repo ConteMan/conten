@@ -27,8 +27,9 @@
   </div>
 
   <div class="flex-grow h-screen max-h-screen overflow-hidden">
-    <div class="h-full overflow-auto">
-      <router-view v-slot="{ Component }">
+    <div class="h-full flex flex-col">
+      <Dragbar class="h-[32px] flex-grow-0 flex-shrink-0" />
+      <router-view v-slot="{ Component }" class="flex-grow flex-shrink overflow-auto">
         <keep-alive>
           <component :is="Component" v-if="$route.meta.keepAlive" />
         </keep-alive>

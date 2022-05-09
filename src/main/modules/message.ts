@@ -13,6 +13,7 @@ import { getUser } from "~/main/services/user"
 import { getConfigsByGroup, setConfig } from '~/main/services/config'
 import { getPackageInfo } from "~/main/services/package"
 import { viewWindowInit } from "~/main/modules/window"
+import { execScript } from "~/main/services/juejin"
 
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
@@ -183,28 +184,12 @@ async function messageInit() {
   })
 
   ipcMain.handle('hide-view-window', async(event, data) => {
-    await global.wins.view.hide()
+    global.wins.view.isVisible() ? global.wins.view.hide() : global.wins.view.show()
     return true
   })
 
   ipcMain.handle('run-script-in-view-window', async(event, data) => {
-    try {
-      const script = `
-        fetch("https://api.juejin.cn/growth_api/v1/check_in", {
-          headers: {
-            cookie: document.cookie
-          },
-          method: 'POST',
-          credentials: 'include'
-        }).then(resp => resp.json())
-      `
-      const result = await global.wins.view.getBrowserView()?.webContents.executeJavaScript(script, true)
-      return result
-    }
-    catch(e) {
-      console.log('>>> run-script-in-view-window', e)
-      return false
-    }
+    return execScript()
   })
 
   ipcMain.on('run-script-in-view-window-reply', async(event, msg) => {
