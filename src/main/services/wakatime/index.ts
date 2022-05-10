@@ -42,12 +42,10 @@ class WakaTime {
     }
 
     const data = await this.getData(range)
-    console.log(`>>> WakaTime.getDataByCache data: ${data}`)
     if (!data)
       return null
 
     const cacheRes = await RequestCache.set(cacheName, data as object, expired)
-    console.log(`>>> WakaTime.getDataByCache: ${cacheRes}`)
     return cacheRes
   }
 }

@@ -6,8 +6,8 @@
   "author": "ConteMan <real.conteman@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "node scripts/package.mjs && node scripts/watch.mjs",
-    "build": "node scripts/package.mjs && vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder"
+    "dev": "npm install && node scripts/package.mjs && node scripts/watch.mjs",
+    "build": "npm install && node scripts/package.mjs && vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder"
   },
   "engines": {
     "node": ">=14.17.0"

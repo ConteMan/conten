@@ -42,11 +42,11 @@ async function deal() {
 
     const formatDataPath = path.join(path.resolve(), 'src/main/config/packageInfo.json')
 
-    await fs.writeJSON(formatDataPath, formatData, { spaces: 2 })
+    await fs.writeJSON(formatDataPath, formatData, { spaces: 2 }) // 覆盖写入
   }
   catch(e) {
     console.log(`script > package > deal > error: ${e}`)
   }
 }
 
-deal()
+await deal()
