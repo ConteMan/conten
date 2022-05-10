@@ -17,7 +17,7 @@
           <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('init-view-window')">Init View Window</span>
           <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-view-cookie')">Get View Cookie</span>
           <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('hide-view-window')">Show/Hide View Window</span>
-          <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('run-script-in-view-window')">Run Script View Window</span>
+          <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('juejin-checkin')">Run Script View Window - Juejin Check In</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">
@@ -70,7 +70,16 @@ window.ipcRenderer.on('indexMsg', (event, arg) => {
 })
 
 const invoke = async(command: string, key: any = '') => {
-    window.ipcRenderer.invoke(command, key).then(res => {
+  window.ipcRenderer.invoke(command, key).then(res => {
+    console.log(res)
+  })
+}
+
+const invokeApi = async(name: string, data: object = {}) => {
+  window.ipcRenderer.invoke('api', {
+    name,
+    data
+  }).then(res => {
     console.log(res)
   })
 }

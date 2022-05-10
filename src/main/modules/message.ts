@@ -13,7 +13,7 @@ import { getUser } from "~/main/services/user"
 import { getConfigsByGroup, setConfig } from '~/main/services/config'
 import { getPackageInfo } from "~/main/services/package"
 import { viewWindowInit } from "~/main/modules/window"
-import { execScript } from "~/main/services/juejin"
+import { checkIn as JuejinCheckIn } from "~/main/services/juejin"
 import WakaTime from '~/main/services/wakatime'
 
 function sendToRenderer(type: string, data: any) {
@@ -189,10 +189,6 @@ async function messageInit() {
     return true
   })
 
-  ipcMain.handle('run-script-in-view-window', async(event, data) => {
-    return execScript()
-  })
-
   ipcMain.handle('wakatime-summaries', async(event, msg) => {
     return await WakaTime.getData()
   })
@@ -203,6 +199,9 @@ async function messageInit() {
       case 'wakatime-summaries': {
         const { range } = apiData
         return await WakaTime.getDataByCache(range ?? undefined)
+      }
+      case 'juejin-checkin': {
+        return await JuejinCheckIn()
       }
       default:
         break

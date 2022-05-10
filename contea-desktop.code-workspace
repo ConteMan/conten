@@ -2,20 +2,8 @@
 	"folders": [
 		{
 			"path": "."
-		}
+		},
 	],
 	"settings": {
-		"cSpell.words": [
-			"asar",
-			"datasources",
-			"Dragbar",
-			"esmodule",
-			"icns",
-			"juejin",
-			"nsis",
-			"persistedstate",
-			"TINYINT",
-			"togglefullscreen"
-		]
 	}
 }
