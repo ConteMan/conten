@@ -6,15 +6,40 @@ const Info = global.sequelize?.define('info', {
     primaryKey: true,
     autoIncrement: true
   },
-
-  type_name: {
+  platform: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+  },
+  platform_type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  slug: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  data_origin: {
+    type: DataTypes.TEXT,
   },
   data: {
     type: DataTypes.JSON,
+  },
+  is_public: {
+    type: DataTypes.TINYINT,
+    defaultValue: 0,
+  },
+  info_at: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.TINYINT,
+    allowNull: false,
+    defaultValue: 1,
   }
 }, {
+  tableName: 'infos',
+
   createdAt: 'created_at',
   updatedAt: 'updated_at',
 

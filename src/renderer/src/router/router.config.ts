@@ -1,5 +1,4 @@
 import type { RouteRecordRaw } from 'vue-router'
-import LayoutBase from '../layout/Base.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -24,11 +23,5 @@ export const routes: Array<RouteRecordRaw> = [
     name: 'Setting',
     component: () => import('../views/setting/Setting.vue'),
     meta: { title: '', keepAlive: false },
-  },
-  {
-    path: '/status',
-    name: 'Status',
-    component: () => import('../views/status/Status.vue'),
-    meta: { title: '', keepAlive: true },
   },
 ]

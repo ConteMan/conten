@@ -10,9 +10,10 @@ import RequestCacheModel from '~/main/models/requestCache'
 import ConfigModel from '~/main/models/config'
 import { dbDefault } from '~/main/config/db'
 
+/**
+ * 数据库初始化
+ */
 export async function dbInit() {
-  // connectSqlite3()
-  // connectMongoDB()
   await sqlite3Init()
   return true
 }
@@ -82,9 +83,12 @@ export function connectSqlite3(dbPath: string = '') {
   }
 }
 
+/**
+ * SQLite3 初始化
+ */
 async function sqlite3Init() {
   await RequestCacheModel.sync()
   await ConfigModel.sync()
 
-  await dbDefault()
+  await dbDefault() // 配置文件同步到 SQLite3 数据库
 }

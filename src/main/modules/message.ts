@@ -1,4 +1,4 @@
-import { app, ipcMain, BrowserView } from "electron"
+import { app, ipcMain } from "electron"
 
 import { DB } from "~/main/config"
 import { ConfigEnum } from '~/main/config/enum'
@@ -6,16 +6,20 @@ import { start as koaStart, stop as koaStop } from "~/main/server/koa"
 import { getStatus } from "~/main/services/status"
 import { getStoreDetail } from "~/main/store"
 import { isObject } from "~/main/utils"
-import TestService from '~/main/services/test/test'
 import { reconnectMongoDB } from "~/main/modules/db"
 import { getWeather } from "~/main/services/weather"
-import { getUser } from "~/main/services/user"
 import { getConfigsByGroup, setConfig } from '~/main/services/config'
 import { getPackageInfo } from "~/main/services/package"
 import { viewWindowInit } from "~/main/modules/window"
 import { checkIn as JuejinCheckIn } from "~/main/services/juejin"
+
 import WakaTime from '~/main/services/wakatime'
 
+/**
+ * 向渲染层发送消息
+ * @param type - 消息类型
+ * @param data - 消息数据
+ */
 function sendToRenderer(type: string, data: any) {
   console.log('sendToRenderer: ', type, data)
   const message = {
@@ -25,11 +29,11 @@ function sendToRenderer(type: string, data: any) {
   global.win?.webContents.send('message', message)
 }
 
+/**
+ * 消息监听服务初始化
+ */
 async function messageInit() {
-  // 消息监听
   ipcMain.on('indexMsg', async(event, msg) => {
-    console.log('indexMsg: ', msg)
-    
     if (msg) {
       const { type, data } = msg
       switch (type) {
@@ -53,11 +57,6 @@ async function messageInit() {
           const dragBarPressed = data
           console.log('dragBarPressed:', dragBarPressed)
           break
-        }
-        case 'get-user': {
-          const data = await TestService.getUser()
-          event.reply('indexMsg', { type: 'get-user', data })
-          break;
         }
         default:
           break
@@ -110,28 +109,6 @@ async function messageInit() {
 
   ipcMain.handle('get-settings', async(event, key) => {
     return await getStoreDetail()
-  })
-
-  ipcMain.handle('sqlite3', async() => {
-    try {
-      const user = await getUser()
-      return user
-    }
-    catch(e) {
-      console.log('sqlite3: ', e)
-    }
-    return false
-  })
-
-  ipcMain.handle('sqlite3-create', async() => {
-    try {
-      return true
-    }
-    catch(e) {
-      console.log('sqlite3-create: ', e)
-    }
-    sendToRenderer('error', `sqlite3-create 保存失败`)
-    return false
   })
 
   ipcMain.handle('get-weather', async(event, key) => {
