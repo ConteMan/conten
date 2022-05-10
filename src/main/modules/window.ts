@@ -3,10 +3,12 @@ import { app, BrowserWindow, BrowserView } from 'electron'
 
 import type { ConfigDetail } from '~/main/config'
 import { getStore } from '~/main/store'
-import { execScript } from '../services/juejin'
 
 global.win = null
 
+/**
+ * 初始化主窗口
+ */
 export async function windowInit() {
   const configStore = getStore()
   if (!configStore)
@@ -71,7 +73,12 @@ export async function windowInit() {
   }
 }
 
-export async function viewWindowInit(show: boolean = false) {
+/**
+ * 初始化 BrowserView 窗口
+ * @param url - 窗口加载的 url
+ * @param show - 是否显示
+ */
+export async function viewWindowInit(url: string = '', show: boolean = false) {
   if (global.wins?.view) {
     global.wins['view'].show()
     return true
@@ -114,7 +121,7 @@ export async function viewWindowInit(show: boolean = false) {
     ...global.wins,
   }
   
-  await viewWinBrowserView()
+  await viewWinBrowserView(url)
 
   if (show) {
     viewWin.once('ready-to-show', () => {
@@ -123,7 +130,15 @@ export async function viewWindowInit(show: boolean = false) {
   }
 }
 
-export async function viewWinBrowserView(url: string = 'https://juejin.cn', showWin: boolean = false) {
+/**
+ * BrowserView 附加到窗口
+ * @param url - BrowserView 加载的 url
+ * @param showWin - 是否显示窗口
+ */
+export async function viewWinBrowserView(url: string = '', showWin: boolean = false) {
+  if (!url)
+    return false
+
   const viewWin = global.wins['view']
   const configStore = getStore()
   if (!configStore)
@@ -146,7 +161,4 @@ export async function viewWinBrowserView(url: string = 'https://juejin.cn', show
   
   if (showWin)
     viewWin.show()
-
-  // const scriptRes = await execScript()
-  // console.log('>>> scriptRes', scriptRes)
 }

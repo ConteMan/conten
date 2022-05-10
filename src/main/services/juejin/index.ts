@@ -5,7 +5,8 @@ async function execScript(scriptStr: string = '') {
     if (!scriptStr)
       return false
     
-    await viewWindowInit()
+    const url = 'https://juejin.cn'
+    await viewWindowInit(url)
     return await global.wins.view.getBrowserView()?.webContents.executeJavaScript(scriptStr, true)
   }
   catch(e) {
