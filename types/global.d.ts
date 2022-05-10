@@ -1,10 +1,12 @@
-import type { BrowserWindow, BrowserView } from 'electron'
+/* eslint-disable no-var,vars-on-top */
+
+import type http from 'http'
+import type { Socket } from 'net'
+import type { BrowserView, BrowserWindow } from 'electron'
 import type ElectronStore from 'electron-store'
 import type { MongoClient } from 'mongodb'
 import type { Sequelize } from 'sequelize/types'
 import type koa from 'koa'
-import type http from 'http'
-import type { Socket } from 'net'
 
 declare global {
   var win: BrowserWindow | null

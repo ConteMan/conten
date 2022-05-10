@@ -15,11 +15,11 @@ export default defineConfig({
         find: '~/',
         replacement: `${r('src')}/`,
       },
-    ]
+    ],
   },
   plugins: [
     esmodule([
-      'node-fetch'
+      'node-fetch',
     ]),
   ],
   build: {

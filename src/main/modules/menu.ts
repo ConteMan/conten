@@ -1,4 +1,4 @@
-import { app, Menu } from 'electron'
+import { Menu, app } from 'electron'
 
 export function menuInit() {
   const isMac = process.platform === 'darwin'
@@ -29,24 +29,26 @@ export function menuInit() {
           { role: 'cut' },
           { role: 'copy' },
           { role: 'paste' },
-          ...(isMac ? [
-            { role: 'pasteAndMatchStyle' },
-            { role: 'delete' },
-            { role: 'selectAll' },
-            { type: 'separator' },
-            {
-              label: 'Speech',
-              submenu: [
-                { role: 'startSpeaking' },
-                { role: 'stopSpeaking' }
+          ...(isMac
+            ? [
+                { role: 'pasteAndMatchStyle' },
+                { role: 'delete' },
+                { role: 'selectAll' },
+                { type: 'separator' },
+                {
+                  label: 'Speech',
+                  submenu: [
+                    { role: 'startSpeaking' },
+                    { role: 'stopSpeaking' },
+                  ],
+                },
               ]
-            }
-          ] : [
-            { role: 'delete' },
-            { type: 'separator' },
-            { role: 'selectAll' }
-          ])
-        ]
+            : [
+                { role: 'delete' },
+                { type: 'separator' },
+                { role: 'selectAll' },
+              ]),
+        ],
       },
       {
         label: 'View',
@@ -59,26 +61,28 @@ export function menuInit() {
           { role: 'zoomIn' },
           { role: 'zoomOut' },
           { type: 'separator' },
-          { role: 'togglefullscreen' }
-        ]
+          { role: 'togglefullscreen' },
+        ],
       },
       {
         label: 'Window',
         submenu: [
           { role: 'minimize' },
           { role: 'zoom' },
-          ...(isMac ? [
-            { type: 'separator' },
-            { role: 'front' },
-            { type: 'separator' },
-            { role: 'window' }
-          ] : [
-            { role: 'close' }
-          ])
-        ]
+          ...(isMac
+            ? [
+                { type: 'separator' },
+                { role: 'front' },
+                { type: 'separator' },
+                { role: 'window' },
+              ]
+            : [
+                { role: 'close' },
+              ]),
+        ],
       },
     ]
-  
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(template as any))
   }
 }

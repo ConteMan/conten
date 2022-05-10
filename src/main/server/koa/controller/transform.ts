@@ -2,10 +2,10 @@ import * as cheerio from 'cheerio'
 
 async function transform(data: any) {
   const { module } = data
-  
+
   if (module === 'v2ex')
     return v2ex(data)
-  
+
   return {}
 }
 

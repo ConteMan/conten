@@ -1,15 +1,16 @@
 import { viewWindowInit } from '~/main/modules/window'
 
-async function execScript(scriptStr: string = '') {
+async function execScript(scriptStr = '') {
   try {
     if (!scriptStr)
       return false
-    
+
     const url = 'https://juejin.cn'
     await viewWindowInit(url)
     return await global.wins.view.getBrowserView()?.webContents.executeJavaScript(scriptStr, true)
   }
-  catch(e) {
+  catch (e) {
+    // eslint-disable-next-line no-console
     console.log('>>> run-script-in-view-window', e)
     return false
   }
@@ -19,16 +20,17 @@ async function execScript(scriptStr: string = '') {
  * 签到
  */
 async function checkIn() {
-  const scriptStr =  `
-    fetch("https://api.juejin.cn/growth_api/v1/check_in", {
+  const checkIn = () => {
+    fetch('https://api.juejin.cn/growth_api/v1/check_in', {
       headers: {
-        cookie: document.cookie
+        cookie: document.cookie,
       },
       method: 'POST',
-      credentials: 'include'
+      credentials: 'include',
     }).then(resp => resp.json())
-  `
-  return await execScript(scriptStr)
+  }
+
+  return await execScript(checkIn.toString())
 }
 
 export { execScript, checkIn }

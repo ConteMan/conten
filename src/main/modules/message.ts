@@ -1,17 +1,16 @@
-import { app, ipcMain } from "electron"
+import { app, ipcMain } from 'electron'
 
-import { DB } from "~/main/config"
+import type { DB } from '~/main/config'
 import { ConfigEnum } from '~/main/config/enum'
-import { start as koaStart, stop as koaStop } from "~/main/server/koa"
-import { getStatus } from "~/main/services/status"
-import { getStoreDetail } from "~/main/store"
-import { isObject } from "~/main/utils"
-import { reconnectMongoDB } from "~/main/modules/db"
-import { getWeather } from "~/main/services/weather"
+import { start as koaStart, stop as koaStop } from '~/main/server/koa'
+import { getStoreDetail } from '~/main/store'
+import { isObject } from '~/main/utils'
+import { reconnectMongoDB } from '~/main/modules/db'
+import { getWeather } from '~/main/services/weather'
 import { getConfigsByGroup, setConfig } from '~/main/services/config'
-import { getPackageInfo } from "~/main/services/package"
-import { viewWindowInit } from "~/main/modules/window"
-import { checkIn as JuejinCheckIn } from "~/main/services/juejin"
+import { getPackageInfo } from '~/main/services/package'
+import { viewWindowInit } from '~/main/modules/window'
+import { checkIn as JuejinCheckIn } from '~/main/services/juejin'
 
 import WakaTime from '~/main/services/wakatime'
 
@@ -21,7 +20,6 @@ import WakaTime from '~/main/services/wakatime'
  * @param data - 消息数据
  */
 function sendToRenderer(type: string, data: any) {
-  console.log('sendToRenderer: ', type, data)
   const message = {
     type,
     data,
@@ -33,7 +31,7 @@ function sendToRenderer(type: string, data: any) {
  * 消息监听服务初始化
  */
 async function messageInit() {
-  ipcMain.on('indexMsg', async(event, msg) => {
+  ipcMain.on('indexMsg', async (event, msg) => {
     if (msg) {
       const { type, data } = msg
       switch (type) {
@@ -55,6 +53,7 @@ async function messageInit() {
         }
         case 'drag-bar-pressed': {
           const dragBarPressed = data
+          // eslint-disable-next-line no-console
           console.log('dragBarPressed:', dragBarPressed)
           break
         }
@@ -64,75 +63,70 @@ async function messageInit() {
     }
   })
 
-  ipcMain.handle('getStore', async(event, key) => {
+  ipcMain.handle('getStore', async () => {
     return await global.store?.[ConfigEnum.DEFAULT_NAME].store
   })
 
-  ipcMain.handle('getStorePath', (event, key) => {
+  ipcMain.handle('getStorePath', () => {
     return global.store?.[ConfigEnum.DEFAULT_NAME]?.path
   })
 
-  ipcMain.handle('pin-top', async(event, key) => {
+  ipcMain.handle('pin-top', async () => {
     const isTop = global.win?.isAlwaysOnTop()
     await global.win?.setAlwaysOnTop(!isTop)
     return global.win?.isAlwaysOnTop()
   })
 
-  ipcMain.handle('get-status', async() => {
-    return await getStatus()
-  })
-
-  ipcMain.handle('save-settings', async(event, data) => {
+  ipcMain.handle('save-settings', async (event, data) => {
     try {
-      if (!isObject(data)) {
+      if (!isObject(data))
         data = JSON.parse(data)
-      }
+
       const newDBUrl = data.mongodb?.[0].url
       if (newDBUrl) {
         const oldSetting = global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb') as DB[]
         const oldUrl = oldSetting ? oldSetting?.find((item: any) => item.selected)?.url : ''
         await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb', data.mongodb)
-        if (newDBUrl !== oldUrl) {
+        if (newDBUrl !== oldUrl)
           await reconnectMongoDB()
-        }
-        sendToRenderer('success', `保存成功`)
+
+        sendToRenderer('success', '保存成功')
         return true
       }
       return false
     }
-    catch(e) {
-      console.log(e)
-      sendToRenderer('error', `保存失败`)
+    catch (e) {
+      sendToRenderer('error', '保存失败')
     }
     return true
   })
 
-  ipcMain.handle('get-settings', async(event, key) => {
+  ipcMain.handle('get-settings', async () => {
     return await getStoreDetail()
   })
 
-  ipcMain.handle('get-weather', async(event, key) => {
+  ipcMain.handle('get-weather', async () => {
     return await getWeather()
   })
 
-  ipcMain.handle('get-configs', async(event, data) => {
+  ipcMain.handle('get-configs', async (event, data) => {
     try {
-      if (!isObject(data)) {
+      if (!isObject(data))
         data = JSON.parse(data)
-      }
+
       const { group_key } = data
       return await getConfigsByGroup(group_key)
     }
-    catch(e) {
+    catch (e) {
       return false
     }
   })
 
-  ipcMain.handle('save-configs', async(event, data) => {
+  ipcMain.handle('save-configs', async (event, data) => {
     try {
-      if (!isObject(data)) {
+      if (!isObject(data))
         data = JSON.parse(data)
-      }
+
       for (const item of data) {
         const saveData = {
           group_key: item.group_key,
@@ -143,34 +137,34 @@ async function messageInit() {
       }
       return true
     }
-    catch(e) {
+    catch (e) {
       return false
     }
   })
 
-  ipcMain.handle('get-package-info', async(event, data) => {
+  ipcMain.handle('get-package-info', async () => {
     return getPackageInfo()
   })
 
-  ipcMain.handle('init-view-window', async(event, data) => {
+  ipcMain.handle('init-view-window', async () => {
     await viewWindowInit()
   })
 
-  ipcMain.handle('get-view-cookie', async(event, data) => {
+  ipcMain.handle('get-view-cookie', async () => {
     const cookies = await global.wins.view.getBrowserView()?.webContents.session.cookies.get({})
     return cookies
   })
 
-  ipcMain.handle('hide-view-window', async(event, data) => {
+  ipcMain.handle('hide-view-window', async () => {
     global.wins.view.isVisible() ? global.wins.view.hide() : global.wins.view.show()
     return true
   })
 
-  ipcMain.handle('wakatime-summaries', async(event, msg) => {
+  ipcMain.handle('wakatime-summaries', async () => {
     return await WakaTime.getData()
   })
 
-  ipcMain.handle('api', async(event, data) => {
+  ipcMain.handle('api', async (event, data) => {
     const { name, data: apiData } = data
     switch (name) {
       case 'wakatime-summaries': {

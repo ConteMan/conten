@@ -1,13 +1,13 @@
 import { join, resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import pkg from '../package.json'
 
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 import WindiCSS from 'vite-plugin-windicss'
+import pkg from '../package.json'
 import windiConfig from './windi.config'
 
 export const r = (...args: string[]) => resolve(__dirname, '..', ...args)
@@ -32,7 +32,7 @@ export default defineConfig({
       ],
       // generate `components.d.ts` for ts support with Volar
       dts: true,
-      resolvers: [ NaiveUiResolver() ]
+      resolvers: [NaiveUiResolver()],
     }),
 
     AutoImport({

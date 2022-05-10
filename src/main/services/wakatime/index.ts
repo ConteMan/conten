@@ -11,7 +11,7 @@ class WakaTime {
     this.name = 'wakatime'
   }
 
-  async getData(range: string = 'Today') {
+  async getData(range = 'Today') {
     const wakatimeApiKey = await getConfigByKey(this.apiKeyConfigName)
     if (!wakatimeApiKey)
       return null
@@ -23,17 +23,17 @@ class WakaTime {
       })
       return await res.json()
     }
-    catch(e) {
+    catch (e) {
       return false
     }
   }
 
   /**
    * Get data by cache
-   * @param range 
-   * @param refresh 
+   * @param range
+   * @param refresh
    */
-  async getDataByCache(range: string = 'Today', refresh: boolean = false, expired: number = 3600) {
+  async getDataByCache(range = 'Today', refresh = false, expired = 3600) {
     const cacheName = `${this.name}-data-${range}`
     if (!refresh) {
       const cache = await RequestCache.get(cacheName)

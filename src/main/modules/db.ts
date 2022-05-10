@@ -1,10 +1,10 @@
-import type { DB } from '~/main/config'
-import { app } from 'electron'
 import path from 'path'
+import { app } from 'electron'
 import { MongoClient } from 'mongodb'
+import { Sequelize } from 'sequelize'
+import type { DB } from '~/main/config'
 import { getStore } from '~/main/store'
 import { sendToRenderer } from '~/main/modules/message'
-import { Sequelize } from 'sequelize'
 
 import RequestCacheModel from '~/main/models/requestCache'
 import ConfigModel from '~/main/models/config'
@@ -18,7 +18,7 @@ export async function dbInit() {
   return true
 }
 
-export async function connectMongoDB(url: string = '') {
+export async function connectMongoDB(url = '') {
   const store = getStore()
   if (!store) {
     sendToRenderer('error', 'NO AVAILABLE DB 1')
@@ -37,10 +37,13 @@ export async function connectMongoDB(url: string = '') {
     return false
   }
   try {
-    global.mongoClient = new MongoClient(url);
+    global.mongoClient = new MongoClient(url)
     global.mongoClient.connect()
+
+    // eslint-disable-next-line no-console
     console.log('Connected to MongoDB!')
-  } catch (error) {
+  }
+  catch (error) {
     sendToRenderer('error', error)
     return false
   }
@@ -58,26 +61,27 @@ export async function reconnectMongoDB() {
     sendToRenderer('success', 'Reconnected to MongoDB!')
     return true
   }
-  catch(e) {
+  catch (e) {
     sendToRenderer('error', e)
     return false
   }
 }
 
-export function connectSqlite3(dbPath: string = '') {
+export function connectSqlite3(dbPath = '') {
   try {
-    if(!dbPath)
+    if (!dbPath)
       dbPath = path.join(app.getPath('userData'), 'sqlite3.db')
-    
+
     const sequelize = new Sequelize({
       dialect: 'sqlite',
       storage: dbPath,
-    });
-    
+    })
+
     global.sequelize = sequelize
     return true
   }
-  catch(e) {
+  catch (e) {
+    // eslint-disable-next-line no-console
     console.log('connectSqlite3', e)
     return false
   }

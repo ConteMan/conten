@@ -1,7 +1,5 @@
 import { DataTypes } from 'sequelize'
 
-console.log('>>> model config')
-
 const Config = global.sequelize?.define('config', {
   name: {
     type: DataTypes.STRING,
@@ -32,7 +30,7 @@ const Config = global.sequelize?.define('config', {
     type: DataTypes.TINYINT,
     allowNull: false,
     defaultValue: 1,
-  }
+  },
 }, {
   tableName: 'configs',
 
@@ -41,6 +39,6 @@ const Config = global.sequelize?.define('config', {
 
   paranoid: true,
   deletedAt: 'deleted_at',
-});
+})
 
 export default Config

@@ -1,4 +1,4 @@
-import Router from "@koa/router"
+import Router from '@koa/router'
 import { transform } from '../controller/transform'
 import { status } from '../controller/status'
 
@@ -8,7 +8,7 @@ function logToRender(data: any) {
 
 const router = new Router()
 
-router.post('/transform', async (ctx, next) => {
+router.post('/transform', async (ctx) => {
   const res = await transform(ctx.request.body)
   logToRender({ res })
   ctx.body = res

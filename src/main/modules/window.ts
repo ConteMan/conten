@@ -1,5 +1,5 @@
 import path from 'path'
-import { app, BrowserWindow, BrowserView } from 'electron'
+import { BrowserView, BrowserWindow, app } from 'electron'
 
 import type { ConfigDetail } from '~/main/config'
 import { getStore } from '~/main/store'
@@ -23,9 +23,9 @@ export async function windowInit() {
     y,
     width,
     height,
-    frame: false, //无框
-    transparent: false, //透明
-    titleBarStyle: 'customButtonsOnHover', //自定义按钮，鼠标悬浮展示
+    frame: false, // 无框
+    transparent: false, // 透明
+    titleBarStyle: 'customButtonsOnHover', // 自定义按钮，鼠标悬浮展示
     trafficLightPosition: {
       x: 16,
       y: 8,
@@ -38,20 +38,18 @@ export async function windowInit() {
     },
   })
 
-  if (process.platform === 'darwin') {
+  if (process.platform === 'darwin')
     app.dock.setIcon(path.join(__dirname, '../public/images/logo_32.png'))
-  }
 
   win.once('ready-to-show', () => {
     win?.show()
   })
 
-  function setWinBounds () {
+  function setWinBounds() {
     const configStore = getStore()
     const bounds = win?.getBounds()
-    if (bounds && configStore) {
+    if (bounds && configStore)
       configStore.set('win.bounds', bounds)
-    }
   }
 
   win.on('resized', () => {
@@ -64,7 +62,8 @@ export async function windowInit() {
 
   if (app.isPackaged) {
     win.loadFile(path.join(__dirname, '../renderer/index.html'))
-  } else {
+  }
+  else {
     const pkg = await import('../../../package.json')
     const url = `http://${pkg.env.HOST || '127.0.0.1'}:${pkg.env.PORT}`
 
@@ -78,9 +77,9 @@ export async function windowInit() {
  * @param url - 窗口加载的 url
  * @param show - 是否显示
  */
-export async function viewWindowInit(url: string = '', show: boolean = false) {
+export async function viewWindowInit(url = '', show = false) {
   if (global.wins?.view) {
-    global.wins['view'].show()
+    global.wins.view.show()
     return true
   }
 
@@ -96,31 +95,29 @@ export async function viewWindowInit(url: string = '', show: boolean = false) {
     y,
     width: 300,
     height,
-    frame: true, //无框
-    transparent: false, //透明
+    frame: true, // 无框
+    transparent: false, // 透明
     focusable: true,
     alwaysOnTop: false,
     webPreferences: {
       webSecurity: false,
-    }
+    },
   })
 
-  if (process.platform === 'darwin') {
+  if (process.platform === 'darwin')
     app.dock.setIcon(path.join(__dirname, '../public/images/logo_32.png'))
-  }
 
   viewWin.on('closed', () => {
-    console.log(`viewWinBrowserView destroyed`)
-    delete global.wins['view']
+    delete global.wins.view
   })
 
   viewWin.loadURL('')
-  
+
   global.wins = {
     view: viewWin,
     ...global.wins,
   }
-  
+
   await viewWinBrowserView(url)
 
   if (show) {
@@ -135,11 +132,11 @@ export async function viewWindowInit(url: string = '', show: boolean = false) {
  * @param url - BrowserView 加载的 url
  * @param showWin - 是否显示窗口
  */
-export async function viewWinBrowserView(url: string = '', showWin: boolean = false) {
+export async function viewWinBrowserView(url = '', showWin = false) {
   if (!url)
     return false
 
-  const viewWin = global.wins['view']
+  const viewWin = global.wins.view
   const configStore = getStore()
   if (!configStore)
     return false
@@ -158,7 +155,7 @@ export async function viewWinBrowserView(url: string = '', showWin: boolean = fa
   view.setBounds({ x: 0, y: viewWinTop, width: viewWinWidth, height: viewWinHeight })
   view.webContents.loadURL(url)
   view.webContents.openDevTools()
-  
+
   if (showWin)
     viewWin.show()
 }

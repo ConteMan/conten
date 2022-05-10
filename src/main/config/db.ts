@@ -25,13 +25,14 @@ async function configDefault() {
           group_key,
           key,
           value,
-        }
+        },
       })
     }
-  
+
     return true
   }
-  catch(e) {
+  catch (e) {
+    // eslint-disable-next-line no-console
     console.log(`>>> configDefault error: ${e}`)
     return false
   }

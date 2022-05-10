@@ -11,22 +11,22 @@ async function getConfigsByGroup(group: string, mode: 'all' | 'value' = 'value')
 
     const res: any = {}
     configs.forEach((item: any) => {
-      if (mode === 'all') {
+      if (mode === 'all')
         res[item.key] = item
-      }
-      else {
+
+      else
         res[item.key] = item.value
-      }
     })
     return res
   }
-  catch(e) {
+  catch (e) {
+    // eslint-disable-next-line no-console
     console.log(`>>> getConfigsByGroup error: ${e}`)
     return null
   }
 }
 
-async function getConfigByKey(key: string = '') {
+async function getConfigByKey(key = '') {
   try {
     if (!key)
       return null
@@ -34,11 +34,11 @@ async function getConfigByKey(key: string = '') {
     const config = await ConfigModel.findOne({
       where: {
         key,
-      }
+      },
     })
     return config?.toJSON()
   }
-  catch(e) {
+  catch (e) {
     return null
   }
 }
@@ -50,7 +50,7 @@ async function setConfig(data: any) {
       where: {
         group_key,
         key,
-      }
+      },
     })
     if (config) {
       await config.update({
@@ -62,7 +62,8 @@ async function setConfig(data: any) {
     }
     return true
   }
-  catch(e) {
+  catch (e) {
+    // eslint-disable-next-line no-console
     console.log(`>>> setConfig error: ${e}`)
     return null
   }

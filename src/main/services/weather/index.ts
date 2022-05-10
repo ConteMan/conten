@@ -1,4 +1,4 @@
-import { getWeather as cmaWeather } from "./cma"
+import { getWeather as cmaWeather } from './cma'
 import requestCache from '~/main/services/requestCache'
 
 const getWeather = async (source = 'cma', refresh = false) => {

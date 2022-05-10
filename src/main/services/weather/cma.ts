@@ -9,7 +9,7 @@ const getWeather = async () => {
     const json = await response.json()
     return json?.data ?? null
   }
-  catch(e) {
+  catch (e) {
     return {}
   }
 }

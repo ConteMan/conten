@@ -4,7 +4,7 @@ const Info = global.sequelize?.define('info', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   platform: {
     type: DataTypes.STRING,
@@ -36,7 +36,7 @@ const Info = global.sequelize?.define('info', {
     type: DataTypes.TINYINT,
     allowNull: false,
     defaultValue: 1,
-  }
+  },
 }, {
   tableName: 'infos',
 
@@ -45,6 +45,6 @@ const Info = global.sequelize?.define('info', {
 
   paranoid: true,
   deletedAt: 'deleted_at',
-});
+})
 
 export default Info

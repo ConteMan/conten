@@ -1,24 +1,6 @@
-<template>
-  <div
-    v-if="packageInfo"
-    class="package-card p-2"
-  >
-    <div
-      class="font-semibold cursor-pointer select-none mb-2"
-      @click="changeDeep()"
-    >
-      Package Info
-    </div>
-    <VueJsonPretty
-      :data="packageInfo"
-      :deep="deep"
-      :key="deep"
-    />
-  </div>
-</template>
 <script setup lang="ts">
 import { invokeToMain } from '@renderer/utils/ipcMessage'
-import VueJsonPretty from 'vue-json-pretty';
+import VueJsonPretty from 'vue-json-pretty'
 
 const data = reactive({
   packageInfo: null as any,
@@ -50,7 +32,26 @@ const get = async () => {
 get()
 
 const changeDeep = () => {
-  data.packageInfo = {...data.packageInfo}
+  data.packageInfo = { ...data.packageInfo }
   data.deep = data.deep ? 0 : 1
 }
 </script>
+
+<template>
+  <div
+    v-if="packageInfo"
+    class="package-card p-2"
+  >
+    <div
+      class="font-semibold cursor-pointer select-none mb-2"
+      @click="changeDeep()"
+    >
+      Package Info
+    </div>
+    <VueJsonPretty
+      :key="deep"
+      :data="packageInfo"
+      :deep="deep"
+    />
+  </div>
+</template>

@@ -1,24 +1,6 @@
-<template>
-  <n-config-provider
-    class="config-container"
-    :theme="data.theme"
-    :theme-overrides="themeOverrides"
-    :locale="zhCN"
-    :date-locale="dateZhCN"
-  >
-    <n-notification-provider>
-      <n-message-provider placement="top-right">
-        <AppContent />
-      </n-message-provider>
-    </n-notification-provider>
-    <n-global-style />
-  </n-config-provider>
-</template>
-
 <script setup lang="ts">
 import type { GlobalThemeOverrides } from 'naive-ui'
-import { darkTheme } from 'naive-ui'
-import { NConfigProvider, dateZhCN, zhCN } from 'naive-ui'
+import { NConfigProvider, darkTheme, dateZhCN, zhCN } from 'naive-ui'
 
 import { useSystemState } from './store/system'
 
@@ -55,3 +37,20 @@ watch(() => systemState.isDark, (dark) => {
   data.theme = dark ? darkTheme : null
 })
 </script>
+
+<template>
+  <n-config-provider
+    class="config-container"
+    :theme="data.theme"
+    :theme-overrides="themeOverrides"
+    :locale="zhCN"
+    :date-locale="dateZhCN"
+  >
+    <n-notification-provider>
+      <n-message-provider placement="top-right">
+        <AppContent />
+      </n-message-provider>
+    </n-notification-provider>
+    <n-global-style />
+  </n-config-provider>
+</template>

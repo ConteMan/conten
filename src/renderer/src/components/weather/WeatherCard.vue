@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import dayjs from 'dayjs'
+
+const data = reactive({
+  weatherData: null as any,
+  weatherExpired: null as any,
+  showDayWeather: false,
+})
+const { weatherData, weatherExpired, showDayWeather } = toRefs(data)
+
+const init = async () => {
+  const weatherRes = await window.ipcRenderer.invoke('get-weather')
+  data.weatherData = weatherRes?.data
+  data.weatherExpired = weatherRes?.expired
+}
+
+const changeShowDayWeather = () => {
+  data.showDayWeather = !data.showDayWeather
+}
+
+init()
+</script>
+
 <template>
   <div
     v-if="weatherData"
@@ -15,7 +38,7 @@
       <span>{{ weatherData.now.temperature }} ℃</span>
     </div>
     <div v-if="showDayWeather" class="mt-1 flex space-x-4">
-      <div v-for="day in weatherData.daily" key="day.date">
+      <div v-for="day in weatherData.daily" :key="day.date">
         <p>{{ day.date }}</p>
         <div>{{ day.low }} / {{ day.high }}</div>
         <div>{{ day.dayText }} / {{ day.nightText }}</div>
@@ -23,29 +46,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import dayjs from 'dayjs'
-
-const data = reactive({
-  weatherData: null as any,
-  weatherExpired: null as any,
-  showDayWeather: false,
-})
-const { weatherData, weatherExpired, showDayWeather } = toRefs(data)
-
-const init = async() => {
-  const weatherRes = await window.ipcRenderer.invoke('get-weather')
-  data.weatherData = weatherRes?.data
-  data.weatherExpired = weatherRes?.expired
-}
-
-const changeShowDayWeather = () => {
-  data.showDayWeather = !data.showDayWeather
-}
-
-init()
-</script>
 
 <style lang="less">
 .weather-card:hover {

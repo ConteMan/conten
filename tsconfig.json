@@ -23,7 +23,7 @@
       ],
       "@renderer/*": [
         "src/renderer/src/*"
-      ],
+      ]
     }
   }
 }

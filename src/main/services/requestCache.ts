@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import RequestCacheModel from "~/main/models/requestCache"
+import RequestCacheModel from '~/main/models/requestCache'
 
 class RequestCache {
   async get(name: string) {
@@ -19,13 +19,14 @@ class RequestCache {
 
       return cache.toJSON()
     }
-    catch(e) {
+    catch (e) {
+      // eslint-disable-next-line no-console
       console.log(`>>> RequestCache.get error: ${e}`)
       return null
     }
   }
 
-  async set(name: string, data: object, expiredSeconds: number = 600) {
+  async set(name: string, data: object, expiredSeconds = 600) {
     try {
       const expired = dayjs().add(expiredSeconds, 'second').toDate()
       const [cache, created] = await RequestCacheModel.findOrCreate({
@@ -36,19 +37,19 @@ class RequestCache {
           name,
           data,
           expired,
-        }
+        },
       })
-      
+
       if (created)
         return cache
 
-      const [ updateNumber ] = await RequestCacheModel.update({
+      const [updateNumber] = await RequestCacheModel.update({
         data,
         expired,
       }, {
         where: {
           name,
-        }
+        },
       })
 
       if (!updateNumber)
@@ -62,7 +63,8 @@ class RequestCache {
       })
       return res?.toJSON()
     }
-    catch(e) {
+    catch (e) {
+      // eslint-disable-next-line no-console
       console.log(`>>> RequestCache.set error: ${e}`)
       return null
     }

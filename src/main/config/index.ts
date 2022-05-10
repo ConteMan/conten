@@ -8,10 +8,10 @@ export interface DB {
 export interface ConfigDetail {
   server: {
     port: number | string
-  },
+  }
   db: {
     mongodb: DB[] | []
-  },
+  }
   win: {
     bounds: {
       x: number
@@ -23,7 +23,7 @@ export interface ConfigDetail {
 }
 
 export interface ExtensionCommandDetail {
-  inbox: string[],
+  inbox: string[]
   doing: string[]
 }
 
@@ -35,13 +35,13 @@ export interface Config {
 export const config: Config = {
   [ConfigEnum.DEFAULT_NAME]: {
     server: {
-      port: 3000
+      port: 3000,
     },
     db: {
       mongodb: [
         {
-        url: "",
-        selected: true
+          url: '',
+          selected: true,
         },
       ],
     },
@@ -50,12 +50,12 @@ export const config: Config = {
         x: 0,
         y: 0,
         width: 800,
-        height: 600
-      }
-    }
+        height: 600,
+      },
+    },
   },
   [ConfigEnum.EXTENSION_COMMAND]: {
     inbox: [],
     doing: [],
-  }
+  },
 }
