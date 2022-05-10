@@ -18,12 +18,20 @@
 <script setup lang="ts">
 const data = reactive({
   summaries: null as any,
+  summariesExpired: null as any,
 })
 const { summaries } = toRefs(data)
 
 const init = async() => {
-  const res = await window.ipcRenderer.invoke('wakatime-summaries')
-  data.summaries = res
+  const res = await window.ipcRenderer.invoke('api', {
+    name: 'wakatime-summaries',
+    data: {
+      range: 'Today',
+    }
+  })
+  
+  data.summaries = res.data
+  data.summariesExpired = res.expired
 }
 
 init()

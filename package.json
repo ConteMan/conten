@@ -1,13 +1,13 @@
 {
   "name": "contea-desktop",
   "productName": "Contea",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "dist/main/index.cjs",
   "author": "ConteMan <real.conteman@gmail.com>",
   "license": "MIT",
   "scripts": {
     "dev": "node scripts/package.mjs && node scripts/watch.mjs",
-    "build": "vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder"
+    "build": "node scripts/package.mjs && vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder"
   },
   "engines": {
     "node": ">=14.17.0"

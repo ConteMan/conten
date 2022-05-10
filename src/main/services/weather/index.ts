@@ -2,8 +2,8 @@ import { getWeather as cmaWeather } from "./cma"
 import requestCache from '~/main/services/requestCache'
 
 const getWeather = async (source = 'cma', refresh = false) => {
+  const cacheName = `weather-${source}`
   if (!refresh) {
-    const cacheName = `weather-${source}`
     const cache = await requestCache.get(cacheName)
     if (cache)
       return cache
@@ -19,7 +19,7 @@ const getWeather = async (source = 'cma', refresh = false) => {
   if (!data)
     return null
 
-  const cacheRes = await requestCache.set(`weather-${source}`, data)
+  const cacheRes = await requestCache.set(cacheName, data)
   return cacheRes
 }
 

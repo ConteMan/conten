@@ -196,6 +196,18 @@ async function messageInit() {
   ipcMain.handle('wakatime-summaries', async(event, msg) => {
     return await WakaTime.getData()
   })
+
+  ipcMain.handle('api', async(event, data) => {
+    const { name, data: apiData } = data
+    switch (name) {
+      case 'wakatime-summaries': {
+        const { range } = apiData
+        return await WakaTime.getDataByCache(range ?? undefined)
+      }
+      default:
+        break
+    }
+  })
 }
 
 export { sendToRenderer, messageInit }

@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import { getConfigByKey } from '~/main/services/config'
+import RequestCache from '~/main/services/requestCache'
 
 class WakaTime {
   private name: string
@@ -25,6 +26,29 @@ class WakaTime {
     catch(e) {
       return false
     }
+  }
+
+  /**
+   * Get data by cache
+   * @param range 
+   * @param refresh 
+   */
+  async getDataByCache(range: string = 'Today', refresh: boolean = false, expired: number = 3600) {
+    const cacheName = `${this.name}-data-${range}`
+    if (!refresh) {
+      const cache = await RequestCache.get(cacheName)
+      if (cache)
+        return cache
+    }
+
+    const data = await this.getData(range)
+    console.log(`>>> WakaTime.getDataByCache data: ${data}`)
+    if (!data)
+      return null
+
+    const cacheRes = await RequestCache.set(cacheName, data as object, expired)
+    console.log(`>>> WakaTime.getDataByCache: ${cacheRes}`)
+    return cacheRes
   }
 }
 
