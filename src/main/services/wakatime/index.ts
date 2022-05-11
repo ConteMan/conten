@@ -11,6 +11,10 @@ class WakaTime {
     this.name = 'wakatime'
   }
 
+  /**
+   * 获取数据
+   * @param range - 时间范围 Today, Week, Month
+   */
   async getData(range = 'Today') {
     const wakatimeApiKey = await getConfigByKey(this.apiKeyConfigName)
     if (!wakatimeApiKey)
@@ -29,14 +33,14 @@ class WakaTime {
   }
 
   /**
-   * Get data by cache
+   * 通过缓存获取数据
    * @param range
    * @param refresh
    */
   async getDataByCache(range = 'Today', refresh = false, expired = 3600) {
     const cacheName = `${this.name}-data-${range}`
     if (!refresh) {
-      const cache = await RequestCache.get(cacheName)
+      const cache = await RequestCache.get(cacheName, true)
       if (cache)
         return cache
     }
@@ -47,6 +51,13 @@ class WakaTime {
 
     const cacheRes = await RequestCache.set(cacheName, data as object, expired)
     return cacheRes
+  }
+
+  /**
+   * 定时任务
+   */
+  async schedule() {
+    await this.getDataByCache('Today', true)
   }
 }
 

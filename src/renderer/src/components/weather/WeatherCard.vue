@@ -31,11 +31,14 @@ init()
         {{ weatherData.location.name }}
       </span>
       <span class="weather-data-time ml-2 text-xs text-gray-400 italic invisible">
-        {{ weatherData.lastUpdate }} <span class="text-gray-200">{{ dayjs(weatherExpired).format('HH:mm') }}</span>
+        {{ dayjs(weatherExpired).format('HH:mm') }}
       </span>
     </div>
     <div>
       <span>{{ weatherData.now.temperature }} ℃</span>
+    </div>
+    <div v-if="showDayWeather">
+      <span class="text-xs text-gray-400">Updated at {{ weatherData.lastUpdate }}</span>
     </div>
     <div v-if="showDayWeather" class="mt-1 flex space-x-4">
       <div v-for="day in weatherData.daily" :key="day.date">

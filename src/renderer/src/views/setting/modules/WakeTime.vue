@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useMessage } from 'naive-ui'
 import { invokeToMain } from '@renderer/utils/ipcMessage'
+import { formValueDefault } from '@main/services/wakatime/type'
 
 const data = reactive({
   formRef: null,
-  formValue: {
-    wakatime_api_key: '',
-  },
+  formValue: formValueDefault,
   formSize: 'small',
 })
 const { formRef, formValue, formSize } = toRefs(data)
@@ -48,6 +47,12 @@ const save = async () => {
     >
       <n-form-item label="API Key" path="wakatime_api_key">
         <n-input v-model:value="formValue.wakatime_api_key" placeholder="" />
+      </n-form-item>
+      <n-form-item label="Schedule" path="wakatime_schedule">
+        <n-input v-model:value="formValue.wakatime_schedule" placeholder="" />
+      </n-form-item>
+      <n-form-item label="Schedule Enable" path="wakatime_schedule_enable">
+        <n-switch v-model:value="formValue.wakatime_schedule_enable" size="small" checked-value="1" unchecked-value="0" />
       </n-form-item>
     </n-form>
     <div class="fixed bottom-0 py-4">

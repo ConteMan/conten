@@ -2,19 +2,24 @@ import dayjs from 'dayjs'
 import RequestCacheModel from '~/main/models/requestCache'
 
 class RequestCache {
-  async get(name: string) {
+  /**
+   * 获取缓存
+   * @param name - 缓存名
+   * @param ignoreExpired - 忽略过期
+   */
+  async get(name: string, ignoreExpired = false) {
     try {
       const cache = await RequestCacheModel.findOne({
         where: {
           name,
         },
-        attributes: ['data', 'expired'],
+        attributes: ['data', 'expired', 'updated_at'],
       })
 
       if (!cache)
         return null
 
-      if (dayjs(cache.toJSON()?.expired).isBefore(dayjs()))
+      if (!ignoreExpired && dayjs(cache.toJSON()?.expired).isBefore(dayjs()))
         return null
 
       return cache.toJSON()
@@ -26,6 +31,12 @@ class RequestCache {
     }
   }
 
+  /**
+   * 设置缓存
+   * @param name - 缓存名
+   * @param data - 缓存数据
+   * @param expiredSeconds - 过期时间，单位秒
+   */
   async set(name: string, data: object, expiredSeconds = 600) {
     try {
       const expired = dayjs().add(expiredSeconds, 'second').toDate()

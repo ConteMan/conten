@@ -10,6 +10,7 @@ import { menuInit } from './modules/menu'
 import { messageInit } from './modules/message'
 import { dbInit } from './modules/db'
 import { windowInit } from './modules/window'
+import Schedule from './services/schedule'
 
 const isWin7 = os.release().startsWith('6.1')
 if (isWin7)
@@ -29,6 +30,7 @@ app.whenReady().then(async () => {
   menuInit()
   await dbInit()
   messageInit()
+  await Schedule.init()
 
   windowInit()
 })

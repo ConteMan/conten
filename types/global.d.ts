@@ -7,6 +7,7 @@ import type ElectronStore from 'electron-store'
 import type { MongoClient } from 'mongodb'
 import type { Sequelize } from 'sequelize/types'
 import type koa from 'koa'
+import type NodeSchedule from 'node-schedule'
 
 declare global {
   var win: BrowserWindow | null
@@ -18,4 +19,5 @@ declare global {
   var koaApp: koa | null
   var server: http.Server | null
   var serverSockets: Set<Socket>
+  var jobs: Record<string, NodeSchedule.Job>
 }

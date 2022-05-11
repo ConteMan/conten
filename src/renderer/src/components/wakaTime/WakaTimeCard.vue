@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import dayjs from 'dayjs'
+
 const data = reactive({
   summaries: null as any,
   summariesExpired: null as any,
+  summariesUpdatedAt: null as any,
 })
-const { summaries } = toRefs(data)
+const { summaries, summariesUpdatedAt } = toRefs(data)
 
 const init = async () => {
   const res = await window.ipcRenderer.invoke('api', {
@@ -15,6 +18,7 @@ const init = async () => {
 
   data.summaries = res.data
   data.summariesExpired = res.expired
+  data.summariesUpdatedAt = res.updated_at
 }
 
 init()
@@ -27,9 +31,14 @@ init()
   >
     <div>
       <span class="font-bold cursor-pointer select-none">
-        Today Code Time:
+        Code Time
       </span>
-      <span class="weather-data-time ml-2 text-xs text-gray-400">
+      <span class="wakatime-data-time invisible text-xs text-gray-400 italic ml-2">
+        {{ dayjs(summariesUpdatedAt).format('HH:mm') }}
+      </span>
+    </div>
+    <div>
+      <span class="weather-data-time text-xs text-gray-400">
         {{ summaries.cummulative_total.text }}
       </span>
     </div>
@@ -37,8 +46,8 @@ init()
 </template>
 
 <style lang="less">
-.weather-card:hover {
-  .weather-data-time {
+.wakatime-card:hover {
+  .wakatime-data-time {
     visibility: visible;
   }
 }

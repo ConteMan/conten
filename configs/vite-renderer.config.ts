@@ -21,6 +21,10 @@ export default defineConfig({
         find: '@renderer/',
         replacement: `${r('src/renderer/src')}/`,
       },
+      {
+        find: '@main/',
+        replacement: `${r('src/main')}/`,
+      },
     ],
   },
   plugins: [
