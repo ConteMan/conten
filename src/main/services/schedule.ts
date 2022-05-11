@@ -2,6 +2,7 @@ import NodeSchedule from 'node-schedule'
 
 import { getConfigByKey } from '~/main/services/config'
 import WakaTime from '~/main/services/wakatime'
+import { schedule as weatherSchedule } from '~/main/services/weather'
 
 class Schedule {
   /**
@@ -39,9 +40,6 @@ class Schedule {
         ...global.jobs,
       }
 
-      // eslint-disable-next-line no-console
-      console.log('>>> schedule:', global.jobs)
-
       return true
     }
     catch (e) {
@@ -57,6 +55,10 @@ class Schedule {
    */
   async moduleSchedule(moduleName: string) {
     switch (moduleName) {
+      case 'weather': {
+        await weatherSchedule()
+        break
+      }
       case 'wakatime':
       default: {
         await WakaTime.schedule()
@@ -71,6 +73,7 @@ class Schedule {
   async init() {
     const modules = [
       'wakatime',
+      'weather',
     ]
     for (const moduleName of modules)
       await this.dealByModule(moduleName)

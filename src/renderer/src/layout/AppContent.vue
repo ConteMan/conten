@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { MessageType } from 'naive-ui'
 import { useMessage } from 'naive-ui'
+import { useRefreshState } from '@renderer/store/refresh'
 
 const navList = [
   {
@@ -80,6 +81,12 @@ window.ipcRenderer.on('message', (event, arg) => {
     type: types[type],
     duration: 5000,
   })
+})
+
+const refreshState = useRefreshState()
+window.ipcRenderer.on('refresh', (event, data) => {
+  const { module } = data
+  refreshState.toggle(module, true)
 })
 </script>
 

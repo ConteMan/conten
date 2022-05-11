@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import { useRefreshState } from '@renderer/store/refresh'
 
 const data = reactive({
   summaries: null as any,
@@ -20,8 +21,15 @@ const init = async () => {
   data.summariesExpired = res.expired
   data.summariesUpdatedAt = res.updated_at
 }
-
 init()
+
+const refreshState = useRefreshState()
+watch(() => refreshState.wakatime, (val) => {
+  if (val) {
+    init()
+    refreshState.toggle('wakatime', false)
+  }
+})
 </script>
 
 <template>

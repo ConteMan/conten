@@ -101,6 +101,11 @@ async function dealSetting(data: any) {
       moduleName = 'wakatime'
       break
     }
+    case 'weather_schedule_enable':
+    case 'weather_schedule': {
+      moduleName = 'weather'
+      break
+    }
     default:
       break
   }

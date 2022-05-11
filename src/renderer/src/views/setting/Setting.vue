@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import DBModule from './modules/DB.vue'
 import WakaTimeModule from './modules/WakeTime.vue'
+import WeatherModule from './modules/Weather.vue'
 
 const modules = [
   {
     name: '数据库',
     code: 'db',
+  },
+  {
+    name: 'Weather',
+    code: 'weather',
   },
   {
     name: 'WakaTime',
@@ -37,6 +42,7 @@ const { currentModule } = toRefs(data)
     <div class="h-full w-[calc(100%-120px)] p-4">
       <DBModule v-if="currentModule === 'db'" />
       <WakaTimeModule v-if="currentModule === 'wakatime'" />
+      <WeatherModule v-if="currentModule === 'weather'" />
     </div>
   </div>
 </template>

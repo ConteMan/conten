@@ -1,10 +1,16 @@
 import { getWeather as cmaWeather } from './cma'
-import requestCache from '~/main/services/requestCache'
+import RequestCache from '~/main/services/requestCache'
+import { sendToRenderer } from '~/main/utils/ipcMessage'
 
+/**
+ * 获取天气数据
+ * @param source - 数据源
+ * @param refresh - 是否刷新
+ */
 const getWeather = async (source = 'cma', refresh = false) => {
   const cacheName = `weather-${source}`
   if (!refresh) {
-    const cache = await requestCache.get(cacheName)
+    const cache = await RequestCache.get(cacheName, true)
     if (cache)
       return cache
   }
@@ -19,8 +25,18 @@ const getWeather = async (source = 'cma', refresh = false) => {
   if (!data)
     return null
 
-  const cacheRes = await requestCache.set(cacheName, data)
+  const cacheRes = await RequestCache.set(cacheName, data)
   return cacheRes
 }
 
-export { getWeather }
+/**
+ * 定时任务
+ */
+const schedule = async () => {
+  await getWeather('cma', true)
+  sendToRenderer('refresh', {
+    module: 'weather',
+  })
+}
+
+export { getWeather, schedule }
