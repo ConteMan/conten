@@ -75,8 +75,10 @@ class Schedule {
       'wakatime',
       'weather',
     ]
-    for (const moduleName of modules)
+    for (const moduleName of modules) {
       await this.dealByModule(moduleName)
+      await this.moduleSchedule(moduleName)
+    }
   }
 }
 

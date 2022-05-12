@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useDark, useToggle } from '@vueuse/core'
+import { useToggle } from '@vueuse/core'
 import { useSystemState } from '@renderer/store/system'
+import { storeToRefs } from 'pinia'
 
 const command = (type = '', data: any = null) => {
   window.ipcRenderer.send('indexMsg', { type, data })
@@ -29,12 +30,10 @@ const invokeApi = async (name: string, data: object = {}) => {
 }
 
 const systemState = useSystemState()
-const isDark = useDark({
-  onChanged(dark: boolean) {
-    systemState.toggleDark(dark)
-  },
-})
-const toggleDark = useToggle(isDark)
+const { isDark } = storeToRefs(systemState)
+const toggleDark = () => {
+  systemState.toggleDark(!isDark.value)
+}
 </script>
 
 <template>
