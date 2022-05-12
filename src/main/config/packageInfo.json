@@ -243,6 +243,16 @@
         "eslint": ">=7.4.0"
       }
     },
+    "@iconify-json/mdi": {
+      "versionDefault": "^1.1.12",
+      "version": "1.1.12",
+      "resolved": "https://registry.npmmirror.com/@iconify-json/mdi/-/mdi-1.1.12.tgz",
+      "integrity": "sha512-n2bPga58OcsIMBHtL5EHPgWqIZXA95O/VOGa4xB1u6/37XocMWZz8WBnnQas+SpFuWMxlsYxPTbvOcrQt1i9kg==",
+      "dev": true,
+      "dependencies": {
+        "@iconify/types": "^1.1.0"
+      }
+    },
     "@types/koa": {
       "versionDefault": "^2.13.4",
       "version": "2.13.4",
@@ -634,6 +644,42 @@
       },
       "peerDependenciesMeta": {
         "@vueuse/core": {
+          "optional": true
+        }
+      }
+    },
+    "unplugin-icons": {
+      "versionDefault": "^0.14.3",
+      "version": "0.14.3",
+      "resolved": "https://registry.npmmirror.com/unplugin-icons/-/unplugin-icons-0.14.3.tgz",
+      "integrity": "sha512-PyyNMACpZ/EAiG3B6K1wPGZ151VGdlHIEx8/utgP546yVmPpV/xC1k1V2eEebf71fGm3WD6gzPrERNsbMgIVgg==",
+      "dev": true,
+      "dependencies": {
+        "@antfu/install-pkg": "^0.1.0",
+        "@antfu/utils": "^0.5.1",
+        "@iconify/utils": "^1.0.32",
+        "debug": "^4.3.4",
+        "kolorist": "^1.5.1",
+        "local-pkg": "^0.4.1",
+        "unplugin": "^0.6.2"
+      },
+      "peerDependencies": {
+        "@svgr/core": ">=5.5.0",
+        "@vue/compiler-sfc": "^3.0.2",
+        "vue-template-compiler": "^2.6.12",
+        "vue-template-es2015-compiler": "^1.9.0"
+      },
+      "peerDependenciesMeta": {
+        "@svgr/core": {
+          "optional": true
+        },
+        "@vue/compiler-sfc": {
+          "optional": true
+        },
+        "vue-template-compiler": {
+          "optional": true
+        },
+        "vue-template-es2015-compiler": {
           "optional": true
         }
       }

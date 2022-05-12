@@ -5,6 +5,8 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 
 import WindiCSS from 'vite-plugin-windicss'
 import pkg from '../package.json'
@@ -36,7 +38,12 @@ export default defineConfig({
       ],
       // generate `components.d.ts` for ts support with Volar
       dts: true,
-      resolvers: [NaiveUiResolver()],
+      resolvers: [
+        NaiveUiResolver(),
+        IconsResolver({
+          componentPrefix: '',
+        }),
+      ],
     }),
 
     AutoImport({
@@ -45,6 +52,10 @@ export default defineConfig({
         'vue-router',
         '@vueuse/core',
         '@vueuse/head',
+        {
+          'pinia': ['storeToRefs'],
+          'naive-ui': ['useMessage'],
+        },
       ],
       dts: r('src/renderer/src/auto-imports.d.ts'),
     }),
@@ -52,6 +63,10 @@ export default defineConfig({
     // https://github.com/antfu/vite-plugin-windicss
     WindiCSS({
       config: windiConfig,
+    }),
+
+    Icons({
+      autoInstall: true,
     }),
   ],
   base: './',

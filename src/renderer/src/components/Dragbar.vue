@@ -13,6 +13,8 @@ watch(pressed, (newValue) => {
 
 <template>
   <div ref="dragBarRef" class="drag w-full h-[32px]">
-    <span />
+    <slot>
+      <span />
+    </slot>
   </div>
 </template>

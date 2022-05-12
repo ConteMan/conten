@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useMessage } from 'naive-ui'
 import { invokeToMain } from '@renderer/utils/ipcMessage'
 import { formValueDefault } from '@main/services/weather/type'
 

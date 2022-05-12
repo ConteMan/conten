@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { MessageType } from 'naive-ui'
-import { useMessage } from 'naive-ui'
 import { useRefreshState } from '@renderer/store/refresh'
+import { useSystemState } from '@renderer/store/system'
 
 const navList = [
   {
@@ -88,6 +88,9 @@ window.ipcRenderer.on('refresh', (event, data) => {
   const { module } = data
   refreshState.toggle(module, true)
 })
+
+const systemState = useSystemState()
+const { showSideNav } = storeToRefs(systemState)
 </script>
 
 <template>
@@ -96,6 +99,7 @@ window.ipcRenderer.on('refresh', (event, data) => {
     :class="{ 'cursor-col-resize-important': onResize }"
   >
     <div
+      v-show="showSideNav"
       class="h-screen max-h-screen sidebar-container"
       :style="{ 'width': `${sideWidth}px`, 'min-width': `${sideWidth}px`, 'max-width': `${sideWidth}px` }"
     >
@@ -114,13 +118,17 @@ window.ipcRenderer.on('refresh', (event, data) => {
       </div>
     </div>
 
-    <div ref="resizeRef" class="flex-grow-0 flex justify-center w-[1px] cursor-col-resize">
+    <div
+      v-show="showSideNav"
+      ref="resizeRef"
+      class="flex-grow-0 flex justify-center w-[1px] cursor-col-resize"
+    >
       <div class="h-full w-[1px] bg-gray-200" />
     </div>
 
     <div class="flex-grow h-screen max-h-screen overflow-hidden">
       <div class="h-full flex flex-col">
-        <Dragbar class="h-[32px] flex-grow-0 flex-shrink-0" />
+        <Menubar />
         <router-view v-slot="{ Component }" class="flex-grow flex-shrink overflow-auto">
           <keep-alive>
             <component :is="Component" v-if="$route.meta.keepAlive" />
