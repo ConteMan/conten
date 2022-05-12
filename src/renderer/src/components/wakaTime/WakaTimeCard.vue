@@ -39,7 +39,7 @@ watch(() => refreshState.wakatime, (val) => {
   >
     <div>
       <span class="font-bold cursor-pointer select-none">
-        Code Time
+        <slot>Code</slot>
       </span>
       <span class="wakatime-data-time invisible text-xs text-gray-400 italic ml-2">
         {{ dayjs(summariesUpdatedAt).format('HH:mm') }}

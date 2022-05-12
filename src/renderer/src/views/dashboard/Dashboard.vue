@@ -2,6 +2,5 @@
   <div class="p-4 space-y-2">
     <WeatherCard />
     <WakaTimeCard />
-    <PackageCard />
   </div>
 </template>

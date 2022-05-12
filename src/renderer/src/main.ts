@@ -3,6 +3,7 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 
+import 'animate.css'
 import 'vue-json-pretty/lib/styles.css'
 import 'virtual:windi.css'
 import './style/index.css'

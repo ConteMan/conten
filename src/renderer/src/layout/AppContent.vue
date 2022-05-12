@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { MessageType } from 'naive-ui'
+import { useMousePressed } from '@vueuse/core'
 import { useRefreshState } from '@renderer/store/refresh'
 import { useSystemState } from '@renderer/store/system'
 
@@ -15,6 +16,10 @@ const navList = [
   {
     name: '设置',
     path: '/setting',
+  },
+  {
+    name: '关于',
+    path: '/about',
   },
 ]
 
@@ -91,6 +96,8 @@ window.ipcRenderer.on('refresh', (event, data) => {
 
 const systemState = useSystemState()
 const { showSideNav } = storeToRefs(systemState)
+
+const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
 </script>
 
 <template>
@@ -99,32 +106,37 @@ const { showSideNav } = storeToRefs(systemState)
     :class="{ 'cursor-col-resize-important': onResize }"
   >
     <div
-      v-show="showSideNav"
       class="h-screen max-h-screen sidebar-container"
-      :style="{ 'width': `${sideWidth}px`, 'min-width': `${sideWidth}px`, 'max-width': `${sideWidth}px` }"
+      :class="{ 'sidebar-transition': !resizePressed }"
+      :style="{ 'width': `${showSideNav ? sideWidth : 0}px`, 'min-width': `${showSideNav ? sideWidth : 0}px`, 'max-width': `${showSideNav ? sideWidth : 0}px` }"
     >
       <Dragbar />
-      <div class="mt-[80px]">
-        <div class="nav-container flex flex-col items-end space-y-2">
-          <div
-            v-for="item in navList" :key="item.path"
-            class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
-            :class="{ 'font-bold text-red-600': $route.path === item.path }"
-            @click="$router.push({ path: item.path })"
-          >
-            {{ item.name }}
+      <Transition name="sidebar-content">
+        <div v-if="showSideNav" class="sidebar-content mt-[80px]">
+          <div class="nav-container flex flex-col items-end space-y-2">
+            <div
+              v-for="item in navList" :key="item.path"
+              class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
+              :class="{ 'font-bold text-red-600': $route.path === item.path }"
+              @click="$router.push({ path: item.path })"
+            >
+              {{ item.name }}
+            </div>
           </div>
         </div>
-      </div>
+      </Transition>
     </div>
 
-    <div
-      v-show="showSideNav"
-      ref="resizeRef"
-      class="flex-grow-0 flex justify-center w-[1px] cursor-col-resize"
-    >
-      <div class="h-full w-[1px] bg-gray-200" />
-    </div>
+    <Transition name="resize" appear>
+      <div
+        v-show="showSideNav"
+        ref="resizeRef"
+        class="flex-grow-0 flex justify-center w-[1px] cursor-col-resize"
+        :style="{ width: `${showSideNav ? 1 : 0}px` }"
+      >
+        <div class="h-full w-[1px] bg-gray-200" />
+      </div>
+    </Transition>
 
     <div class="flex-grow h-screen max-h-screen overflow-hidden">
       <div class="h-full flex flex-col">
@@ -146,5 +158,25 @@ const { showSideNav } = storeToRefs(systemState)
 }
 .cursor-col-resize-important {
   cursor: col-resize !important;
+}
+.sidebar-transition {
+  transition: width 0.5s, min-width 0.5s, max-width 0.5s;
+}
+.sidebar-content-enter-active {
+  transition: opacity 0.5s ease 0.3s;
+}
+.sidebar-content-leave-active {
+  transition: opacity 0;
+}
+.sidebar-content-enter-from,
+.sidebar-content-leave-to {
+  opacity: 0;
+}
+
+.resize-enter-active {
+  transition: opacity 0.5s ease 0.3s;
+}
+.resize-enter-from {
+  opacity: 0;
 }
 </style>

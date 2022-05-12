@@ -46,7 +46,7 @@ const changeDeep = () => {
       class="font-semibold cursor-pointer select-none mb-2"
       @click="changeDeep()"
     >
-      Package Info
+      <slot>Package Info</slot>
     </div>
     <VueJsonPretty
       :key="deep"

@@ -24,8 +24,8 @@ export async function windowInit() {
     width,
     height,
     frame: false, // 无框
-    transparent: false, // 透明
-    titleBarStyle: 'customButtonsOnHover', // 自定义按钮，鼠标悬浮展示
+    transparent: true, // 透明
+    titleBarStyle: 'hidden', // 自定义按钮，鼠标悬浮展示
     trafficLightPosition: {
       x: 16,
       y: 8,
