@@ -174,6 +174,11 @@ async function messageInit() {
       case 'juejin-checkin': {
         return await JuejinCheckIn()
       }
+      case 'hide-traffic-button': {
+        const { status } = apiData
+        global.win?.setWindowButtonVisibility(status)
+        return global.win?.getTrafficLightPosition()
+      }
       default:
         break
     }

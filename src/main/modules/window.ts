@@ -24,14 +24,15 @@ export async function windowInit() {
     width,
     height,
     frame: false, // 无框
-    transparent: true, // 透明
-    titleBarStyle: 'hidden', // 自定义按钮，鼠标悬浮展示
+    transparent: false, // 透明
+    titleBarStyle: 'customButtonsOnHover', // 自定义按钮，鼠标悬浮展示
     trafficLightPosition: {
       x: 16,
       y: 8,
     },
     focusable: true,
     alwaysOnTop: false,
+    roundedCorners: true, // 设置 true，macOS 窗口圆角，但是顶部有 28px 高度鼠标样式无法应用
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
       spellcheck: false,

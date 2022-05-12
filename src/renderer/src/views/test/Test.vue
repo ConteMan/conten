@@ -37,13 +37,19 @@ const toggleDark = () => {
 const data = reactive({
   transitionWidth: 200,
   transitionShow: true,
+  showTrafficButton: true,
 })
-const { transitionWidth, transitionShow } = toRefs(data)
+const { transitionWidth, transitionShow, showTrafficButton } = toRefs(data)
 const transitionTest = (mode = 'width') => {
   if (mode === 'width')
     data.transitionWidth = data.transitionWidth === 200 ? 400 : 200
   else
     data.transitionWidth = 0
+}
+
+const changeTrafficButton = async () => {
+  await invokeApi('hide-traffic-button', { status: showTrafficButton.value })
+  data.showTrafficButton = !data.showTrafficButton
 }
 </script>
 
@@ -67,6 +73,7 @@ const transitionTest = (mode = 'width') => {
         Window
       </div>
       <div class="space-x-2">
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="changeTrafficButton()">Show/Hide Traffic Button</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('init-view-window')">Init View Window</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-view-cookie')">Get View Cookie</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('hide-view-window')">Show/Hide View Window</span>

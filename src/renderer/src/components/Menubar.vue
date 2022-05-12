@@ -11,21 +11,23 @@ const toggleSideNav = () => {
 
 <template>
   <Dragbar
-    class="menubar-container cursor-default flex-grow-0 flex-shrink-0 flex items-center"
+    class="menubar-container cursor-default flex-grow-0 flex-shrink-0 flex flex-row items-center"
     :class="{ 'pl-[82px]': !showSideNav }"
   >
-    <Transition name="arrow-left" appear>
-      <mdi-chevron-double-left
-        v-if="showSideNav" class="bar-arrow bar-arrow-left cursor-pointer text-xl ml-2 opacity-0 hover:(opacity-100)"
-        @click="toggleSideNav()"
-      />
-    </Transition>
-    <Transition name="arrow-right" appear>
-      <mdi-chevron-double-right
-        v-if="!showSideNav" class="bar-arrow bar-arrow-right cursor-pointer text-xl ml-2 opacity-0 hover:(opacity-100)"
-        @click="toggleSideNav()"
-      />
-    </Transition>
+    <div class="no-drag">
+      <Transition name="arrow-left" appear>
+        <mdi-chevron-double-left
+          v-if="showSideNav" class="bar-arrow bar-arrow-left text-xl ml-2 opacity-0 hover:(opacity-100)"
+          @click="toggleSideNav()"
+        />
+      </Transition>
+      <Transition name="arrow-right" appear>
+        <mdi-chevron-double-right
+          v-if="!showSideNav" class="bar-arrow bar-arrow-right text-xl ml-2 opacity-0 hover:(opacity-100)"
+          @click="toggleSideNav()"
+        />
+      </Transition>
+    </div>
   </Dragbar>
 </template>
 
