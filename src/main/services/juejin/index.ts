@@ -1,4 +1,5 @@
 import { viewWindowInit } from '~/main/modules/window'
+import { isObject } from '~/main/utils'
 
 async function execScript(scriptStr = '') {
   try {
@@ -7,7 +8,8 @@ async function execScript(scriptStr = '') {
 
     const url = 'https://juejin.cn'
     await viewWindowInit(url)
-    return await global.wins.view.getBrowserView()?.webContents.executeJavaScript(scriptStr, true)
+    const res = await global.wins.view.getBrowserView()?.webContents.executeJavaScript(scriptStr, true)
+    return isObject(res) ? JSON.stringify(res) : res
   }
   catch (e) {
     // eslint-disable-next-line no-console
@@ -20,7 +22,7 @@ async function execScript(scriptStr = '') {
  * 签到
  */
 async function checkIn() {
-  const checkIn = () => {
+  const checkIn = `
     fetch('https://api.juejin.cn/growth_api/v1/check_in', {
       headers: {
         cookie: document.cookie,
@@ -28,8 +30,7 @@ async function checkIn() {
       method: 'POST',
       credentials: 'include',
     }).then(resp => resp.json())
-  }
-
+  `
   return await execScript(checkIn.toString())
 }
 
