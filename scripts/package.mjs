@@ -1,5 +1,5 @@
-import fs from 'fs-extra'
 import path from 'path'
+import fs from 'fs-extra'
 
 async function getPackageLock() {
   try {
@@ -7,7 +7,7 @@ async function getPackageLock() {
     const packageLock = await fs.readJson(packageLockPath)
     return packageLock
   }
-  catch(e) {
+  catch (e) {
     console.log(`script > package > getPackageLock > error: ${e}`)
   }
 }
@@ -21,7 +21,7 @@ async function deal() {
     formatData.name = name
     formatData.version = version
     formatData.license = license
-    
+
     const dealDependencies = {}
     const dealDevDependencies = {}
     for (const key in dependencies) {
@@ -36,7 +36,7 @@ async function deal() {
         ...packageData.packages[`node_modules/${key}`],
       }
     }
-  
+
     formatData.dependencies = dealDependencies
     formatData.devDependencies = dealDevDependencies
 
@@ -44,7 +44,7 @@ async function deal() {
 
     await fs.writeJSON(formatDataPath, formatData, { spaces: 2 }) // 覆盖写入
   }
-  catch(e) {
+  catch (e) {
     console.log(`script > package > deal > error: ${e}`)
   }
 }

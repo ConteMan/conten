@@ -14,7 +14,7 @@ const toggleSideNav = () => {
     class="menubar-container flex-grow-0 flex-shrink-0"
     :class="{ 'pl-[82px]': !showSideNav }"
   >
-    <div class="no-drag h-full flex flex-row items-center">
+    <div class="h-full flex flex-row items-center">
       <Transition name="arrow-left" appear>
         <mdi-chevron-double-left
           v-if="showSideNav" class="bar-arrow bar-arrow-left text-xl ml-2 opacity-0 hover:(opacity-100)"

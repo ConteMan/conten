@@ -12,3 +12,10 @@
 ::-webkit-scrollbar-thumb {
   background-color: gray;
 }
+
+@font-face{
+  font-family: JetBrainsMono;
+  src: url("/fonts/JetBrainsMono-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}

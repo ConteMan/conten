@@ -1,7 +1,7 @@
-process.env.NODE_ENV = 'production'
-
 import { build as viteBuild } from 'vite'
 import chalk from 'chalk'
+
+process.env.NODE_ENV = 'production'
 
 const TAG = chalk.bgBlue(' build.mjs ')
 

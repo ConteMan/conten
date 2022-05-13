@@ -1,11 +1,12 @@
-process.env.NODE_ENV = 'development'
-
-import electron from 'electron'
 import { spawn } from 'child_process'
 import { createRequire } from 'module'
+import electron from 'electron'
 import { createServer, build as viteBuild } from 'vite'
 import chalk from 'chalk'
 
+process.env.NODE_ENV = 'development'
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TAG = chalk.bgGreen(' dev.mjs ')
 const require = createRequire(import.meta.url)
 const pkg = require('../package.json')
