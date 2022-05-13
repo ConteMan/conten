@@ -59,11 +59,11 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         System
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('pin-top')">Pin Top</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="toggleDark()">{{ isDark ? 'Dark' : 'Light' }}</span>
       </div>
-      <div class="space-x-2 mt-4">
+      <div class="flex flex-wrap gap-2 mt-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user-data-path')">Get UserData Path</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-package-info')">Get Package Info</span>
       </div>
@@ -72,7 +72,7 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         Window
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="changeTrafficButton()">Show/Hide Traffic Button</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('init-view-window')">Init View Window</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-view-cookie')">Get View Cookie</span>
@@ -84,7 +84,7 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         Koa Server
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('start-koa')">Start Koa</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('stop-koa')">Stop Koa</span>
       </div>
@@ -93,7 +93,7 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         Store
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStorePath')">Get Store Path</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStore', 'server')">Get Store</span>
       </div>
@@ -102,7 +102,7 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         DB
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('sqlite3')">Sqlite3 Get</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user')">MongoDB Get</span>
       </div>
@@ -111,7 +111,7 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         Weather
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-weather')">Get CMA Weather</span>
       </div>
     </div>
@@ -119,7 +119,7 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         WakaTime
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('wakatime-summaries')">Summaries</span>
       </div>
     </div>
@@ -127,25 +127,22 @@ const changeTrafficButton = async () => {
       <div class="p-2">
         Transition
       </div>
-      <div class="space-x-2">
+      <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="transitionTest()">Transition Width</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="transitionTest('show')">Transition Show</span>
       </div>
-      <div class="mt-2 w-full flex">
+      <div class="mt-4 w-full flex">
         <div
-          class="transition-card flex-grow-0 py-1 text-light-400 rounded-md bg-black"
+          class="transition-card flex-grow-0 py-1 text-light-400 bg-blue-400"
           :style="{ width: `${transitionWidth}px`, visibility: transitionShow ? 'visible' : 'hidden' }"
         >
           <Transition>
-            <div
-              v-show="transitionWidth > 0"
-              class="overflow-hidden whitespace-nowrap px-2"
-            >
+            <div v-show="transitionWidth" class="overflow-hidden whitespace-nowrap px-2">
               Card Left
             </div>
           </Transition>
         </div>
-        <div class="flex-grow p-1 px-2 bg-red-400 rounded-md text-light-400">
+        <div class="flex-grow p-1 px-2 bg-red-400 text-light-400">
           Card Right
         </div>
       </div>
