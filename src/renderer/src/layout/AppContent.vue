@@ -113,7 +113,7 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
       <Dragbar />
       <Transition name="sidebar-content">
         <div v-if="showSideNav" class="sidebar-content mt-[80px]">
-          <div class="nav-container flex flex-col items-end space-y-2">
+          <div class="nav-container flex flex-col items-center space-y-2">
             <div
               v-for="item in navList" :key="item.path"
               class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
@@ -131,10 +131,11 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
       <div
         v-show="showSideNav"
         ref="resizeRef"
-        class="flex-grow-0 flex justify-center w-[1px] cursor-col-resize"
+        class="flex-grow-0 flex flex-col justify-end w-[1px] cursor-col-resize"
         :style="{ width: `${showSideNav ? 1 : 0}px` }"
       >
-        <div class="h-full w-[1px] bg-gray-200" />
+        <div class="h-[32px] w-[1px] bg-gray-100" />
+        <div class="h-[calc(100%-32px)] w-[1px] bg-gray-100" />
       </div>
     </Transition>
 

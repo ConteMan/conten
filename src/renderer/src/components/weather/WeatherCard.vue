@@ -46,9 +46,19 @@ watch(() => refreshState.weather, (val) => {
     </div>
     <div>
       <span>{{ weatherData.now.temperature }} ℃</span>
+      <span class="ml-1">/</span>
+      <span class="ml-1">湿度 {{ weatherData.now.humidity }}%</span>
+      <span v-if="weatherData.now.windScale || weatherData.now.windDirection" class="ml-1">/</span>
+      <span v-if="weatherData.now.windDirection" class="ml-1">{{ `${weatherData.now.windDirection ?? ''}` }}</span>
+      <span v-if="weatherData.now.windScale" class="ml-1">{{ `${weatherData.now.windScale ?? ''}` }}</span>
+    </div>
+    <div v-if="weatherData.alarm.length">
+      <div v-for="alarm in weatherData.alarm" :key="alarm.id">
+        {{ `${alarm.signaltype}${alarm.signallevel}预警` }}
+      </div>
     </div>
     <div v-if="showDayWeather">
-      <span class="text-xs text-gray-400">Updated at {{ weatherData.lastUpdate }}</span>
+      <span class="text-xs text-gray-400 italic">Updated at {{ weatherData.lastUpdate }}</span>
     </div>
     <div v-if="showDayWeather" class="mt-1 flex space-x-4">
       <div v-for="day in weatherData.daily" :key="day.date">
