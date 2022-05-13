@@ -47,8 +47,8 @@ class WakaTime {
         return cache
     }
 
-    const data = await this.getData(range)
-    if (!data)
+    const data: any = await this.getData(range)
+    if (!data || data?.error)
       return null
 
     const cacheRes = await RequestCache.set(cacheName, data as object, expired)

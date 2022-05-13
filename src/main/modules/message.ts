@@ -168,8 +168,8 @@ async function messageInit() {
     const { name, data: apiData } = data
     switch (name) {
       case 'wakatime-summaries': {
-        const { range } = apiData
-        return await WakaTime.getDataByCache(range ?? undefined)
+        const { range, refresh } = apiData
+        return await WakaTime.getDataByCache(range ?? undefined, refresh ?? false)
       }
       case 'juejin-checkin': {
         return await JuejinCheckIn()

@@ -9,11 +9,12 @@ const data = reactive({
 })
 const { summaries, summariesUpdatedAt } = toRefs(data)
 
-const init = async () => {
+const init = async (refresh = false) => {
   const res = await window.ipcRenderer.invoke('api', {
     name: 'wakatime-summaries',
     data: {
       range: 'Today',
+      refresh,
     },
   })
 
@@ -38,16 +39,19 @@ watch(() => refreshState.wakatime, (val) => {
     class="wakatime-card p-2"
   >
     <div>
-      <span class="font-bold cursor-pointer select-none">
-        <slot>Code</slot>
+      <span
+        class="font-bold cursor-pointer select-none"
+        @click="init(true)"
+      >
+        <slot>Coding Time</slot>
       </span>
       <span class="wakatime-data-time invisible text-xs text-gray-400 italic ml-2">
         {{ dayjs(summariesUpdatedAt).format('HH:mm') }}
       </span>
     </div>
     <div>
-      <span class="weather-data-time text-xs text-gray-400">
-        {{ summaries.cummulative_total.text }}
+      <span class="weather-data-time">
+        Today {{ summaries.cummulative_total.text }}
       </span>
     </div>
   </div>
