@@ -39,19 +39,14 @@ watch(() => refreshState.wakatime, (val) => {
     class="wakatime-card p-2"
   >
     <div>
+      <span class="weather-data-time">
+        Today has been coding for {{ summaries.cummulative_total.text }}.
+      </span>
       <span
-        class="font-bold cursor-pointer select-none"
+        class="wakatime-data-time invisible text-xs text-gray-400 italic cursor-pointer ml-2"
         @click="init(true)"
       >
-        <slot>Coding Time</slot>
-      </span>
-      <span class="wakatime-data-time invisible text-xs text-gray-400 italic ml-2">
         {{ dayjs(summariesUpdatedAt).format('HH:mm') }}
-      </span>
-    </div>
-    <div>
-      <span class="weather-data-time">
-        Today {{ summaries.cummulative_total.text }}
       </span>
     </div>
   </div>
