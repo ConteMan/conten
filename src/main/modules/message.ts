@@ -179,6 +179,10 @@ async function messageInit() {
         global.win?.setWindowButtonVisibility(status)
         return global.win?.getTrafficLightPosition()
       }
+      case 'get-weather': {
+        const { source, refresh } = apiData
+        return await getWeather(source ?? 'cma', refresh ?? false)
+      }
       default:
         break
     }

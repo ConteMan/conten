@@ -21,8 +21,13 @@ const getTodayText = (days: any[]) => {
   return today ? `${today.dayText} / ${today.nightText}` : ''
 }
 
-const init = async () => {
-  const weatherRes = await window.ipcRenderer.invoke('get-weather')
+const init = async (refresh = false) => {
+  const weatherRes = await window.ipcRenderer.invoke('api', {
+    name: 'get-weather',
+    data: {
+      refresh,
+    },
+  })
   data.weatherData = weatherRes?.data
   data.weatherExpired = weatherRes?.expired
   data.weatherUpdatedAt = weatherRes?.updated_at
@@ -49,11 +54,17 @@ watch(() => refreshState.weather, (val) => {
     class="weather-card p-2"
   >
     <div>
-      <span class="font-bold cursor-pointer select-none" @click="changeShowDayWeather()">
+      <span
+        class="font-bold cursor-pointer select-none"
+        @click="changeShowDayWeather()"
+      >
         {{ weatherData.location.name }}
       </span>
       <span v-if="todayText" class="ml-1 text-xs">{{ todayText }}</span>
-      <span class="weather-data-time ml-2 text-xs text-gray-400 italic invisible">
+      <span
+        class="weather-data-time ml-2 text-xs text-gray-400 italic cursor-pointer invisible"
+        @click="init(true)"
+      >
         {{ dayjs(weatherUpdatedAt).format('HH:mm') }}
       </span>
     </div>
