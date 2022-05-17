@@ -13,6 +13,7 @@ import { viewWindowInit } from '~/main/modules/window'
 import { checkIn as JuejinCheckIn } from '~/main/services/juejin'
 
 import WakaTime from '~/main/services/wakatime'
+import TapTap from '~/main/services/taptap'
 
 /**
  * 向渲染层发送消息
@@ -182,6 +183,21 @@ async function messageInit() {
       case 'get-weather': {
         const { source, refresh } = apiData
         return await getWeather(source ?? 'cma', refresh ?? false)
+      }
+      case 'taptap-view-http-data': {
+        const { url } = apiData
+        const winInfo = TapTap.getViewHttpData(url ?? undefined)
+        if (winInfo && global?.wins[winInfo.name])
+          global?.wins[winInfo.name].showInactive()
+        return true
+      }
+      case 'taptap-profile': {
+        const { refresh } = apiData
+        return TapTap.profile(refresh ?? false)
+      }
+      case 'taptap-detail': {
+        const { refresh } = apiData
+        return TapTap.detail(refresh ?? false)
       }
       default:
         break

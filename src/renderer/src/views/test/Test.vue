@@ -78,6 +78,8 @@ const changeTrafficButton = async () => {
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-view-cookie')">Get View Cookie</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('hide-view-window')">Show/Hide View Window</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('juejin-checkin')">Run Script View Window - Juejin Check In</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('taptap-view-http-data')">Get View HTTP Data - TapTap</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('taptap-view-http-data', { url: 'https://www.taptap.com/user/5827457' })">Get View HTTP Data - TapTap User</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">

@@ -3,5 +3,6 @@
     <NowCard />
     <WeatherCard />
     <WakaTimeCard />
+    <TapTapCard />
   </div>
 </template>

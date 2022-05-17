@@ -3,6 +3,7 @@ import { BrowserView, BrowserWindow, app } from 'electron'
 
 import type { ConfigDetail } from '~/main/config'
 import { getStore } from '~/main/store'
+import { randomStr } from '~/main/utils'
 
 global.win = null
 
@@ -73,58 +74,101 @@ export async function windowInit() {
   }
 }
 
+interface Bounds {
+  width: number
+  height: number
+}
+
 /**
  * 初始化 BrowserView 窗口
  * @param url - 窗口加载的 url
  * @param show - 是否显示
+ * @param once - 是否只执行一次的窗口
  */
-export async function viewWindowInit(url = '', show = false) {
-  if (global.wins?.view) {
-    global.wins.view.show()
-    return true
-  }
+export function viewWindowInit(url = '', show = false, once = false, winBounds: Bounds = { width: 0, height: 0 }) {
+  try {
+    let winName = 'view'
 
-  const configStore = getStore()
-  if (!configStore)
-    return false
+    if (!once) {
+      if (global.wins?.view) {
+        if (url) {
+          const currentUrl = global.wins.view.webContents.getURL()
+          if (currentUrl !== url)
+            global.wins.view.webContents.loadURL(url)
+        }
 
-  const { x, y, width, height } = configStore.get('win.bounds') as ConfigDetail['win']['bounds']
+        if (show)
+          global.wins.view.show()
 
-  const viewWin = new BrowserWindow({
-    show: false,
-    x: x + width + 4,
-    y,
-    width: 300,
-    height,
-    frame: true, // 无框
-    transparent: false, // 透明
-    focusable: true,
-    alwaysOnTop: false,
-    webPreferences: {
-      webSecurity: false,
-    },
-  })
+        return { name: winName, win: global.wins.view }
+      }
+    }
+    else {
+      winName = randomStr(5)
+    }
 
-  if (process.platform === 'darwin')
-    app.dock.setIcon(path.join(__dirname, '../public/images/logo_32.png'))
+    const configStore = getStore()
+    if (!configStore)
+      return false
 
-  viewWin.on('closed', () => {
-    delete global.wins.view
-  })
+    const { width, height } = winBounds
+    const { x, y, width: defaultWidth, height: defaultHeight } = configStore.get('win.bounds') as ConfigDetail['win']['bounds']
+    const dealWidth = width > 0 ? width : defaultWidth
+    const dealHeight = height > 0 ? height : defaultHeight
 
-  viewWin.loadURL('')
-
-  global.wins = {
-    view: viewWin,
-    ...global.wins,
-  }
-
-  await viewWinBrowserView(url)
-
-  if (show) {
-    viewWin.once('ready-to-show', () => {
-      viewWin?.show()
+    const viewWin = new BrowserWindow({
+      show: false,
+      x: x + width + 4,
+      y,
+      width: dealWidth,
+      height: dealHeight,
+      frame: true, // 无框
+      transparent: false, // 透明
+      focusable: true,
+      alwaysOnTop: false,
+      webPreferences: {
+        webSecurity: false,
+      },
     })
+
+    if (process.platform === 'darwin')
+      app.dock.setIcon(path.join(__dirname, '../public/images/logo_32.png'))
+
+    viewWin.on('closed', () => {
+      if (global.wins[winName])
+        delete global.wins[winName]
+
+      if (global.views[winName]) {
+        global.views[winName]?.webContents.debugger.detach()
+        delete global.views[winName]
+      }
+    })
+
+    viewWin.loadURL('')
+
+    global.wins = {
+      [winName]: viewWin,
+      ...global.wins,
+    }
+
+    const view = viewWinBrowserView(url, viewWin, { width: dealWidth, height: dealHeight })
+    if (view) {
+      global.views = {
+        [winName]: view,
+        ...global.views,
+      }
+    }
+
+    viewWin.once('ready-to-show', () => {
+      if (show)
+        viewWin?.showInactive()
+    })
+
+    return { name: winName, win: viewWin, view }
+  }
+  catch (e) {
+    console.error(e)
+    return false
   }
 }
 
@@ -133,30 +177,82 @@ export async function viewWindowInit(url = '', show = false) {
  * @param url - BrowserView 加载的 url
  * @param showWin - 是否显示窗口
  */
-export async function viewWinBrowserView(url = '', showWin = false) {
-  if (!url)
+export function viewWinBrowserView(url = '', win: BrowserWindow, winBounds: Bounds): false | BrowserView {
+  try {
+    if (!url || !win)
+      return false
+
+    const viewWin = win
+    const configStore = getStore()
+    if (!configStore)
+      return false
+
+    const { width: dealWidth, height: dealHeight } = winBounds
+
+    const viewWinWidth = dealWidth
+    const viewWinTop = 28
+    const viewWinHeight = dealHeight - viewWinTop
+    const view = new BrowserView()
+    viewWin.setBrowserView(view)
+    view.setAutoResize({
+      width: true,
+      height: true,
+    })
+    view.setBounds({ x: 0, y: viewWinTop, width: viewWinWidth, height: viewWinHeight })
+    view.webContents.loadURL(url)
+    view.webContents.openDevTools()
+
+    // if (show)
+    //   viewWin.show()
+
+    return view
+  }
+  catch (e) {
     return false
+  }
+}
 
-  const viewWin = global.wins.view
-  const configStore = getStore()
-  if (!configStore)
-    return false
+interface Rule {
+  url: string
+  mineType: string
+}
 
-  const { height } = configStore.get('win.bounds') as ConfigDetail['win']['bounds']
-
-  const viewWinWidth = 300
-  const viewWinTop = 28
-  const viewWinHeight = height - viewWinTop
-  const view = new BrowserView()
-  viewWin.setBrowserView(view)
-  view.setAutoResize({
-    width: true,
-    height: true,
+export function getHttpData(win: BrowserWindow | BrowserView, rule: Rule, callback: (req: any, res: any) => void) {
+  try {
+    win.webContents.debugger.attach('1.1')
+  }
+  catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('调试器连接失败: ', err)
+  }
+  win.webContents.debugger.on('detach', (event, reason) => {
+    // eslint-disable-next-line no-console
+    console.log('调试器由于以下原因而分离 : ', reason)
   })
-  view.setBounds({ x: 0, y: viewWinTop, width: viewWinWidth, height: viewWinHeight })
-  view.webContents.loadURL(url)
-  view.webContents.openDevTools()
 
-  if (showWin)
-    viewWin.show()
+  try {
+    const { url, mineType } = rule
+
+    win.webContents.debugger.on('message', async (event, method, params) => {
+      try {
+        if (method === 'Network.responseReceived' && params.response) {
+          const { url: messageUrl, mimeType } = params.response
+          const regex = new RegExp(url)
+          if (regex.test(messageUrl) && mimeType === mineType) {
+            const response = await win.webContents.debugger.sendCommand('Network.getResponseBody', { requestId: params.requestId })
+            callback(params, response)
+          }
+        }
+      }
+      catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e)
+      }
+    })
+    win.webContents.debugger.sendCommand('Network.enable')
+  }
+  catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('getHttpData 调试器连接失败: ', err)
+  }
 }

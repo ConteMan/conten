@@ -7,9 +7,12 @@ async function execScript(scriptStr = '') {
       return false
 
     const url = 'https://juejin.cn'
-    await viewWindowInit(url)
-    const res = await global.wins.view.getBrowserView()?.webContents.executeJavaScript(scriptStr, true)
-    return isObject(res) ? JSON.stringify(res) : res
+    const winInfo = await viewWindowInit(url)
+    if (winInfo && winInfo.view) {
+      const res = await winInfo.view.webContents.executeJavaScript(scriptStr, true)
+      return isObject(res) ? JSON.stringify(res) : res
+    }
+    return false
   }
   catch (e) {
     // eslint-disable-next-line no-console
