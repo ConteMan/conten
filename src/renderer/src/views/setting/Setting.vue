@@ -5,7 +5,7 @@ import WeatherModule from './modules/Weather.vue'
 
 const modules = [
   {
-    name: '数据库',
+    name: 'DB',
     code: 'db',
   },
   {
@@ -29,7 +29,7 @@ const { currentModule } = toRefs(data)
       <div
         v-for="itemModule in modules"
         :key="itemModule.code"
-        class="px-2 cursor-pointer text-left hover:(underline decoration-2 underline-offset-4)"
+        class="px-4 cursor-pointer text-left hover:(underline decoration-2 underline-offset-4)"
         :class="{ 'font-bold text-red-600': currentModule === itemModule.code }"
         @click="() => data.currentModule = itemModule.code"
       >

@@ -46,6 +46,9 @@ const save = async () => {
       :model="formValue"
       :size="formSize"
     >
+      <n-form-item label="Enable" path="`${module}_enable`">
+        <n-switch v-model:value="formValue[`${module}_enable`]" size="small" checked-value="1" unchecked-value="0" />
+      </n-form-item>
       <n-form-item label="Schedule" path="`${module}_schedule`">
         <n-input v-model:value="formValue[`${module}_schedule`]" placeholder="" />
       </n-form-item>

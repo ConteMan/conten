@@ -1,16 +1,30 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { useRefreshState } from '@renderer/store/refresh'
+import { invokeApi } from '@renderer/utils/ipcMessage'
 
 const data = reactive({
+  module: 'wakatime',
+  enable: false,
   summaries: null as any,
   summariesExpired: null as any,
   summariesUpdatedAt: null as any,
 })
-const { summaries, summariesUpdatedAt } = toRefs(data)
+const { module, enable, summaries, summariesUpdatedAt } = toRefs(data)
 
-const init = async (refresh = false) => {
-  const res = await window.ipcRenderer.invoke('api', {
+const moduleEnable = async () => {
+  const res = await invokeApi({
+    name: 'module-enable',
+    data: {
+      module: module.value,
+    },
+  })
+  data.enable = res
+  return res
+}
+
+const getSummaries = async (refresh = false) => {
+  const res = await invokeApi({
     name: 'wakatime-summaries',
     data: {
       range: 'Today',
@@ -22,12 +36,18 @@ const init = async (refresh = false) => {
   data.summariesExpired = res.expired
   data.summariesUpdatedAt = res.updated_at
 }
+
+const init = async () => {
+  const enable = await moduleEnable()
+  if (enable)
+    await getSummaries()
+}
 init()
 
 const refreshState = useRefreshState()
 watch(() => refreshState.wakatime, (val) => {
   if (val) {
-    init()
+    getSummaries(true)
     refreshState.toggle('wakatime', false)
   }
 })
@@ -35,7 +55,7 @@ watch(() => refreshState.wakatime, (val) => {
 
 <template>
   <div
-    v-if="summaries"
+    v-if="enable && summaries"
     class="wakatime-card p-2"
   >
     <div>
@@ -44,7 +64,7 @@ watch(() => refreshState.wakatime, (val) => {
       </span>
       <span
         class="wakatime-data-time invisible text-xs text-gray-400 italic cursor-pointer ml-2"
-        @click="init(true)"
+        @click="getSummaries(true)"
       >
         {{ dayjs(summariesUpdatedAt).format('HH:mm') }}
       </span>

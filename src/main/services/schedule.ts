@@ -11,8 +11,10 @@ class Schedule {
    */
   async dealByModule(moduleName: string) {
     try {
+      const moduleEnable = await getConfigByKey(`${moduleName}_enable`)
       const scheduleEnable = await getConfigByKey(`${moduleName}_schedule_enable`)
-      if (!scheduleEnable.value) {
+      const schedule = await getConfigByKey(`${moduleName}_schedule`)
+      if (!scheduleEnable.value || !moduleEnable.value || !schedule.value) {
         if (global.jobs?.[moduleName]) {
           global.jobs?.[moduleName].cancel()
           delete global.jobs?.[moduleName]
@@ -22,10 +24,6 @@ class Schedule {
           return true
         }
       }
-
-      const schedule = await getConfigByKey(`${moduleName}_schedule`)
-      if (!schedule.value)
-        return false
 
       if (global.jobs?.[moduleName]) {
         global.jobs?.[moduleName].reschedule(schedule.value)
@@ -59,12 +57,15 @@ class Schedule {
         await weatherSchedule()
         break
       }
-      case 'wakatime':
-      default: {
+      case 'wakatime':{
         await WakaTime.schedule()
         break
       }
+      default: {
+        break
+      }
     }
+    return true
   }
 
   /**

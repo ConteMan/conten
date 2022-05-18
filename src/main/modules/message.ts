@@ -1,5 +1,6 @@
 import { app, ipcMain } from 'electron'
 
+import { isString } from 'lodash'
 import type { DB } from '~/main/config'
 import { ConfigEnum } from '~/main/config/enum'
 import { start as koaStart, stop as koaStop } from '~/main/server/koa'
@@ -7,7 +8,7 @@ import { getStoreDetail } from '~/main/store'
 import { isObject } from '~/main/utils'
 import { reconnectMongoDB } from '~/main/modules/db'
 import { getWeather } from '~/main/services/weather'
-import { getConfigsByGroup, setConfig } from '~/main/services/config'
+import { getConfigsByGroup, moduleEnable, setConfig } from '~/main/services/config'
 import { getPackageInfo } from '~/main/services/package'
 import { viewWindowInit } from '~/main/modules/window'
 import { checkIn as JuejinCheckIn } from '~/main/services/juejin'
@@ -166,6 +167,9 @@ async function messageInit() {
   })
 
   ipcMain.handle('api', async (event, data) => {
+    if (isString(data))
+      data = JSON.parse(data)
+
     const { name, data: apiData } = data
     switch (name) {
       case 'wakatime-summaries': {
@@ -199,7 +203,13 @@ async function messageInit() {
         const { refresh } = apiData
         return TapTap.detail(refresh ?? false)
       }
+      case 'module-enable': {
+        const { module } = apiData
+        return await moduleEnable(module)
+      }
       default:
+        // eslint-disable-next-line no-console
+        console.log('>>>>default:', name)
         break
     }
   })

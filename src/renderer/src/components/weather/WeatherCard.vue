@@ -1,19 +1,29 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { useRefreshState } from '@renderer/store/refresh'
+import { invokeApi } from '@renderer/utils/ipcMessage'
 
 const data = reactive({
+  module: 'weather',
+  enable: true,
   weatherData: null as any,
   weatherExpired: null as any,
   weatherUpdatedAt: null as any,
   todayText: '',
   showDayWeather: false,
 })
-const { weatherData, showDayWeather, weatherUpdatedAt, todayText } = toRefs(data)
+const { module, enable, weatherData, showDayWeather, weatherUpdatedAt, todayText } = toRefs(data)
 
-const windDirection = computed(() => {
-  return !['9999'].includes(weatherData.value.now.windDirection) ? weatherData.value.now.windDirection : ''
-})
+const moduleEnable = async () => {
+  const res = await invokeApi({
+    name: 'module-enable',
+    data: {
+      module: module.value,
+    },
+  })
+  data.enable = res
+  return res
+}
 
 const getTodayText = (days: any[]) => {
   const todayDate = dayjs().format('YYYY/MM/DD')
@@ -21,8 +31,16 @@ const getTodayText = (days: any[]) => {
   return today ? `${today.dayText} / ${today.nightText}` : ''
 }
 
-const init = async (refresh = false) => {
-  const weatherRes = await window.ipcRenderer.invoke('api', {
+const windDirection = computed(() => {
+  return !['9999'].includes(weatherData.value.now.windDirection) ? weatherData.value.now.windDirection : ''
+})
+
+const changeShowDayWeather = () => {
+  data.showDayWeather = !data.showDayWeather
+}
+
+const getWeather = async (refresh = false) => {
+  const weatherRes = await invokeApi({
     name: 'get-weather',
     data: {
       refresh,
@@ -33,11 +51,13 @@ const init = async (refresh = false) => {
   data.weatherUpdatedAt = weatherRes?.updated_at
   data.todayText = getTodayText(weatherRes?.data.daily)
 }
-init()
 
-const changeShowDayWeather = () => {
-  data.showDayWeather = !data.showDayWeather
+const init = async () => {
+  const enable = await moduleEnable()
+  if (enable)
+    await getWeather()
 }
+init()
 
 const refreshState = useRefreshState()
 watch(() => refreshState.weather, (val) => {
@@ -50,7 +70,7 @@ watch(() => refreshState.weather, (val) => {
 
 <template>
   <div
-    v-if="weatherData"
+    v-if="enable && weatherData"
     class="weather-card p-2"
   >
     <div>
@@ -63,7 +83,7 @@ watch(() => refreshState.weather, (val) => {
       <span v-if="todayText" class="ml-1 text-xs">{{ todayText }}</span>
       <span
         class="weather-data-time ml-2 text-xs text-gray-400 italic cursor-pointer invisible"
-        @click="init(true)"
+        @click="getWeather(true)"
       >
         {{ dayjs(weatherUpdatedAt).format('HH:mm') }}
       </span>

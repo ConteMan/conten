@@ -87,7 +87,7 @@ async function setConfig(data: any) {
 }
 
 /**
- * 配置处理
+ * 配置处理，如定时任务等
  * @param data - 配置数据
  */
 async function dealSetting(data: any) {
@@ -116,4 +116,20 @@ async function dealSetting(data: any) {
   return await Schedule.dealByModule(moduleName)
 }
 
-export { getConfigsByGroup, getConfigByKey, setConfig }
+/**
+ * 获取模块是否开启
+ * @param moduleName - 模块名称
+ */
+async function moduleEnable(moduleName: string) {
+  try {
+    const config = await getConfigByKey(`${moduleName}_enable`)
+    return config?.value > 0
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(`>>> moduleEnable error: ${e}`)
+    return false
+  }
+}
+
+export { getConfigsByGroup, getConfigByKey, setConfig, moduleEnable }

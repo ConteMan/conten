@@ -5,3 +5,11 @@ export const sendToMain = (type = '', data: any = null, process = 'indexMsg'): v
 export const invokeToMain = async (type = '', data: any = null) => {
   return await window.ipcRenderer.invoke(type, data)
 }
+
+interface Data {
+  name: string
+  data: any
+}
+export const invokeApi = async (data: Data) => {
+  return await window.ipcRenderer.invoke('api', data)
+}
