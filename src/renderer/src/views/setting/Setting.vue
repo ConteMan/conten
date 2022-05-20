@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import SystemModule from './modules/System.vue'
 import DBModule from './modules/DB.vue'
-import WakaTimeModule from './modules/WakeTime.vue'
 import WeatherModule from './modules/Weather.vue'
+import WakaTimeModule from './modules/WakeTime.vue'
 
 const modules = [
+  {
+    name: 'System',
+    code: 'system',
+  },
   {
     name: 'DB',
     code: 'db',
@@ -18,7 +23,7 @@ const modules = [
   },
 ]
 const data = reactive({
-  currentModule: 'db',
+  currentModule: 'system',
 })
 const { currentModule } = toRefs(data)
 </script>
@@ -40,9 +45,10 @@ const { currentModule } = toRefs(data)
     </div>
 
     <div class="h-full w-[calc(100%-120px)] p-4">
+      <SystemModule v-if="currentModule === 'system'" />
       <DBModule v-if="currentModule === 'db'" />
-      <WakaTimeModule v-if="currentModule === 'wakatime'" />
       <WeatherModule v-if="currentModule === 'weather'" />
+      <WakaTimeModule v-if="currentModule === 'wakatime'" />
     </div>
   </div>
 </template>

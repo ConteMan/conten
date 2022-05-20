@@ -207,6 +207,32 @@ async function messageInit() {
         const { module } = apiData
         return await moduleEnable(module)
       }
+      case 'configs': {
+        const { group_key } = apiData
+        try {
+          return await getConfigsByGroup(group_key)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'save-configs': {
+        const { data } = apiData
+        try {
+          for (const item of data) {
+            const saveData = {
+              group_key: item.group_key,
+              key: item.key,
+              value: item.value,
+            }
+            await setConfig(saveData)
+          }
+          return true
+        }
+        catch (e) {
+          return false
+        }
+      }
       default:
         // eslint-disable-next-line no-console
         console.log('>>>>default:', name)
