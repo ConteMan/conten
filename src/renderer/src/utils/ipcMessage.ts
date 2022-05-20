@@ -8,7 +8,7 @@ export const invokeToMain = async (type = '', data: any = null) => {
 
 interface Data {
   name: string
-  data: any
+  data?: any
 }
 export const invokeApi = async (data: Data) => {
   return await window.ipcRenderer.invoke('api', data)

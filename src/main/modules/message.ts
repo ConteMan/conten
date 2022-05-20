@@ -1,10 +1,11 @@
 import { app, ipcMain } from 'electron'
 
 import { isString } from 'lodash'
+import { sendToRenderer as sendToRendererNew } from '@main/utils/ipcMessage'
 import type { DB } from '~/main/config'
 import { ConfigEnum } from '~/main/config/enum'
 import { start as koaStart, stop as koaStop } from '~/main/server/koa'
-import { getStoreDetail } from '~/main/store'
+import { getStore, getStoreDetail, setStore } from '~/main/store'
 import { isObject } from '~/main/utils'
 import { reconnectMongoDB } from '~/main/modules/db'
 import { getWeather } from '~/main/services/weather'
@@ -226,6 +227,38 @@ async function messageInit() {
               value: item.value,
             }
             await setConfig(saveData)
+          }
+          return true
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'config-store': { // 获取配置
+        let configStore = {}
+        const defaultStore = getStore()
+        if (defaultStore) {
+          const themeWithSystem = defaultStore.get('app.themeWithSystem')
+          configStore = { themeWithSystem, ...configStore }
+        }
+        return configStore
+      }
+      case 'set-config-store': {
+        try {
+          const { key, value } = apiData
+          const keys: any = {
+            themeWithSystem: 'app.themeWithSystem',
+          }
+          if (Object.keys(keys).includes(key)) {
+            const configKey = keys[key]
+            const setRes = setStore(configKey, value)
+            // eslint-disable-next-line no-console
+            console.log('>>> set-config-store:', setRes, value)
+            if (setRes) {
+              sendToRendererNew('store', {
+                [key]: value,
+              })
+            }
           }
           return true
         }

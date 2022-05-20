@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { invokeApi } from '@renderer/utils/ipcMessage'
 import { formValueDefault } from '@main/services/system/type'
+import { useSystemState } from '@renderer/store/system'
+import { setSystemTheme } from '@renderer/utils'
 
 const module = 'system'
 
@@ -21,6 +23,25 @@ const getConfig = async () => {
   data.formValue = res
 }
 getConfig()
+const systemState = useSystemState()
+const { themeWithSystem } = storeToRefs(systemState)
+// eslint-disable-next-line no-console
+console.log(themeWithSystem.value)
+const themeWithSystemChange = async (value: boolean) => {
+  // eslint-disable-next-line no-console
+  console.log('>>> themeWithSystem change:', value)
+
+  if (value)
+    setSystemTheme()
+
+  await invokeApi({
+    name: 'set-config-store',
+    data: {
+      key: 'themeWithSystem',
+      value,
+    },
+  })
+}
 
 const message = useMessage()
 
@@ -54,6 +75,9 @@ const save = async () => {
       :model="formValue"
       :size="formSize"
     >
+      <n-form-item label="深色模式跟随系统">
+        <n-switch v-model:value="themeWithSystem" size="small" @update:value="themeWithSystemChange" />
+      </n-form-item>
       <n-form-item label="Schedule" path="`${module}_schedule`">
         <n-input v-model:value="formValue[`${module}_schedule`]" placeholder="" />
       </n-form-item>

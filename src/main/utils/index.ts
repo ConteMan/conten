@@ -1,3 +1,5 @@
+import os from 'os'
+
 export function is(val: unknown, type: string) {
   return toString.call(val) === `[object ${type}]`
 }
@@ -20,4 +22,11 @@ export function randomStr(length: number, chars = '0123456789abcdefghijklmnopqrs
     result += chars[Math.floor(Math.random() * chars.length)]
 
   return result
+}
+
+/**
+ * 是否为 Windows7 之后系统
+ */
+export function isWin7() {
+  return os.release().startsWith('6.1')
 }

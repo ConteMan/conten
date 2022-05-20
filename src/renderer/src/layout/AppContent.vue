@@ -4,6 +4,7 @@ import { useMousePressed } from '@vueuse/core'
 import { useRefreshState } from '@renderer/store/refresh'
 import { useSystemState } from '@renderer/store/system'
 
+// 导航栏
 const navList = [
   {
     name: '面板',
@@ -23,6 +24,7 @@ const navList = [
   },
 ]
 
+// 导航栏拖拽调节宽度
 const resizeRef = ref<HTMLDivElement | null>(null)
 const data = reactive({
   sideWidth: 82,
@@ -69,6 +71,7 @@ onMounted(() => {
   })
 })
 
+// 消息通知
 const types: MessageType[] = [
   'success',
   'info',
@@ -79,7 +82,6 @@ const types: MessageType[] = [
 ]
 const message = useMessage()
 
-// 消息通知
 window.ipcRenderer.on('message', (event, arg) => {
   const { type, data } = arg
   message.create(`${data}`, {
@@ -88,14 +90,23 @@ window.ipcRenderer.on('message', (event, arg) => {
   })
 })
 
+// 状态更新
 const refreshState = useRefreshState()
 window.ipcRenderer.on('refresh', (event, data) => {
   const { module } = data
   refreshState.toggle(module, true)
 })
 
+// 系统状态
 const systemState = useSystemState()
 const { showSideNav } = storeToRefs(systemState)
+
+window.ipcRenderer.on('store', (event, data) => {
+  // eslint-disable-next-line no-console
+  console.log('>>> store receive', data)
+  if (data?.themeWithSystem)
+    systemState.toggleThemeWithSystem(data.themeWithSystem)
+})
 
 const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
 </script>

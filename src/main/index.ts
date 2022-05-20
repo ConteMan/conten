@@ -1,38 +1,29 @@
-import os from 'os'
 import { BrowserWindow, app } from 'electron'
 
-import './modules/init'
+import '@main/modules/boot'
 
-import { storeInit } from './store'
-import { shortcutsInit, unregister } from './modules/shortcuts'
-import { trayInit } from './modules/tray'
-import { menuInit } from './modules/menu'
-import { messageInit } from './modules/message'
-import { dbInit } from './modules/db'
-import { windowInit } from './modules/window'
-import Schedule from './services/schedule'
-
-const isWin7 = os.release().startsWith('6.1')
-if (isWin7)
-  app.disableHardwareAcceleration()
-
-if (!app.requestSingleInstanceLock()) {
-  app.quit()
-  process.exit(0)
-}
+import { storeInit } from '@main/store'
+import { shortcutsInit, unregister } from '@main/modules/shortcuts'
+import { trayInit } from '@main/modules/tray'
+import { menuInit } from '@main/modules/menu'
+import { appInit } from '@main/modules/app'
+import { messageInit } from '@main/modules/message'
+import { dbInit } from '@main/modules/db'
+import { windowInit } from '@main/modules/window'
+import Schedule from '@main/services/schedule'
 
 app.whenReady().then(async () => {
-  app.setName('Contea')
-
   storeInit()
   shortcutsInit()
   trayInit()
   menuInit()
+
+  await appInit()
   await dbInit()
-  messageInit()
+  await messageInit()
   await Schedule.init()
 
-  windowInit()
+  await windowInit()
 })
 
 app.on('window-all-closed', () => {

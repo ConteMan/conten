@@ -26,13 +26,16 @@ const themeOverrides: GlobalThemeOverrides = {
 }
 
 const systemState = useSystemState()
+const { themeWithSystem } = storeToRefs(systemState)
 
 const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
 watch(prefersDark, (newVal) => {
-  if (newVal)
-    systemState.toggleDark(true)
-  else
-    systemState.toggleDark(false)
+  if (themeWithSystem.value) {
+    if (newVal)
+      systemState.toggleDark(true)
+    else
+      systemState.toggleDark(false)
+  }
 })
 
 watch(() => systemState.isDark, (dark) => {

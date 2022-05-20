@@ -1,9 +1,9 @@
 import path from 'path'
 import { BrowserView, BrowserWindow, app } from 'electron'
 
-import type { ConfigDetail } from '~/main/config'
-import { getStore } from '~/main/store'
-import { randomStr } from '~/main/utils'
+import type { ConfigDetail } from '@main/config'
+import { getStore } from '@main/store'
+import { randomStr } from '@main/utils'
 
 global.win = null
 
@@ -217,6 +217,12 @@ interface Rule {
   mineType: string
 }
 
+/**
+ * 获取窗口请求信息
+ * @param win - BrowserWindow | BrowserView
+ * @param rule - 规则
+ * @param callback - 回调
+ */
 export function getHttpData(win: BrowserWindow | BrowserView, rule: Rule, callback: (req: any, res: any) => void) {
   try {
     win.webContents.debugger.attach('1.1')

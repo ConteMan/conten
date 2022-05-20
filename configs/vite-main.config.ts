@@ -15,6 +15,10 @@ export default defineConfig({
         find: '~/',
         replacement: `${r('src')}/`,
       },
+      {
+        find: '@main/',
+        replacement: `${r('src/main')}/`,
+      },
     ],
   },
   plugins: [

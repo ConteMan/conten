@@ -6,6 +6,10 @@ export interface DB {
 }
 
 export interface ConfigDetail {
+  app: {
+    name: string
+    themeWithSystem: boolean
+  }
   server: {
     port: number | string
   }
@@ -28,6 +32,10 @@ export interface Config {
 
 export const config: Config = {
   [ConfigEnum.DEFAULT_NAME]: {
+    app: {
+      name: 'Contea',
+      themeWithSystem: true,
+    },
     server: {
       port: 3000,
     },
