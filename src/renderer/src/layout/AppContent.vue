@@ -102,10 +102,11 @@ const systemState = useSystemState()
 const { showSideNav } = storeToRefs(systemState)
 
 window.ipcRenderer.on('store', (event, data) => {
-  // eslint-disable-next-line no-console
-  console.log('>>> store receive', data)
-  if (data?.themeWithSystem)
-    systemState.toggleThemeWithSystem(data.themeWithSystem)
+  if (Object.keys(data)) {
+    const keys = Object.keys(data)
+    if (keys.includes('themeWithSystem'))
+      systemState.toggleThemeWithSystem(data.themeWithSystem)
+  }
 })
 
 const { pressed: resizePressed } = useMousePressed({ target: resizeRef })

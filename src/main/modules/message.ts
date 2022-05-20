@@ -243,7 +243,7 @@ async function messageInit() {
         }
         return configStore
       }
-      case 'set-config-store': {
+      case 'set-config-store': { // TODO 完善，封装
         try {
           const { key, value } = apiData
           const keys: any = {
@@ -252,8 +252,6 @@ async function messageInit() {
           if (Object.keys(keys).includes(key)) {
             const configKey = keys[key]
             const setRes = setStore(configKey, value)
-            // eslint-disable-next-line no-console
-            console.log('>>> set-config-store:', setRes, value)
             if (setRes) {
               sendToRendererNew('store', {
                 [key]: value,

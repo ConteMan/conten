@@ -23,17 +23,14 @@ const getConfig = async () => {
   data.formValue = res
 }
 getConfig()
+
+// 设置主题模式
 const systemState = useSystemState()
 const { themeWithSystem } = storeToRefs(systemState)
-// eslint-disable-next-line no-console
-console.log(themeWithSystem.value)
-const themeWithSystemChange = async (value: boolean) => {
-  // eslint-disable-next-line no-console
-  console.log('>>> themeWithSystem change:', value)
 
+const themeWithSystemChange = async (value: boolean) => {
   if (value)
     setSystemTheme()
-
   await invokeApi({
     name: 'set-config-store',
     data: {

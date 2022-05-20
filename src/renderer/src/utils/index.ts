@@ -15,7 +15,7 @@ export function isObject(val: any): val is Record<any, any> {
 export function setSystemTheme() {
   const isDark = usePreferredDark()
   const systemState = useSystemState()
-  if (isDark)
+  if (isDark.value)
     systemState.toggleDark(true)
   else
     systemState.toggleDark(false)
