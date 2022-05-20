@@ -31,6 +31,8 @@ const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
 watch(prefersDark, (newVal) => {
   if (newVal)
     systemState.toggleDark(true)
+  else
+    systemState.toggleDark(false)
 })
 
 watch(() => systemState.isDark, (dark) => {
