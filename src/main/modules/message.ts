@@ -1,11 +1,13 @@
-import { app, ipcMain } from 'electron'
+import path from 'path'
+import { app, dialog, ipcMain } from 'electron'
 
+import fs from 'fs-extra'
 import { isString } from 'lodash'
 import { sendToRenderer as sendToRendererNew } from '@main/utils/ipcMessage'
 import type { DB } from '~/main/config'
 import { ConfigEnum } from '~/main/config/enum'
 import { start as koaStart, stop as koaStop } from '~/main/server/koa'
-import { getStore, getStoreDetail, setStore } from '~/main/store'
+import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '~/main/store'
 import { isObject } from '~/main/utils'
 import { reconnectMongoDB } from '~/main/modules/db'
 import { getWeather } from '~/main/services/weather'
@@ -262,6 +264,76 @@ async function messageInit() {
         }
         catch (e) {
           return false
+        }
+      }
+      case 'get-store-path': {
+        try {
+          const { name } = apiData
+          return getStorePath(name)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'set-store-path': {
+        try {
+          const { name, path } = apiData
+          return setStorePath(name, path)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'select-path-dialog': { // 通过对话窗口选择路径，且复制配置文件到目标路径，并重载 store
+        const { name } = apiData
+        const oldPath = getStorePath(name)
+        try {
+          const { canceled, filePaths } = await dialog.showOpenDialog({
+            title: '选择文件夹',
+            defaultPath: oldPath,
+            properties: ['openDirectory'],
+          })
+          if (!canceled && path && oldPath !== filePaths[0]) {
+            const setRes = setStorePath(name, filePaths[0])
+            if (setRes) {
+              const newPath = path.join(filePaths[0], `${name}.json`)
+              const exist = await fs.pathExists(newPath)
+              if (!exist)
+                await fs.copy(path.join(oldPath, `${name}.json`), newPath)
+              storeInit(name, true)
+            }
+            return { path: filePaths[0], change: true }
+          }
+          else {
+            return { path: oldPath, change: false }
+          }
+        }
+        catch (e) {
+          return { path: oldPath, change: false }
+        }
+      }
+      case 'reset-store-path': { // 重置默认配置路径
+        const { name } = apiData
+        const oldPath = getStorePath(name)
+        try {
+          const defaultPath = app.getPath('userData')
+          if (oldPath !== defaultPath) {
+            const setRes = setStorePath(name, defaultPath)
+            if (setRes) {
+              const newPath = path.join(defaultPath, `${name}.json`)
+              const exist = await fs.pathExists(newPath)
+              if (!exist)
+                await fs.copy(path.join(oldPath, `${name}.json`), newPath)
+              storeInit(name, true)
+            }
+            return { path: defaultPath, change: true }
+          }
+          else {
+            return { path: oldPath, change: false }
+          }
+        }
+        catch (e) {
+          return { path: oldPath, change: false }
         }
       }
       default:
