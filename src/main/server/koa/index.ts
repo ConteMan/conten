@@ -3,7 +3,7 @@ import Koa from 'koa'
 import koaBody from 'koa-body'
 
 import router from './router'
-import { getStore } from '~/main/store'
+import { getStore } from '~/main/modules/store'
 
 async function start(port: number | string | undefined = undefined) {
   try {

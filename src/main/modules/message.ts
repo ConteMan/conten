@@ -7,7 +7,7 @@ import { sendToRenderer as sendToRendererNew } from '@main/utils/ipcMessage'
 import type { DB } from '~/main/config'
 import { ConfigEnum } from '~/main/config/enum'
 import { start as koaStart, stop as koaStop } from '~/main/server/koa'
-import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '~/main/store'
+import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '~/main/modules/store'
 import { isObject } from '~/main/utils'
 import { reconnectMongoDB } from '~/main/modules/db'
 import { getWeather } from '~/main/services/weather'
@@ -236,12 +236,13 @@ async function messageInit() {
           return false
         }
       }
-      case 'config-store': { // 获取配置
+      case 'config-store': { // 获取前端初始化状态的配置
         let configStore = {}
         const defaultStore = getStore()
         if (defaultStore) {
           const themeWithSystem = defaultStore.get('app.themeWithSystem')
-          configStore = { themeWithSystem, ...configStore }
+          const isTop = defaultStore.get('app.isTop')
+          configStore = { themeWithSystem, isTop, ...configStore }
         }
         return configStore
       }
@@ -250,6 +251,7 @@ async function messageInit() {
           const { key, value } = apiData
           const keys: any = {
             themeWithSystem: 'app.themeWithSystem',
+            isTop: 'app.isTop',
           }
           if (Object.keys(keys).includes(key)) {
             const configKey = keys[key]
@@ -334,6 +336,24 @@ async function messageInit() {
         }
         catch (e) {
           return { path: oldPath, change: false }
+        }
+      }
+      case 'pin': {
+        try {
+          const { status } = apiData
+          await global.win?.setAlwaysOnTop(status)
+          const isTop = global.win ? global.win.isAlwaysOnTop() : false
+
+          const setRes = setStore('app.isTop', isTop)
+          if (setRes) {
+            sendToRendererNew('store', {
+              isTop,
+            })
+          }
+          return true
+        }
+        catch (e) {
+          return false
         }
       }
       default:

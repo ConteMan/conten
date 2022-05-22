@@ -11,5 +11,9 @@ export async function storeInit() {
       const systemState = useSystemState()
       systemState.toggleThemeWithSystem(configStore.themeWithSystem)
     }
+    if (Object.keys(configStore).includes('isTop')) {
+      const systemState = useSystemState()
+      systemState.toggleTop(configStore.isTop)
+    }
   }
 }

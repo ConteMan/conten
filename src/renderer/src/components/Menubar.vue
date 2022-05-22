@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { useSystemState } from '@renderer/store/system'
+import { invokeApi } from '@renderer/utils/ipcMessage'
 
 const systemState = useSystemState()
-const { showSideNav } = storeToRefs(systemState)
+const { showSideNav, isTop } = storeToRefs(systemState)
 
 const toggleSideNav = () => {
   systemState.toggleSideNav(!showSideNav.value)
+}
+
+const togglePin = (status: boolean) => {
+  invokeApi({
+    name: 'pin',
+    data: {
+      status,
+    },
+  })
 }
 </script>
 
@@ -27,6 +37,14 @@ const toggleSideNav = () => {
           @click="toggleSideNav()"
         />
       </Transition>
+      <mdi-pin
+        v-if="isTop" class="bar-pin ml-4 opacity-0 hover:(opacity-100)"
+        @click="togglePin(false)"
+      />
+      <mdi-pin-off
+        v-else class="bar-pin ml-4 opacity-0 hover:(opacity-100)"
+        @click="togglePin(true)"
+      />
     </div>
   </Dragbar>
 </template>
@@ -34,7 +52,7 @@ const toggleSideNav = () => {
 <style scoped lang="less">
 .menubar-container {
   &:hover {
-    .bar-arrow {
+    .bar-arrow,.bar-pin {
       opacity: 1;
     }
   }

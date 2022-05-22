@@ -106,6 +106,8 @@ window.ipcRenderer.on('store', (event, data) => {
     const keys = Object.keys(data)
     if (keys.includes('themeWithSystem'))
       systemState.toggleThemeWithSystem(data.themeWithSystem)
+    if (keys.includes('isTop'))
+      systemState.toggleTop(data.isTop)
   }
 })
 

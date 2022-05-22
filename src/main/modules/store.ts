@@ -1,7 +1,7 @@
 import { app } from 'electron'
 import Store from 'electron-store'
 
-import { config } from '@main/config'
+import { CONFIG } from '@main/config'
 import { ConfigEnum } from '@main/config/enum'
 
 /**
@@ -9,8 +9,9 @@ import { ConfigEnum } from '@main/config/enum'
  * @param name - 配置文件名称
  * @param reload - 是否重新加载
  * @param overwrite - 是否覆盖原有配置
+ * @param reset - 是否重置（清空再设置）
  */
-export function storeInit(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, reload = false, overwrite = false) {
+export function storeInit(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, reload = false, overwrite = false, reset = false) {
   try {
     const cwd = getStorePath(name)
 
@@ -20,12 +21,17 @@ export function storeInit(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, reload = f
     if (!global.store[name] || reload)
       global.store[name] = new Store({ name, cwd, clearInvalidConfig: false })
 
-    if (!global.store[name].size) {
-      global.store[name].set(config[name] as object)
+    if (reset)
+      global.store[name].clear()
+
+    if (!global.store[name].size || overwrite) {
+      global.store[name].set(CONFIG[name] as object)
     }
     else {
-      if (overwrite)
-        global.store[name].clear()
+      const mergeConfig = Object.assign({}, { ...CONFIG[name] }, global.store[name].store)
+      // eslint-disable-next-line no-console
+      console.log('mergeConfig:', mergeConfig)
+      global.store[name].set(mergeConfig)
     }
     return global.store[name]
   }
@@ -66,7 +72,7 @@ export function getStoreDetail(name = ConfigEnum.DEFAULT_NAME) {
  * @param name - 配置文件名称
  * @param data - 配置数据
  */
-export function setStore(key = '', value = '', name = ConfigEnum.DEFAULT_NAME) {
+export function setStore(key = '', value: string | boolean = '', name = ConfigEnum.DEFAULT_NAME) {
   try {
     if (key) {
       global.store?.[name].set(key, value)

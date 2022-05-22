@@ -6,6 +6,7 @@ export const useSystemState = defineStore('system', {
       isDark: false,
       showSideNav: true,
       themeWithSystem: true, // 主题是否和系统一致
+      isTop: true, // 是否窗口置顶
     }
   },
   actions: {
@@ -17,6 +18,9 @@ export const useSystemState = defineStore('system', {
     },
     toggleThemeWithSystem(status = true) {
       this.themeWithSystem = status
+    },
+    toggleTop(status = true) {
+      this.isTop = status
     },
   },
 })

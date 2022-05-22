@@ -9,6 +9,7 @@ export interface ConfigDetail {
   app: {
     name: string
     themeWithSystem: boolean
+    isTop: boolean
   }
   server: {
     port: number | string
@@ -26,15 +27,22 @@ export interface ConfigDetail {
   }
 }
 
+/**
+ * 应用配置描述
+ */
 export interface Config {
   [ConfigEnum.DEFAULT_NAME]: ConfigDetail
 }
 
-export const config: Config = {
+/**
+ * 应用原始配置
+ */
+export const CONFIG: Config = {
   [ConfigEnum.DEFAULT_NAME]: {
     app: {
       name: 'Contea',
       themeWithSystem: true,
+      isTop: false,
     },
     server: {
       port: 3000,

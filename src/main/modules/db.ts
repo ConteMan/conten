@@ -3,7 +3,7 @@ import { app } from 'electron'
 import { MongoClient } from 'mongodb'
 import { Sequelize } from 'sequelize'
 import type { DB } from '~/main/config'
-import { getStore } from '~/main/store'
+import { getStore } from '~/main/modules/store'
 import { sendToRenderer } from '~/main/modules/message'
 
 import RequestCacheModel from '~/main/models/requestCache'

@@ -2,8 +2,8 @@ import path from 'path'
 import { BrowserView, BrowserWindow, app } from 'electron'
 
 import type { ConfigDetail } from '@main/config'
-import { getStore } from '@main/store'
 import { randomStr } from '@main/utils'
+import { getStore } from '~/main/modules/store'
 
 global.win = null
 
@@ -16,6 +16,7 @@ export async function windowInit() {
     return false
 
   const { x, y, width, height } = configStore.get('win.bounds') as ConfigDetail['win']['bounds']
+  const { isTop } = configStore.get('app.isTop') as ConfigDetail['app']
 
   win = new BrowserWindow({
     show: false,
@@ -32,7 +33,7 @@ export async function windowInit() {
       y: 8,
     },
     focusable: true,
-    alwaysOnTop: false,
+    alwaysOnTop: isTop, // 置顶
     roundedCorners: true, // 设置 true，macOS 窗口圆角，但是顶部有 28px 高度鼠标样式无法应用
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),

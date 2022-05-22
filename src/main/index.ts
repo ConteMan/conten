@@ -2,7 +2,6 @@ import { BrowserWindow, app } from 'electron'
 
 import '@main/modules/boot'
 
-import { appStoreInit, storeInit } from '@main/store'
 import { shortcutsInit, unregister } from '@main/modules/shortcuts'
 import { trayInit } from '@main/modules/tray'
 import { menuInit } from '@main/modules/menu'
@@ -11,6 +10,7 @@ import { messageInit } from '@main/modules/message'
 import { dbInit } from '@main/modules/db'
 import { windowInit } from '@main/modules/window'
 import Schedule from '@main/services/schedule'
+import { appStoreInit, storeInit } from '~/main/modules/store'
 
 app.whenReady().then(async () => {
   await appStoreInit()
