@@ -1,7 +1,6 @@
 import path from 'path'
 import { BrowserView, BrowserWindow, app } from 'electron'
 
-import type { ConfigDetail } from '@main/config'
 import { randomStr } from '@main/utils'
 import { getStore } from '~/main/modules/store'
 
@@ -15,8 +14,8 @@ export async function windowInit() {
   if (!configStore)
     return false
 
-  const { x, y, width, height } = configStore.get('win.bounds') as ConfigDetail['win']['bounds']
-  const { isTop } = configStore.get('app.isTop') as ConfigDetail['app']
+  const { x, y, width, height } = configStore.get('win.bounds') as Contea.ConfigDetail['win']['bounds']
+  const { isTop } = configStore.get('app') as Contea.ConfigDetail['app']
 
   win = new BrowserWindow({
     show: false,
@@ -75,18 +74,13 @@ export async function windowInit() {
   }
 }
 
-interface Bounds {
-  width: number
-  height: number
-}
-
 /**
  * 初始化 BrowserView 窗口
  * @param url - 窗口加载的 url
  * @param show - 是否显示
  * @param once - 是否只执行一次的窗口
  */
-export function viewWindowInit(url = '', show = false, once = false, winBounds: Bounds = { width: 0, height: 0 }) {
+export function viewWindowInit(url = '', show = false, once = false, winBounds: Contea.Bounds = { width: 0, height: 0 }) {
   try {
     let winName = 'view'
 
@@ -113,7 +107,7 @@ export function viewWindowInit(url = '', show = false, once = false, winBounds: 
       return false
 
     const { width, height } = winBounds
-    const { x, y, width: defaultWidth, height: defaultHeight } = configStore.get('win.bounds') as ConfigDetail['win']['bounds']
+    const { x, y, width: defaultWidth, height: defaultHeight } = configStore.get('win.bounds') as Contea.ConfigDetail['win']['bounds']
     const dealWidth = width > 0 ? width : defaultWidth
     const dealHeight = height > 0 ? height : defaultHeight
 
@@ -178,7 +172,7 @@ export function viewWindowInit(url = '', show = false, once = false, winBounds: 
  * @param url - BrowserView 加载的 url
  * @param showWin - 是否显示窗口
  */
-export function viewWinBrowserView(url = '', win: BrowserWindow, winBounds: Bounds): false | BrowserView {
+export function viewWinBrowserView(url = '', win: BrowserWindow, winBounds: Contea.Bounds): false | BrowserView {
   try {
     if (!url || !win)
       return false
@@ -213,18 +207,13 @@ export function viewWinBrowserView(url = '', win: BrowserWindow, winBounds: Boun
   }
 }
 
-interface Rule {
-  url: string
-  mineType: string
-}
-
 /**
  * 获取窗口请求信息
  * @param win - BrowserWindow | BrowserView
  * @param rule - 规则
  * @param callback - 回调
  */
-export function getHttpData(win: BrowserWindow | BrowserView, rule: Rule, callback: (req: any, res: any) => void) {
+export function getHttpData(win: BrowserWindow | BrowserView, rule: Contea.HttpDataRule, callback: (req: any, res: any) => void) {
   try {
     win.webContents.debugger.attach('1.1')
   }

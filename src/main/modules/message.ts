@@ -4,8 +4,7 @@ import { app, dialog, ipcMain } from 'electron'
 import fs from 'fs-extra'
 import { isString } from 'lodash'
 import { sendToRenderer as sendToRendererNew } from '@main/utils/ipcMessage'
-import type { DB } from '~/main/config'
-import { ConfigEnum } from '~/main/config/enum'
+import { ConfigEnum } from '~/main/enums/configEnum'
 import { start as koaStart, stop as koaStop } from '~/main/server/koa'
 import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '~/main/modules/store'
 import { isObject } from '~/main/utils'
@@ -76,12 +75,6 @@ async function messageInit() {
     return global.store?.[ConfigEnum.DEFAULT_NAME]?.path
   })
 
-  ipcMain.handle('pin-top', async () => {
-    const isTop = global.win?.isAlwaysOnTop()
-    await global.win?.setAlwaysOnTop(!isTop)
-    return global.win?.isAlwaysOnTop()
-  })
-
   ipcMain.handle('save-settings', async (event, data) => {
     try {
       if (!isObject(data))
@@ -89,7 +82,7 @@ async function messageInit() {
 
       const newDBUrl = data.mongodb?.[0].url
       if (newDBUrl) {
-        const oldSetting = global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb') as DB[]
+        const oldSetting = global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb') as Contea.DB[]
         const oldUrl = oldSetting ? oldSetting?.find((item: any) => item.selected)?.url : ''
         await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb', data.mongodb)
         if (newDBUrl !== oldUrl)

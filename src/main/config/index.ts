@@ -1,43 +1,9 @@
-import { ConfigEnum } from './enum'
-
-export interface DB {
-  url: string
-  selected?: boolean
-}
-
-export interface ConfigDetail {
-  app: {
-    name: string
-    themeWithSystem: boolean
-    isTop: boolean
-  }
-  server: {
-    port: number | string
-  }
-  db: {
-    mongodb: DB[] | []
-  }
-  win: {
-    bounds: {
-      x: number
-      y: number
-      width: number
-      height: number
-    }
-  }
-}
-
-/**
- * 应用配置描述
- */
-export interface Config {
-  [ConfigEnum.DEFAULT_NAME]: ConfigDetail
-}
+import { ConfigEnum } from '@main/enums/configEnum'
 
 /**
  * 应用原始配置
  */
-export const CONFIG: Config = {
+export const CONFIG: Contea.Config = {
   [ConfigEnum.DEFAULT_NAME]: {
     app: {
       name: 'Contea',

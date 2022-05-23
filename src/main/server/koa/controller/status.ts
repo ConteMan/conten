@@ -1,8 +1,8 @@
-import { ConfigEnum } from '~/main/config/enum'
+import { ConfigEnum } from '~/main/enums/configEnum'
 
 async function status() {
   if (global.store) {
-    const res = await global.store[ConfigEnum.EXTENSION_COMMAND].store
+    const res = await global.store[ConfigEnum.DEFAULT_NAME].store
     return res
   }
   return {}

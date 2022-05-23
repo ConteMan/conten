@@ -2,7 +2,7 @@ import { app } from 'electron'
 import Store from 'electron-store'
 
 import { CONFIG } from '@main/config'
-import { ConfigEnum } from '@main/config/enum'
+import { ConfigEnum } from '@main/enums/configEnum'
 
 /**
  * 配置文件初始化
@@ -29,8 +29,6 @@ export function storeInit(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, reload = f
     }
     else {
       const mergeConfig = Object.assign({}, { ...CONFIG[name] }, global.store[name].store)
-      // eslint-disable-next-line no-console
-      console.log('mergeConfig:', mergeConfig)
       global.store[name].set(mergeConfig)
     }
     return global.store[name]
