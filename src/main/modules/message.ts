@@ -331,7 +331,7 @@ async function messageInit() {
           return { path: oldPath, change: false }
         }
       }
-      case 'pin': {
+      case 'pin': { // 窗口置顶
         try {
           const { status } = apiData
           await global.win?.setAlwaysOnTop(status)
@@ -349,12 +349,12 @@ async function messageInit() {
           return false
         }
       }
-      case 'close-app': {
+      case 'close-app': { // 关闭应用
         app.quit()
         process.exit(0)
         return
       }
-      case 'hide-app': {
+      case 'hide-app': { // 隐藏应用
         global.win?.hide()
         return
       }

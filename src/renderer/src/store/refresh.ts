@@ -5,10 +5,11 @@ export const useRefreshState = defineStore('refresh', {
     return {
       weather: false,
       wakatime: false,
+      taptap: false,
     }
   },
   actions: {
-    toggle(module: 'weather' | 'wakatime', status = false) {
+    toggle(module: 'weather' | 'wakatime' | 'taptap', status = false) {
       this[module] = status
     },
   },
