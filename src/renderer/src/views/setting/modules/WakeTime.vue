@@ -58,7 +58,8 @@ const save = async () => {
         <n-input v-model:value="formValue.wakatime_api_key" placeholder="" />
       </n-form-item>
     </n-form>
-    <div class="fixed bottom-0 py-4">
+    <n-divider />
+    <div class="pb-4">
       <n-button
         size="tiny"
         type="primary"

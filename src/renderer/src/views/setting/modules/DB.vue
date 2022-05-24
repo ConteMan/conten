@@ -34,7 +34,7 @@ watch(database, () => {
   })
 })
 
-const onSave = async () => {
+const save = async () => {
   const saveSetting = {
     mongodb: toRaw(data.database),
   }
@@ -67,13 +67,12 @@ const onSave = async () => {
       </template>
     </n-dynamic-input>
   </div>
-
-  <div class="fixed bottom-0 py-4">
+  <n-divider />
+  <div class="pb-4">
     <n-button
-      class=""
       size="tiny"
       type="primary"
-      @click="onSave"
+      @click="save()"
     >
       Save
     </n-button>

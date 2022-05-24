@@ -24,8 +24,5 @@ init()
       <span class="pb-1 text-xs">{{ detail[1].data.data[0].app.title }}</span>
       <span class="ml-1 text-xs">{{ detail[1].data.data[0].played_tips }}</span>
     </div>
-    <!-- <div>
-      {{ JSON.stringify(detail) }}
-    </div> -->
   </div>
 </template>

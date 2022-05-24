@@ -136,7 +136,8 @@ const save = async () => {
         <n-switch v-model:value="formValue[`${module}_schedule_enable`]" size="small" checked-value="1" unchecked-value="0" />
       </n-form-item>
     </n-form>
-    <div class="fixed bottom-0 py-4">
+    <n-divider />
+    <div class="pb-4">
       <n-button
         size="tiny"
         type="primary"
