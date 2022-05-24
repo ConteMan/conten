@@ -2,13 +2,13 @@ import path from 'path'
 import { app } from 'electron'
 import { MongoClient } from 'mongodb'
 import { Sequelize } from 'sequelize'
-import type { DB } from '~/main/config'
-import { getStore } from '~/main/modules/store'
-import { sendToRenderer } from '~/main/modules/message'
+import { getStore } from '@main/modules/store'
+import { sendToRenderer } from '@main/modules/message'
 
-import RequestCacheModel from '~/main/models/requestCache'
-import ConfigModel from '~/main/models/config'
-import { dbDefault } from '~/main/config/db'
+import RequestCacheModel from '@main/models/requestCache'
+import ConfigModel from '@main/models/config'
+import TaskModel from '@main/models/task'
+import { dbDefault } from '@main/config/db'
 
 /**
  * 数据库初始化
@@ -26,9 +26,9 @@ export async function connectMongoDB(url = '') {
   }
 
   if (!url) {
-    const dbArray = store.get('db.mongodb', []) as DB[]
+    const dbArray = store.get('db.mongodb', []) as Contea.DB[]
     if (dbArray.length) {
-      const selectedDB = dbArray.find((item: DB) => item.selected)
+      const selectedDB = dbArray.find((item: Contea.DB) => item.selected)
       url = selectedDB?.url || ''
     }
   }
@@ -93,6 +93,7 @@ export function connectSqlite3(dbPath = '') {
 async function sqlite3Init() {
   await RequestCacheModel.sync()
   await ConfigModel.sync()
+  await TaskModel.sync()
 
   await dbDefault() // 配置文件同步到 SQLite3 数据库
 }

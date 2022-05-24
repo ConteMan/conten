@@ -1,6 +1,6 @@
 {
   "name": "contea-desktop",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "license": "MIT",
   "dependencies": {
     "@koa/router": {
@@ -36,6 +36,12 @@
       "engines": {
         "node": ">= 6"
       }
+    },
+    "crypto-js": {
+      "versionDefault": "^4.1.1",
+      "version": "4.1.1",
+      "resolved": "https://registry.npmmirror.com/crypto-js/-/crypto-js-4.1.1.tgz",
+      "integrity": "sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw=="
     },
     "electron-store": {
       "versionDefault": "^8.0.1",
@@ -252,6 +258,13 @@
       "dependencies": {
         "@iconify/types": "^1.1.0"
       }
+    },
+    "@types/crypto-js": {
+      "versionDefault": "^4.1.1",
+      "version": "4.1.1",
+      "resolved": "https://registry.npmmirror.com/@types/crypto-js/-/crypto-js-4.1.1.tgz",
+      "integrity": "sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==",
+      "dev": true
     },
     "@types/koa": {
       "versionDefault": "^2.13.4",

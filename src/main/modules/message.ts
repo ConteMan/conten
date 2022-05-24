@@ -186,9 +186,9 @@ async function messageInit() {
       }
       case 'taptap-view-http-data': {
         const { url } = apiData
-        const winInfo = TapTap.getViewHttpData(url ?? undefined)
-        if (winInfo && global?.wins[winInfo.name])
-          global?.wins[winInfo.name].showInactive()
+        const winInfo = await TapTap.getViewHttpData(url ?? undefined)
+        // eslint-disable-next-line no-console
+        console.log('winInfo:', winInfo)
         return true
       }
       case 'taptap-profile': {

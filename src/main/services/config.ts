@@ -1,5 +1,5 @@
-import ConfigModel from '~/main/models/config'
-import Schedule from '~/main/services/schedule'
+import ConfigModel from '@main/models/config'
+import Schedule from '@main/services/schedule'
 
 /**
  * 根据组别获取配置
@@ -95,7 +95,7 @@ async function dealSetting(data: any) {
 
   let moduleName = ''
 
-  switch (key) {
+  switch (key) { // TODO 不优雅
     case 'wakatime_schedule_enable':
     case 'wakatime_schedule': {
       moduleName = 'wakatime'
@@ -104,6 +104,11 @@ async function dealSetting(data: any) {
     case 'weather_schedule_enable':
     case 'weather_schedule': {
       moduleName = 'weather'
+      break
+    }
+    case 'taptap_schedule_enable':
+    case 'taptap_schedule': {
+      moduleName = 'taptap'
       break
     }
     default:

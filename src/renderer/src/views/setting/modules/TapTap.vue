@@ -55,6 +55,9 @@ const save = async () => {
       <n-form-item label="Schedule Enable" path="`${module}_schedule_enable`">
         <n-switch v-model:value="formValue[`${module}_schedule_enable`]" size="small" checked-value="1" unchecked-value="0" />
       </n-form-item>
+      <n-form-item label="User ID" path="`${module}_user_id`">
+        <n-input v-model:value="formValue[`${module}_user_id`]" placeholder="" />
+      </n-form-item>
     </n-form>
     <n-divider />
     <div class="pb-4">

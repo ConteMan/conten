@@ -1,8 +1,9 @@
 import NodeSchedule from 'node-schedule'
 
-import { getConfigByKey } from '~/main/services/config'
-import WakaTime from '~/main/services/wakatime'
-import { schedule as weatherSchedule } from '~/main/services/weather'
+import { getConfigByKey } from '@main/services/config'
+import WakaTime from '@main/services/wakatime'
+import { schedule as weatherSchedule } from '@main/services/weather'
+import TapTap from '@main/services/taptap'
 
 class Schedule {
   /**
@@ -52,7 +53,7 @@ class Schedule {
    * @param moduleName - 模块名称
    */
   async moduleSchedule(moduleName: string) {
-    switch (moduleName) {
+    switch (moduleName) { // TODO 不优雅
       case 'weather': {
         await weatherSchedule()
         break
@@ -61,7 +62,13 @@ class Schedule {
         await WakaTime.schedule()
         break
       }
+      case 'taptap': {
+        await TapTap.schedule()
+        break
+      }
       default: {
+        // eslint-disable-next-line no-console
+        console.log('>>> schedule: not find moduleName, check.')
         break
       }
     }
@@ -75,10 +82,11 @@ class Schedule {
     const modules = [
       'wakatime',
       'weather',
+      'taptap',
     ]
     for (const moduleName of modules) {
       await this.dealByModule(moduleName)
-      await this.moduleSchedule(moduleName)
+      await this.moduleSchedule(moduleName) // TODO 任务多会影响启动体验，可以考虑延迟处理
     }
   }
 }
