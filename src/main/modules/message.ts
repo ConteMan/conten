@@ -349,6 +349,15 @@ async function messageInit() {
           return false
         }
       }
+      case 'close-app': {
+        app.quit()
+        process.exit(0)
+        return
+      }
+      case 'hide-app': {
+        global.win?.hide()
+        return
+      }
       default:
         // eslint-disable-next-line no-console
         console.log('>>>>default:', name)

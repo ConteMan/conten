@@ -3,9 +3,12 @@ import { useSystemState } from '@renderer/store/system'
 import { invokeApi } from '@renderer/utils/ipcMessage'
 
 const data = reactive({
+  hoverShowBar: false,
   showBar: true,
+  showMore: false,
+  showMoreHold: false,
 })
-const { showBar } = toRefs(data)
+const { hoverShowBar, showBar, showMore, showMoreHold } = toRefs(data)
 
 const systemState = useSystemState()
 const { showSideNav, isTop, isDark } = storeToRefs(systemState)
@@ -30,55 +33,128 @@ const togglePin = (status: boolean) => {
 const toggleDark = () => {
   systemState.toggleDark(!isDark.value)
 }
+
+const toggleClose = () => {
+  invokeApi({
+    name: 'close-app',
+  })
+}
+
+const toggleHide = () => {
+  invokeApi({
+    name: 'hide-app',
+  })
+}
+
+const toggleShowMore = (status: boolean) => {
+  data.showMore = status
+}
+
+const toggleHoverShowBar = (status: boolean) => {
+  data.hoverShowBar = status
+}
+
+const toggleBar = (status: boolean) => {
+  if (hoverShowBar.value)
+    data.showBar = status
+}
 </script>
 
 <template>
-  <Dragbar
-    class="menubar-container flex-grow-0 flex-shrink-0"
-    :class="{ 'pl-[82px]': !showSideNav }"
+  <div
+    class="menubar-container flex-grow-0 flex-shrink-0 h-[36px]"
+    @mouseenter="toggleBar(true)"
+    @mouseleave="toggleBar(false)"
   >
     <Transition appear>
-      <div v-if="showBar" class="h-full flex flex-row items-center">
-        <mdi-chevron-double-left
-          v-if="showSideNav" class="bar-arrow bar-arrow-left text-xl ml-2 opacity-0 hover:(opacity-100)"
-          @click="toggleSideNav()"
-        />
-        <mdi-chevron-double-right
-          v-if="!showSideNav" class="bar-arrow bar-arrow-right text-xl ml-2 opacity-0 hover:(opacity-100)"
-          @click="toggleSideNav()"
-        />
+      <div v-if="showBar" class="h-full flex items-center">
+        <div class="flex items-center ml-4 text-xl">
+          <mdi-chevron-double-left
+            v-if="showSideNav" class="bar-arrow bar-arrow-left"
+            @click="toggleSideNav()"
+          />
+          <mdi-chevron-double-right
+            v-if="!showSideNav" class="bar-arrow bar-arrow-right"
+            @click="toggleSideNav()"
+          />
+        </div>
 
-        <mdi:brightness-2
-          v-if="isDark"
-          class="bar-theme ml-4 opacity-0 hover:(opacity-100)"
-          @click="toggleDark()"
-        />
-        <mdi-brightness-7
-          v-else class="bar-theme ml-4 opacity-0 hover:(opacity-100)"
-          @click="toggleDark()"
-        />
+        <div class="flex-grow flex justify-end items-center gap-2 mr-6">
+          <div
+            class=" flex items-center gap-2"
+            @mouseover="toggleShowMore(true)"
+            @mouseleave="toggleShowMore(false)"
+          >
+            <template v-if="showMore || showMoreHold">
+              <mdi:brightness-2
+                v-if="isDark"
+                class="bar-theme"
+                @click="toggleDark()"
+              />
+              <mdi-brightness-7
+                v-else
+                class="bar-theme"
+                @click="toggleDark()"
+              />
 
-        <mdi-square-rounded
-          v-if="isTop" class="bar-pin ml-2 opacity-0 hover:(opacity-100)"
-          @click="togglePin(false)"
-        />
-        <mdi-square-rounded-outline
-          v-else class="bar-pin ml-2 opacity-0 hover:(opacity-100)"
-          @click="togglePin(true)"
-        />
+              <mdi-square-rounded
+                v-if="isTop"
+                class="bar-pin"
+                @click="togglePin(false)"
+              />
+              <mdi-square-rounded-outline
+                v-else class="bar-pin"
+                @click="togglePin(true)"
+              />
+
+              <mdi-circle-box-outline
+                v-if="hoverShowBar"
+                class="bar-hover-show"
+                @click="toggleHoverShowBar(false)"
+              />
+              <mdi-circle-box
+                v-else
+                class="bar-hover-show"
+                @click="toggleHoverShowBar(true)"
+              />
+            </template>
+
+            <mdi:chevron-right-box
+              v-if="showMoreHold"
+              class="bar-show-more ml-2"
+              @click="() => data.showMoreHold = false"
+            />
+            <mdi:chevron-left-box
+              v-else
+              class="bar-show-more ml-2"
+              @click="() => data.showMoreHold = true"
+            />
+          </div>
+
+          <mdi:chevron-down-box
+            class="bar-hide"
+            @click="toggleHide()"
+          />
+          <mdi-close-box
+            class="bar-close"
+            @click="toggleClose()"
+          />
+        </div>
       </div>
     </Transition>
-  </Dragbar>
+  </div>
 </template>
 
 <style scoped lang="less">
 .menubar-container {
-  &:hover {
-    .bar-arrow,
-    .bar-pin,
-    .bar-theme {
-      opacity: 1;
-    }
+  .bar-arrow,
+  .bar-pin,
+  .bar-theme,
+  .bar-show-more,
+  .bar-close,
+  .bar-hide,
+  .bar-hover-show {
+    cursor: pointer;
   }
 }
 

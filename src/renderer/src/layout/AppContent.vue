@@ -153,9 +153,9 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
       </div>
     </Transition>
 
-    <div class="flex-grow h-screen max-h-screen overflow-hidden">
+    <div class="relative flex-grow h-screen max-h-screen overflow-hidden">
       <div class="h-full flex flex-col">
-        <Menubar />
+        <Dragbar />
         <router-view v-slot="{ Component }" class="flex-grow flex-shrink overflow-auto">
           <keep-alive>
             <component :is="Component" v-if="$route.meta.keepAlive" />
@@ -163,6 +163,7 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
           <component :is="Component" v-if="!$route.meta.keepAlive" />
         </router-view>
       </div>
+      <Menubar class="absolute bottom-0 w-full" />
     </div>
   </div>
 </template>
