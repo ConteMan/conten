@@ -1,4 +1,6 @@
+import { Op } from 'sequelize'
 import TaskModel from '@main/models/task'
+import { TASK_STATUS } from '@main/enums/taptapEnum'
 
 /**
  * 获取任务信息
@@ -67,5 +69,48 @@ export async function updateTask(name: string, data: any) {
     // eslint-disable-next-line no-console
     console.log('>>> updateTask error: ', e)
     return false
+  }
+}
+
+/**
+ * 检查任务，清理过期未完成
+ */
+export async function checkTask() {
+  try {
+    const { count, rows } = await TaskModel.findAndCountAll({
+      where: {
+        expired_at: {
+          [Op.lt]: new Date(),
+        },
+        status: 0,
+      },
+      raw: true,
+    })
+
+    if (count) {
+      rows.forEach(async (task: any) => {
+        // eslint-disable-next-line no-console
+        console.log('>>> checkTask item', task)
+        await updateTask(task.name, {
+          status: TASK_STATUS.FAIL,
+          end_at: new Date(),
+        })
+        await global.wins?.[task.window_name].close()
+      })
+    }
+
+    // eslint-disable-next-line no-console
+    console.log('>>> checkTask', count)
+
+    return {
+      count,
+    }
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('>>> checkTask error: ', e)
+    return {
+      count: 0,
+    }
   }
 }

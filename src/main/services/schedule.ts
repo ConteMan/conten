@@ -4,6 +4,7 @@ import { getConfigByKey } from '@main/services/config'
 import WakaTime from '@main/services/wakatime'
 import { schedule as weatherSchedule } from '@main/services/weather'
 import TapTap from '@main/services/taptap'
+import System from '@main/services/system'
 
 class Schedule {
   /**
@@ -54,6 +55,10 @@ class Schedule {
    */
   async moduleSchedule(moduleName: string) {
     switch (moduleName) { // TODO 不优雅
+      case 'system': {
+        await System.schedule()
+        break
+      }
       case 'weather': {
         await weatherSchedule()
         break
@@ -80,6 +85,7 @@ class Schedule {
    */
   async init() {
     const modules = [
+      'system',
       'wakatime',
       'weather',
       'taptap',

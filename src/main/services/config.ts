@@ -96,6 +96,11 @@ async function dealSetting(data: any) {
   let moduleName = ''
 
   switch (key) { // TODO 不优雅
+    case 'system_schedule_enable':
+    case 'system_schedule': {
+      moduleName = 'system'
+      break
+    }
     case 'wakatime_schedule_enable':
     case 'wakatime_schedule': {
       moduleName = 'wakatime'
