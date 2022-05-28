@@ -1,6 +1,6 @@
 {
   "name": "contea-desktop",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "license": "MIT",
   "dependencies": {
     "@koa/router": {
@@ -17,6 +17,16 @@
       },
       "engines": {
         "node": ">= 8.0.0"
+      }
+    },
+    "axios": {
+      "versionDefault": "^0.27.2",
+      "version": "0.27.2",
+      "resolved": "https://registry.npmmirror.com/axios/-/axios-0.27.2.tgz",
+      "integrity": "sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==",
+      "dependencies": {
+        "follow-redirects": "^1.14.9",
+        "form-data": "^4.0.0"
       }
     },
     "cheerio": {
@@ -111,6 +121,12 @@
         "co-body": "^5.1.1",
         "formidable": "^2.0.1"
       }
+    },
+    "lodash": {
+      "versionDefault": "^4.17.21",
+      "version": "4.17.21",
+      "resolved": "https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz",
+      "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
     },
     "mongodb": {
       "versionDefault": "^4.5.0",

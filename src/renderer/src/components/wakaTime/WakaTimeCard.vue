@@ -59,7 +59,7 @@ watch(() => refreshState.wakatime, (val) => {
     class="wakatime-card p-2"
   >
     <div>
-      <span class="weather-data-time">
+      <span>
         Today has been coding for {{ summaries.cummulative_total.text }}.
       </span>
       <span

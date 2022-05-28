@@ -4,19 +4,20 @@ import { app, dialog, ipcMain } from 'electron'
 import fs from 'fs-extra'
 import { isString } from 'lodash'
 import { sendToRenderer as sendToRendererNew } from '@main/utils/ipcMessage'
-import { ConfigEnum } from '~/main/enums/configEnum'
-import { start as koaStart, stop as koaStop } from '~/main/server/koa'
-import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '~/main/modules/store'
-import { isObject } from '~/main/utils'
-import { reconnectMongoDB } from '~/main/modules/db'
-import { getWeather } from '~/main/services/weather'
-import { getConfigsByGroup, moduleEnable, setConfig } from '~/main/services/config'
-import { getPackageInfo } from '~/main/services/package'
-import { viewWindowInit } from '~/main/modules/window'
-import { checkIn as JuejinCheckIn } from '~/main/services/juejin'
+import { ConfigEnum } from '@main/enums/configEnum'
+import { start as koaStart, stop as koaStop } from '@main/server/koa'
+import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '@main/modules/store'
+import { isObject } from '@main/utils'
+import { reconnectMongoDB } from '@main/modules/db'
+import { getWeather } from '@main/services/weather'
+import { getConfigByKey, getConfigsByGroup, moduleEnable, setConfig } from '@main/services/config'
+import { getPackageInfo } from '@main/services/package'
+import { viewWindowInit } from '@main/modules/window'
+import { checkIn as JuejinCheckIn } from '@main/services/juejin'
 
-import WakaTime from '~/main/services/wakatime'
-import TapTap from '~/main/services/taptap'
+import WakaTime from '@main/services/wakatime'
+import TapTap from '@main/services/taptap'
+import V2EX from '@main/services/v2ex'
 
 /**
  * 向渲染层发送消息
@@ -145,7 +146,7 @@ async function messageInit() {
   })
 
   ipcMain.handle('init-view-window', async () => {
-    await viewWindowInit()
+    await viewWindowInit('https://v2ex.com', true)
   })
 
   ipcMain.handle('get-view-cookie', async () => {
@@ -357,6 +358,25 @@ async function messageInit() {
       case 'hide-app': { // 隐藏应用
         global.win?.hide()
         return
+      }
+      case 'v2ex': {
+        try {
+          return await V2EX.getUser(true)
+        }
+        catch (e) {
+          // eslint-disable-next-line no-console
+          console.log('>> v2ex', e)
+          return false
+        }
+      }
+      case 'module-info': {
+        try {
+          const { module } = apiData
+          return await getConfigByKey(`${module}_module`)
+        }
+        catch (e) {
+          return false
+        }
       }
       default:
         // eslint-disable-next-line no-console

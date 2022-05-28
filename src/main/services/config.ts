@@ -1,3 +1,4 @@
+import _, { isObject } from 'lodash'
 import ConfigModel from '@main/models/config'
 import Schedule from '@main/services/schedule'
 
@@ -87,6 +88,46 @@ async function setConfig(data: any) {
 }
 
 /**
+ * 合并式配置数据，适用于 JSON 格式数据
+ * @param data - 配置数据
+ */
+async function mergeConfig(data: any) {
+  try {
+    const { group_key, key, value } = data
+    const config = await ConfigModel.findOne({
+      where: {
+        group_key,
+        key,
+      },
+    })
+    if (config) {
+      const currentValueRes = await config.get('value')
+      const currentValue = JSON.parse(currentValueRes as any)
+      _.merge(currentValue, value)
+      await config.update({
+        value: JSON.stringify(currentValue),
+      })
+    }
+    else {
+      await ConfigModel.create({
+        group_key,
+        key,
+        value: isObject(value) ? JSON.stringify(value) : value,
+      })
+    }
+
+    await dealSetting(data)
+
+    return true
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(`>>> mergeConfig error: ${e}`)
+    return null
+  }
+}
+
+/**
  * 配置处理，如定时任务等
  * @param data - 配置数据
  */
@@ -116,6 +157,11 @@ async function dealSetting(data: any) {
       moduleName = 'taptap'
       break
     }
+    case 'v2ex_schedule_enable':
+    case 'v2ex_schedule': {
+      moduleName = 'v2ex'
+      break
+    }
     default:
       break
   }
@@ -142,4 +188,4 @@ async function moduleEnable(moduleName: string) {
   }
 }
 
-export { getConfigsByGroup, getConfigByKey, setConfig, moduleEnable }
+export { getConfigsByGroup, getConfigByKey, setConfig, mergeConfig, moduleEnable }

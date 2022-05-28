@@ -4,5 +4,6 @@
     <WeatherCard />
     <WakaTimeCard />
     <TapTapCard />
+    <V2exCard />
   </div>
 </template>

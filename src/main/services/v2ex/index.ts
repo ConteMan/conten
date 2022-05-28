@@ -1,0 +1,251 @@
+import { getConfigByKey, mergeConfig } from '@main/services/config'
+import { viewWindowInit } from '@main/modules/window'
+import * as cheerio from 'cheerio'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Axios = require('axios')
+
+class V2EX {
+  private name: string
+  public moduleKey = 'v2ex_module'
+  public siteUrl = 'https://www.v2ex.com'
+
+  constructor() {
+    this.name = 'v2ex'
+  }
+
+  /**
+   * 登录检测
+   */
+  async loginCheck(request = false) {
+    try {
+      if (request) {
+        const login = await this.requestSetting()
+        const { cookieStr } = login || { cookieStr: '' }
+        await mergeConfig({
+          group_key: this.name,
+          key: this.moduleKey,
+          value: {
+            login: !!login,
+            cookieStr,
+          },
+        })
+        return !!login
+      }
+      else {
+        const moduleInfo = await getConfigByKey(this.moduleKey)
+        if (!moduleInfo)
+          return false
+
+        const { login } = moduleInfo.value ? JSON.parse(moduleInfo.value) : { login: false }
+        return !!login
+      }
+    }
+    catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 请求设置页，页面内容（可以请求到，则已登录）
+   */
+  async requestSetting() {
+    try {
+      const url = `${this.siteUrl}/settings`
+      const winInfo = await viewWindowInit(url, false, true, { width: 1000, height: 100 })
+      if (winInfo && winInfo.name && winInfo.view) {
+        const cookies = await winInfo.win.getBrowserView()?.webContents.session.cookies.get({ url: this.siteUrl })
+        let cookieStr = ''
+        cookies?.forEach((item) => {
+          cookieStr += `${item.name}=${item.value};`
+        })
+        await global.wins?.[winInfo.name].close()
+
+        const res = await Axios.request({
+          url,
+          headers: {
+            Cookie: cookieStr,
+          },
+          method: 'GET',
+          responseType: 'text',
+          timeout: 10000,
+          maxRedirects: 5,
+        })
+        return res ? { data: res.data, cookieStr } : false
+      }
+      return false
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> requestSetting', e)
+      return false
+    }
+  }
+
+  /**
+   * 获取页面数据
+   */
+  async getPage(url = this.siteUrl, auth = true) {
+    try {
+      let cookieStr = ''
+      if (auth) {
+        const moduleInfo = await getConfigByKey(this.moduleKey)
+        const moduleValue = JSON.parse(moduleInfo.value)
+        cookieStr = moduleValue.cookieStr || ''
+        if (!cookieStr)
+          return null
+      }
+
+      const options = {
+        url,
+        method: 'GET',
+        responseType: 'text',
+        timeout: 10000,
+        maxRedirects: 5,
+      }
+
+      if (cookieStr) {
+        Object.assign(options, {
+          headers: {
+            Cookie: cookieStr,
+          },
+        })
+      }
+
+      const res = await Axios.request(options)
+      return res ? { data: res.data } : null
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> getPage', e)
+      return null
+    }
+  }
+
+  /**
+   * 获取用户名
+   * @param request - 是否进行远程请求
+   */
+  async getUsername(request = false) {
+    try {
+      if (!request) {
+        const moduleInfo = await getConfigByKey(this.moduleKey)
+        const moduleValue = JSON.parse(moduleInfo.value)
+        const { username } = moduleValue || { username: '' }
+        return username || null
+      }
+
+      const mainPageStr = await this.getPage(`${this.siteUrl}/`)
+      if (!mainPageStr)
+        return null
+
+      const $ = cheerio.load(mainPageStr.data)
+      const aDoms = $('#Top .tools a')
+
+      const username = aDoms.length > 0 && aDoms.eq(1).attr('href') ? aDoms.eq(1).attr('href') as string : null
+
+      if (username) {
+        await mergeConfig({
+          group_key: this.name,
+          key: this.moduleKey,
+          value: {
+            username,
+          },
+        })
+      }
+
+      return username
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> getUsername', e)
+      return null
+    }
+  }
+
+  /**
+   * 获取用户信息
+   * @param request - 是否进行远程请求
+   */
+  async getUser(request = false) {
+    try {
+      if (!request) {
+        const moduleInfo = await getConfigByKey(this.moduleKey)
+        const moduleValue = JSON.parse(moduleInfo.value)
+        const { user } = moduleValue || { user: '' }
+        return user || null
+      }
+
+      const username = await this.getUsername()
+      if (!username)
+        return null
+      const url = `${this.siteUrl}${username}`
+      const mainPageStr = await this.getPage(url)
+      if (!mainPageStr)
+        return null
+
+      const $ = cheerio.load(mainPageStr.data)
+      const mainDom = $('#Main')
+
+      const idHtml = mainDom.find('span.gray').first().text()
+      const id = idHtml?.match(/V2EX 第 ([0-9]+?) 号会员/)?.[1]
+      const created = idHtml?.match(/加入于 (.+?) /)?.[1]
+      const dau = mainDom.find('span.gray a').first().html()
+      const online = mainDom.find('strong.online').first().text()
+      const balanceHtml = mainDom.find('div.balance_area').first().html()
+      const balanceArray = [...String(balanceHtml).matchAll(/\s?([0-9]+?)\s\</g)]
+      const balance = {
+        gold: balanceArray[0][1],
+        silver: balanceArray[1][1],
+        bronze: balanceArray[2][1],
+      }
+      const showName = username.split('/')?.[2]
+      const signature = mainDom.find('.bigger').first().text()
+
+      const user = {
+        id,
+        created,
+        dau,
+        online,
+        balance,
+        showName,
+        signature,
+      }
+      if (id) {
+        await mergeConfig({
+          group_key: this.name,
+          key: this.moduleKey,
+          value: {
+            user,
+          },
+        })
+      }
+
+      return id ? user : null
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> getUser', e)
+      return null
+    }
+  }
+
+  /**
+   * 定时任务
+   */
+  async schedule() {
+    try {
+      const login = await this.loginCheck(true)
+      if (login) {
+        const username = await this.getUsername(true)
+        if (username)
+          await this.getUser()
+      }
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> v2ex schedule', e)
+    }
+  }
+}
+
+export default new V2EX()

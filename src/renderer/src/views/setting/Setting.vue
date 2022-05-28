@@ -4,6 +4,7 @@ import DBModule from './modules/DB.vue'
 import WeatherModule from './modules/Weather.vue'
 import WakaTimeModule from './modules/WakeTime.vue'
 import TapTapModule from './modules/TapTap.vue'
+import V2exModule from './modules/V2ex.vue'
 
 const modules = [
   {
@@ -25,6 +26,10 @@ const modules = [
   {
     name: 'TapTap',
     code: 'taptap',
+  },
+  {
+    name: 'V2EX',
+    code: 'v2ex',
   },
 ]
 const data = reactive({
@@ -55,6 +60,7 @@ const { currentModule } = toRefs(data)
       <WeatherModule v-if="currentModule === 'weather'" />
       <WakaTimeModule v-if="currentModule === 'wakatime'" />
       <TapTapModule v-if="currentModule === 'taptap'" />
+      <V2exModule v-if="currentModule === 'v2ex'" />
     </div>
   </div>
 </template>

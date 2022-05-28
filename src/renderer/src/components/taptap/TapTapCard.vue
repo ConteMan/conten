@@ -49,7 +49,7 @@ watch(() => refreshState.taptap, (val) => {
 <template>
   <div v-if="enable && detail" class="p-2">
     <div>
-      <span class="pb-1 text-xs">{{ detail[1].data.data[0].app.title }}</span>
+      <span class="pb-1 text-xs">[ {{ detail[1].data.data[0].app.title }} ]</span>
       <span class="ml-1 text-xs">{{ detail[1].data.data[0].played_tips }}</span>
     </div>
   </div>

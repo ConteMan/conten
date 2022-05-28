@@ -5,6 +5,7 @@ import WakaTime from '@main/services/wakatime'
 import { schedule as weatherSchedule } from '@main/services/weather'
 import TapTap from '@main/services/taptap'
 import System from '@main/services/system'
+import V2ex from '@main/services/v2ex'
 
 class Schedule {
   /**
@@ -69,6 +70,10 @@ class Schedule {
       }
       case 'taptap': {
         await TapTap.schedule()
+        break
+      }
+      case 'v2ex': {
+        await V2ex.schedule()
         break
       }
       default: {
