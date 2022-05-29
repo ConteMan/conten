@@ -1,5 +1,6 @@
 import { app } from 'electron'
 import Store from 'electron-store'
+import _ from 'lodash'
 
 import { CONFIG } from '@main/config'
 import { ConfigEnum } from '@main/enums/configEnum'
@@ -28,7 +29,7 @@ export function storeInit(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, reload = f
       global.store[name].set(CONFIG[name] as object)
     }
     else {
-      const mergeConfig = Object.assign({}, { ...CONFIG[name] }, global.store[name].store)
+      const mergeConfig = _.merge({}, { ...CONFIG[name] }, global.store[name].store)
       global.store[name].set(mergeConfig)
     }
     return global.store[name]

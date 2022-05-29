@@ -94,6 +94,7 @@ class Schedule {
       'wakatime',
       'weather',
       'taptap',
+      'v2ex',
     ]
     for (const moduleName of modules) {
       await this.dealByModule(moduleName)

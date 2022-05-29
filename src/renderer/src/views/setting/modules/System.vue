@@ -5,6 +5,7 @@ import { useSystemState } from '@renderer/store/system'
 import { setSystemTheme } from '@renderer/utils'
 
 const module = 'system'
+const message = useMessage()
 
 const data = reactive({
   formRef: null,
@@ -12,8 +13,9 @@ const data = reactive({
   formSize: 'small',
   defaultPath: 'defaultPath',
   pathStatusText: '',
+  sqlite3Path: '',
 })
-const { formRef, formValue, formSize, defaultPath, pathStatusText } = toRefs(data)
+const { formRef, formValue, formSize, defaultPath, pathStatusText, sqlite3Path } = toRefs(data)
 
 const getConfig = async () => {
   const res = await invokeApi({
@@ -54,33 +56,54 @@ const getDefaultPath = async () => {
 }
 getDefaultPath()
 
+// 获取 SQLite3 数据文件路径
+const getSQLite3Path = async () => {
+  const res = await invokeApi({
+    name: 'get-sqlite3-path',
+  })
+  data.sqlite3Path = res
+}
+getSQLite3Path()
+
 // 打开对话框选择配置文件目录
-const getPathByDialog = async () => {
+const getPathByDialog = async (type = 'config', name = 'default') => {
   const res = await invokeApi({
     name: 'select-path-dialog',
     data: {
-      name: 'default',
+      type,
+      name,
     },
   })
-  data.defaultPath = res.path
-  if (res?.change)
+  if (type === 'config')
+    data.defaultPath = res.path
+  if (type === 'sqlite3')
+    data.sqlite3Path = res.path
+
+  if (res?.change && type === 'config')
     data.pathStatusText = '配置已更新, 请重启'
+
+  message.create(res ? 'Success' : 'Error', {
+    type: res ? 'success' : 'error',
+    duration: 2000,
+  })
 }
 
 // 重置配置文件目录
-const resetStorePath = async () => {
+const resetStorePath = async (type = 'config', name = 'default') => {
   const res = await invokeApi({
     name: 'reset-store-path',
     data: {
-      name: 'default',
+      type,
+      name,
     },
   })
-  data.defaultPath = res.path
-  if (res?.change)
+  if (type === 'config')
+    data.defaultPath = res.path
+  if (type === 'sqlite3')
+    data.sqlite3Path = res.path
+  if (res?.change && type === 'config')
     data.pathStatusText = '配置已更新, 请重启'
 }
-
-const message = useMessage()
 
 const save = async () => {
   const saveData: any = []
@@ -124,6 +147,20 @@ const save = async () => {
             <mdi-cursor-default-click />
           </div>
           <div class="cursor-pointer ml-2 flex" title="重置为默认路径" @click="resetStorePath()">
+            <mdi-restore />
+          </div>
+          <span v-if="pathStatusText" class="ml-2 text-xs text-red-400">{{ pathStatusText }}</span>
+        </div>
+      </n-form-item>
+      <n-form-item label="SQLite3 数据文件路径">
+        <div class="flex items-center">
+          <div class="self">
+            {{ sqlite3Path }}
+          </div>
+          <div class="cursor-pointer ml-2 flex" title="选择路径" @click="getPathByDialog('sqlite3')">
+            <mdi-cursor-default-click />
+          </div>
+          <div class="cursor-pointer ml-2 flex" title="重置为默认路径" @click="resetStorePath('sqlite3')">
             <mdi-restore />
           </div>
           <span v-if="pathStatusText" class="ml-2 text-xs text-red-400">{{ pathStatusText }}</span>

@@ -8,7 +8,7 @@ import { ConfigEnum } from '@main/enums/configEnum'
 import { start as koaStart, stop as koaStop } from '@main/server/koa'
 import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '@main/modules/store'
 import { isObject } from '@main/utils'
-import { reconnectMongoDB } from '@main/modules/db'
+import { connectSqlite3, reconnectMongoDB } from '@main/modules/db'
 import { getWeather } from '@main/services/weather'
 import { getConfigByKey, getConfigsByGroup, moduleEnable, setConfig } from '@main/services/config'
 import { getPackageInfo } from '@main/services/package'
@@ -271,7 +271,18 @@ async function messageInit() {
           return false
         }
       }
-      case 'set-store-path': {
+      case 'get-sqlite3-path': { // SQLite3 文件路径
+        try {
+          const store = getStore()
+          if (!store)
+            return false
+          return store.get('db.sqlite3.path', '')
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'set-store-path': { // 设置配置文件路径
         try {
           const { name, path } = apiData
           return setStorePath(name, path)
@@ -280,57 +291,129 @@ async function messageInit() {
           return false
         }
       }
-      case 'select-path-dialog': { // 通过对话窗口选择路径，且复制配置文件到目标路径，并重载 store
-        const { name } = apiData
-        const oldPath = getStorePath(name)
-        try {
-          const { canceled, filePaths } = await dialog.showOpenDialog({
-            title: '选择文件夹',
-            defaultPath: oldPath,
-            properties: ['openDirectory'],
-          })
-          if (!canceled && path && oldPath !== filePaths[0]) {
-            const setRes = setStorePath(name, filePaths[0])
-            if (setRes) {
-              const newPath = path.join(filePaths[0], `${name}.json`)
-              const exist = await fs.pathExists(newPath)
-              if (!exist)
-                await fs.copy(path.join(oldPath, `${name}.json`), newPath)
-              storeInit(name, true)
+      case 'select-path-dialog': { // 通过对话窗口选择路径，且复制文件到目标路径，并进行处理
+        const { type, name } = apiData
+        if (type === 'config') {
+          const oldPath = getStorePath(name)
+          try {
+            const { canceled, filePaths } = await dialog.showOpenDialog({
+              title: '选择文件夹',
+              defaultPath: oldPath,
+              properties: ['openDirectory'],
+            })
+            if (!canceled && path && oldPath !== filePaths[0]) {
+              const setRes = setStorePath(name, filePaths[0])
+              if (setRes) {
+                const newPath = path.join(filePaths[0], `${name}.json`)
+                const exist = await fs.pathExists(newPath)
+                if (!exist)
+                  await fs.copy(path.join(oldPath, `${name}.json`), newPath)
+                storeInit(name, true)
+              }
+              return { path: filePaths[0], change: true }
             }
-            return { path: filePaths[0], change: true }
+            else {
+              return { path: oldPath, change: false }
+            }
           }
-          else {
+          catch (e) {
             return { path: oldPath, change: false }
           }
         }
-        catch (e) {
-          return { path: oldPath, change: false }
+        if (type === 'sqlite3') {
+          try {
+            const store = getStore()
+            if (!store)
+              return false
+            const storeName = 'db.sqlite3.path'
+            const oldPath = store.get(storeName, '') as string
+            if (!oldPath)
+              return false
+            const { canceled, filePaths } = await dialog.showOpenDialog({
+              title: '选择文件夹',
+              defaultPath: oldPath,
+              properties: ['openDirectory'],
+            })
+            if (!canceled && path && oldPath !== filePaths[0]) {
+              store.set(storeName, filePaths[0])
+              const setRes = store.get(storeName, '')
+              if (setRes) {
+                const dbFileName = 'sqlite3.db'
+                const newPath = path.join(filePaths[0], dbFileName)
+                const exist = await fs.pathExists(newPath)
+                if (!exist)
+                  await fs.copy(path.join(oldPath, dbFileName), newPath)
+                connectSqlite3(newPath)
+              }
+              return { path: filePaths[0], change: true }
+            }
+            else {
+              return { path: oldPath, change: false }
+            }
+          }
+          catch (e) {
+            return false
+          }
         }
+        return false
       }
-      case 'reset-store-path': { // 重置默认配置路径
-        const { name } = apiData
-        const oldPath = getStorePath(name)
-        try {
-          const defaultPath = app.getPath('userData')
-          if (oldPath !== defaultPath) {
-            const setRes = setStorePath(name, defaultPath)
-            if (setRes) {
-              const newPath = path.join(defaultPath, `${name}.json`)
-              const exist = await fs.pathExists(newPath)
-              if (!exist)
-                await fs.copy(path.join(oldPath, `${name}.json`), newPath)
-              storeInit(name, true)
+      case 'reset-store-path': { // 重置默认路径
+        const { type, name } = apiData
+        if (type === 'config') {
+          const oldPath = getStorePath(name)
+          try {
+            const defaultPath = app.getPath('userData')
+            if (oldPath !== defaultPath) {
+              const setRes = setStorePath(name, defaultPath)
+              if (setRes) {
+                const newPath = path.join(defaultPath, `${name}.json`)
+                const exist = await fs.pathExists(newPath)
+                if (!exist)
+                  await fs.copy(path.join(oldPath, `${name}.json`), newPath)
+                storeInit(name, true)
+              }
+              return { path: defaultPath, change: true }
             }
-            return { path: defaultPath, change: true }
+            else {
+              return { path: oldPath, change: false }
+            }
           }
-          else {
+          catch (e) {
             return { path: oldPath, change: false }
           }
         }
-        catch (e) {
-          return { path: oldPath, change: false }
+        if (type === 'sqlite3') {
+          const store = getStore()
+          if (!store)
+            return false
+          const storeName = 'db.sqlite3.path'
+          const oldPath = store.get(storeName, '') as string
+          if (!oldPath)
+            return false
+          try {
+            const defaultPath = app.getPath('userData')
+            if (oldPath !== defaultPath) {
+              store.set(storeName, defaultPath)
+              const setRes = store.get(storeName, '')
+              if (setRes) {
+                const dbFileName = 'sqlite3.db'
+                const newPath = path.join(defaultPath, dbFileName)
+                const exist = await fs.pathExists(newPath)
+                if (!exist)
+                  await fs.copy(path.join(oldPath, dbFileName), newPath)
+                connectSqlite3(newPath)
+              }
+              return { path: defaultPath, change: true }
+            }
+            else {
+              return { path: oldPath, change: false }
+            }
+          }
+          catch (e) {
+            return { path: oldPath, change: false }
+          }
         }
+        return false
       }
       case 'pin': { // 窗口置顶
         try {

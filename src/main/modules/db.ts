@@ -9,14 +9,50 @@ import RequestCacheModel from '@main/models/requestCache'
 import ConfigModel from '@main/models/config'
 import TaskModel from '@main/models/task'
 import InfoModel from '@main/models/info'
-import { dbDefault } from '@main/config/db'
 
 /**
  * 数据库初始化
  */
 export async function dbInit() {
   await sqlite3Init()
-  return true
+}
+
+/**
+ * SQLite3 初始化
+ */
+async function sqlite3Init() {
+  await RequestCacheModel.sync()
+  await ConfigModel.sync()
+  await TaskModel.sync()
+  await InfoModel.sync()
+}
+
+/**
+ * 连接 SQLite3
+ * @param dbPath - db 文件地址
+ */
+export function connectSqlite3(dbPath = '') {
+  try {
+    if (!dbPath)
+      dbPath = path.join(app.getPath('userData'), 'sqlite3.db')
+
+    const sequelize = new Sequelize({
+      dialect: 'sqlite',
+      storage: dbPath,
+    })
+
+    global.sequelize = sequelize
+
+    // eslint-disable-next-line no-console
+    console.log('>>> sqlite2Init connectSqlite3')
+
+    return true
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('connectSqlite3', e)
+    return false
+  }
 }
 
 export async function connectMongoDB(url = '') {
@@ -66,36 +102,4 @@ export async function reconnectMongoDB() {
     sendToRenderer('error', e)
     return false
   }
-}
-
-export function connectSqlite3(dbPath = '') {
-  try {
-    if (!dbPath)
-      dbPath = path.join(app.getPath('userData'), 'sqlite3.db')
-
-    const sequelize = new Sequelize({
-      dialect: 'sqlite',
-      storage: dbPath,
-    })
-
-    global.sequelize = sequelize
-    return true
-  }
-  catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('connectSqlite3', e)
-    return false
-  }
-}
-
-/**
- * SQLite3 初始化
- */
-async function sqlite3Init() {
-  await RequestCacheModel.sync()
-  await ConfigModel.sync()
-  await TaskModel.sync()
-  await InfoModel.sync()
-
-  await dbDefault() // 配置文件同步到 SQLite3 数据库
 }

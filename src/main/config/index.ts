@@ -1,3 +1,4 @@
+import { app } from 'electron'
 import { ConfigEnum } from '@main/enums/configEnum'
 
 /**
@@ -14,6 +15,9 @@ export const CONFIG: Contea.Config = {
       port: 3000,
     },
     db: {
+      sqlite3: {
+        path: app.getPath('userData'),
+      },
       mongodb: [
         {
           url: '',

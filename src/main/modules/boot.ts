@@ -1,5 +1,6 @@
 import { app } from 'electron'
 import { isWin7 } from '@main/utils'
+
 import '@main/modules/sqlite3'
 
 if (isWin7())

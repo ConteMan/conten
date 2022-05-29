@@ -1,5 +1,5 @@
 import { app } from 'electron'
-import { getStore } from '~/main/modules/store'
+import { getStore } from '@main/modules/store'
 
 /**
  * 应用初始化

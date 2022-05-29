@@ -37,6 +37,9 @@ declare namespace Contea {
       port: number | string
     }
     db: {
+      sqlite3: {
+        path: string
+      }
       mongodb: DB[] | []
     }
     win: {
