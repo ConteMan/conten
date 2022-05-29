@@ -8,6 +8,7 @@ import { sendToRenderer } from '@main/modules/message'
 import RequestCacheModel from '@main/models/requestCache'
 import ConfigModel from '@main/models/config'
 import TaskModel from '@main/models/task'
+import InfoModel from '@main/models/info'
 import { dbDefault } from '@main/config/db'
 
 /**
@@ -94,6 +95,7 @@ async function sqlite3Init() {
   await RequestCacheModel.sync()
   await ConfigModel.sync()
   await TaskModel.sync()
+  await InfoModel.sync()
 
   await dbDefault() // 配置文件同步到 SQLite3 数据库
 }

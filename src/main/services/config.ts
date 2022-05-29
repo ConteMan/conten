@@ -104,6 +104,8 @@ async function mergeConfig(data: any) {
       const currentValueRes = await config.get('value')
       const currentValue = JSON.parse(currentValueRes as any)
       _.merge(currentValue, value)
+      // eslint-disable-next-line no-console
+      console.log('>>> config mergeConfig', currentValue)
       await config.update({
         value: JSON.stringify(currentValue),
       })

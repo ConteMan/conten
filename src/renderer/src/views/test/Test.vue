@@ -104,7 +104,6 @@ const changeTrafficButton = async () => {
       </div>
       <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-weather')">Get CMA Weather</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('v2ex')">V2EX</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">

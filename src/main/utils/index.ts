@@ -30,3 +30,39 @@ export function randomStr(length: number, chars = '0123456789abcdefghijklmnopqrs
 export function isWin7() {
   return os.release().startsWith('6.1')
 }
+
+/**
+ * 重试适配器
+ * @param adapter - 适配器
+ * @param options - 重试选项
+ */
+export function retryAdapterEnhancer(adapter: any, options = { times: 0, delay: 300 }) {
+  const { times, delay } = options
+
+  return async (config: any) => {
+    const { retryTimes = times, retryDelay = delay } = config
+    let __retryCount = 0
+    const request: any = async () => {
+      try {
+        return await adapter(config)
+      }
+      catch (err) {
+        if (!retryTimes || __retryCount >= retryTimes)
+          return Promise.reject(err)
+
+        __retryCount++
+        // 延时处理
+        const delay = new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(true)
+          }, retryDelay)
+        })
+        // 重新发起请求
+        return delay.then(() => {
+          return request()
+        })
+      }
+    }
+    return request()
+  }
+}

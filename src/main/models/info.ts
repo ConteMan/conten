@@ -20,9 +20,11 @@ const Info = global.sequelize?.define('info', {
   },
   data_origin: {
     type: DataTypes.TEXT,
+    allowNull: true,
   },
   data: {
     type: DataTypes.JSON,
+    allowNull: true,
   },
   is_public: {
     type: DataTypes.TINYINT,

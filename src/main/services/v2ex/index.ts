@@ -1,8 +1,14 @@
+import * as cheerio from 'cheerio'
+import dayjs from 'dayjs'
+
 import { getConfigByKey, mergeConfig } from '@main/services/config'
 import { viewWindowInit } from '@main/modules/window'
-import * as cheerio from 'cheerio'
+import { bulkCreateOrUpdate } from '@main/services/info'
+import { retryAdapterEnhancer } from '@main/utils'
+import { sendToRenderer } from '@main/utils/ipcMessage'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Axios = require('axios')
+const Axios = require('axios').default
 
 class V2EX {
   private name: string
@@ -60,7 +66,14 @@ class V2EX {
         })
         await global.wins?.[winInfo.name].close()
 
-        const res = await Axios.request({
+        const axiosInstance = Axios.create({
+          adapter: retryAdapterEnhancer(Axios.defaults.adapter, {
+            times: 3,
+            delay: 1000,
+          }),
+        })
+
+        const res = await axiosInstance.request({
           url,
           headers: {
             Cookie: cookieStr,
@@ -100,7 +113,7 @@ class V2EX {
         method: 'GET',
         responseType: 'text',
         timeout: 10000,
-        maxRedirects: 5,
+        maxRedirects: 20,
       }
 
       if (cookieStr) {
@@ -110,8 +123,13 @@ class V2EX {
           },
         })
       }
-
-      const res = await Axios.request(options)
+      const axiosInstance = Axios.create({
+        adapter: retryAdapterEnhancer(Axios.defaults.adapter, {
+          times: 3,
+          delay: 1000,
+        }),
+      })
+      const res = await axiosInstance.request(options)
       return res ? { data: res.data } : null
     }
     catch (e) {
@@ -230,16 +248,83 @@ class V2EX {
   }
 
   /**
+   * 获取节点列表
+   * @param tab - 节点
+   */
+  async getTabList(tab = 'hot') {
+    try {
+      const tabs = ['hot', 'all', 'tech', 'creative', 'play', 'apple', 'r2', 'members', 'qna', 'city', 'deals', 'jobs']
+      if (!tabs.includes(tab))
+        return null
+
+      const url = `${this.siteUrl}/?tab=${tab}`
+      const pageRes = await this.getPage(url)
+      if (!pageRes)
+        return null
+
+      const $ = cheerio.load(pageRes.data)
+
+      const mainDom = $('#Main')
+      const list: any[] = []
+      const moduleName = this.name
+      mainDom.find('.cell.item').each(function () {
+        const title = $(this).find('.item_title a').first().text()
+        const title_link = $(this).find('.item_title a').first().attr('href')
+        const id = Number(title_link?.match(/\/t\/([0-9]+)/)?.[1])
+        const node = $(this).find('.topic_info > .node').first().text()
+        const node_link = $(this).find('.topic_info > .node').first().attr('href')
+        const author = $(this).find('.topic_info strong a').first().html()
+        const author_link = $(this).find('.topic_info strong a').first().attr('href')
+        const last_reply_at = $(this).find('.topic_info span').first().attr('title')
+        const reply_count = Number($(this).find('td[align=right] a').first().html())
+
+        const slug = `${moduleName}_${tab}_${id}`
+        const data = {
+          id,
+          title,
+          title_link,
+          node,
+          node_link,
+          author,
+          author_link,
+          last_reply_at,
+          reply_count,
+        }
+
+        list.push(
+          {
+            platform: moduleName,
+            platform_type: `${moduleName}-${tab}`,
+            slug,
+            info_at: dayjs(last_reply_at),
+            data,
+          })
+      })
+      if (list.length)
+        await bulkCreateOrUpdate(list)
+      return list
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> getTabList', e)
+    }
+  }
+
+  /**
    * 定时任务
    */
   async schedule() {
     try {
       const login = await this.loginCheck(true)
       if (login) {
-        const username = await this.getUsername(true)
-        if (username)
-          await this.getUser()
+        await this.getUsername(true)
+        await this.getUser(true)
       }
+      await this.getTabList()
+
+      sendToRenderer('refresh', {
+        module: this.name,
+      })
     }
     catch (e) {
       // eslint-disable-next-line no-console

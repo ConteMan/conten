@@ -33,8 +33,6 @@ const getModuleInfo = async (refresh = false) => {
   })
 
   if (res) {
-    // eslint-disable-next-line no-console
-    console.log(res)
     data.info = JSON.parse(res.value)
     data.updated_at = res.updated_at
   }
@@ -47,11 +45,21 @@ const init = async () => {
 }
 init()
 
+// 开启新窗口
+const openWindow = (url: string) => {
+  invokeApi({
+    name: 'open-new-window',
+    data: {
+      url,
+    },
+  })
+}
+
 const refreshState = useRefreshState()
-watch(() => refreshState.v2ex, (val) => {
+watch(() => refreshState[module], (val) => {
   if (val) {
     getModuleInfo(true)
-    refreshState.toggle('v2ex', false)
+    refreshState.toggle(module, false)
   }
 })
 </script>
@@ -63,7 +71,7 @@ watch(() => refreshState.v2ex, (val) => {
   >
     <div class="text-xs">
       <span>
-        [ V2EX ] {{ info.login ? 'online' : 'offline' }}.
+        [ V2EX ] {{ info.login ? 'online' : '' }}<span v-if="!info.login" class="cursor-pointer hover:(underline decoration-2 underline-offset-2)" @click="openWindow('https://v2ex.com')">offline</span> / {{ info.user.balance.gold }}-{{ info.user.balance.silver }}-{{ info.user.balance.bronze }}
       </span>
       <span
         class="v2ex-data-time invisible text-xs text-gray-400 italic cursor-pointer ml-2"

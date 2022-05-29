@@ -11,6 +11,10 @@ const navList = [
     path: '/dashboard',
   },
   {
+    name: '资讯',
+    path: '/info',
+  },
+  {
     name: '实验',
     path: '/test',
   },

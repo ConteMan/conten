@@ -17,7 +17,7 @@ import { checkIn as JuejinCheckIn } from '@main/services/juejin'
 
 import WakaTime from '@main/services/wakatime'
 import TapTap from '@main/services/taptap'
-import V2EX from '@main/services/v2ex'
+import { list as infoList } from '@main/services/info'
 
 /**
  * 向渲染层发送消息
@@ -353,26 +353,39 @@ async function messageInit() {
       case 'close-app': { // 关闭应用
         app.quit()
         process.exit(0)
-        return
+        return true
       }
       case 'hide-app': { // 隐藏应用
         global.win?.hide()
-        return
+        return true
       }
-      case 'v2ex': {
-        try {
-          return await V2EX.getUser(true)
-        }
-        catch (e) {
-          // eslint-disable-next-line no-console
-          console.log('>> v2ex', e)
-          return false
-        }
-      }
-      case 'module-info': {
+      case 'module-info': { // 模块信息
         try {
           const { module } = apiData
           return await getConfigByKey(`${module}_module`)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'info-list': { // Info 列表查询
+        const { type = 'v2ex', page = 1, pageSize = 10 } = apiData
+        try {
+          return await infoList(type, page, pageSize)
+        }
+        catch (e) {
+          return null
+        }
+      }
+      case 'open-new-window': { // 新窗口打开网址
+        try {
+          const { url } = apiData
+          const res = await viewWindowInit(url, true, true)
+          if (res) {
+            const { name } = res
+            global.wins?.[name]?.show()
+          }
+          return true
         }
         catch (e) {
           return false

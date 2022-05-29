@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, shell } from 'electron'
 import { domReady } from './utils'
 import { useLoading } from './loading'
 
@@ -14,6 +14,7 @@ domReady().then(() => {
 contextBridge.exposeInMainWorld('fs', fs)
 contextBridge.exposeInMainWorld('removeLoading', removeLoading)
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
+contextBridge.exposeInMainWorld('shell', withPrototype(shell))
 
 // `exposeInMainWorld` can not detect `prototype` attribute and methods, manually patch it.
 function withPrototype(obj: Record<string, any>) {
