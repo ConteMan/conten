@@ -6,6 +6,7 @@ import { viewWindowInit } from '@main/modules/window'
 import { bulkCreateOrUpdate } from '@main/services/info'
 import { retryAdapterEnhancer } from '@main/utils'
 import { sendToRenderer } from '@main/utils/ipcMessage'
+import { addLog } from '../log'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Axios = require('axios').default
@@ -307,6 +308,7 @@ class V2EX {
     catch (e) {
       // eslint-disable-next-line no-console
       console.log('>>> getTabList', e)
+      return null
     }
   }
 
@@ -315,20 +317,29 @@ class V2EX {
    */
   async schedule() {
     try {
-      const login = await this.loginCheck(true)
-      if (login) {
-        await this.getUsername(true)
-        await this.getUser(true)
-      }
-      await this.getTabList()
+      const loginRes = await this.loginCheck(true)
+      const getUsernameRes = await this.getUsername(true)
+      const getUserRes = await this.getUser(true)
+      const getTabListRes = await this.getTabList()
 
       sendToRenderer('refresh', {
         module: this.name,
       })
+
+      const res = {
+        login: !!loginRes,
+        getUsername: !!getUsernameRes,
+        getUser: !!getUserRes,
+        getTabList: !!getTabListRes,
+      }
+      addLog(`${this.name}_schedule`, `定时任务：${JSON.stringify(res)}`, {})
+      return res
     }
     catch (e) {
       // eslint-disable-next-line no-console
       console.log('>>> v2ex schedule', e)
+      addLog(`${this.name}_schedule`, `定时任务失败：${String(e)}`, {})
+      return false
     }
   }
 }

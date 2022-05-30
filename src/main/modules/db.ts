@@ -9,6 +9,7 @@ import RequestCacheModel from '@main/models/requestCache'
 import ConfigModel from '@main/models/config'
 import TaskModel from '@main/models/task'
 import InfoModel from '@main/models/info'
+import LogModel from '@main/models/log'
 
 /**
  * 数据库初始化
@@ -25,6 +26,7 @@ async function sqlite3Init() {
   await ConfigModel.sync()
   await TaskModel.sync()
   await InfoModel.sync()
+  await LogModel.sync()
 }
 
 /**
