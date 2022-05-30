@@ -36,4 +36,10 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/info/Info.vue'),
     meta: { title: '', keepAlive: false },
   },
+  {
+    path: '/system',
+    name: 'System',
+    component: () => import('../views/system/System.vue'),
+    meta: { title: '', keepAlive: false },
+  },
 ]

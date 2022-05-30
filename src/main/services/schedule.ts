@@ -1,4 +1,5 @@
 import NodeSchedule from 'node-schedule'
+import dayjs from 'dayjs'
 
 import { getConfigByKey } from '@main/services/config'
 import WakaTime from '@main/services/wakatime'
@@ -45,7 +46,7 @@ class Schedule {
     }
     catch (e) {
       // eslint-disable-next-line no-console
-      console.log(`>>> dealByModule error: ${e}`)
+      console.log('>>> SCHEDULE >> dealByModule > error: ', e)
       return false
     }
   }
@@ -78,7 +79,7 @@ class Schedule {
       }
       default: {
         // eslint-disable-next-line no-console
-        console.log('>>> schedule: not find moduleName, check.')
+        console.log('>>> SCHEDULE >> moduleSchedule: not find moduleName')
         break
       }
     }
@@ -86,21 +87,47 @@ class Schedule {
   }
 
   /**
-   * 初始化定时任务
+   * 定时任务列表
    */
-  async init() {
-    const modules = [
-      'system',
-      'wakatime',
-      'weather',
-      'taptap',
-      'v2ex',
-    ]
-    for (const moduleName of modules) {
-      await this.dealByModule(moduleName)
-      await this.moduleSchedule(moduleName) // TODO 任务多会影响启动体验，可以考虑延迟处理
+  async list() {
+    try {
+      const keys = Object.keys(global.jobs)
+      if (!keys.length)
+        return []
+
+      const jobList = []
+      for (const key of keys) {
+        jobList.push({
+          name: key,
+          next: dayjs(global.jobs[key].nextInvocation()).format('YYYY-MM-DD HH:mm:ss'),
+        })
+      }
+      return jobList
+    }
+    catch (e) {
+      return []
     }
   }
+}
+
+/**
+ * 定时任务初始化
+ */
+export async function scheduleInit() {
+  const scheduleInstance = new Schedule()
+  const modules = [
+    'system',
+    'wakatime',
+    'weather',
+    'taptap',
+    'v2ex',
+  ]
+  for (const moduleName of modules)
+    await scheduleInstance.dealByModule(moduleName)
+    // await this.moduleSchedule(moduleName) // TODO 任务多会影响启动体验，可以考虑延迟处理
+
+  // eslint-disable-next-line no-console
+  console.log('>>> SCHEDULE >> init > jobs: ', Object.keys(global.jobs))
 }
 
 export default new Schedule()

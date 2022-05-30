@@ -18,6 +18,7 @@ import { checkIn as JuejinCheckIn } from '@main/services/juejin'
 import WakaTime from '@main/services/wakatime'
 import TapTap from '@main/services/taptap'
 import { list as infoList } from '@main/services/info'
+import schedule from '@main/services/schedule'
 
 /**
  * 向渲染层发送消息
@@ -472,6 +473,14 @@ async function messageInit() {
         }
         catch (e) {
           return false
+        }
+      }
+      case 'schedule-list': { // 定时任务列表
+        try {
+          return await schedule.list()
+        }
+        catch (e) {
+          return null
         }
       }
       default:

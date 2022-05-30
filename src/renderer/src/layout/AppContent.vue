@@ -19,6 +19,10 @@ const navList = [
     path: '/test',
   },
   {
+    name: '系统',
+    path: '/system',
+  },
+  {
     name: '设置',
     path: '/setting',
   },
