@@ -39,6 +39,7 @@
     "@types/node-schedule": "^2.1.0",
     "@types/sqlite3": "^3.1.8",
     "@vitejs/plugin-vue": "^2.0.1",
+    "@vueuse/components": "^8.5.0",
     "@vueuse/core": "^8.2.0",
     "animate.css": "^4.1.1",
     "chalk": "^5.0.0",

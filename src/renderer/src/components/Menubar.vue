@@ -62,7 +62,7 @@ const toggleBar = (status: boolean) => {
 
 <template>
   <div
-    class="menubar-container flex-grow-0 flex-shrink-0 h-[36px]"
+    class="menubar-container flex-grow-0 flex-shrink-0 h-[32px]"
     @mouseenter="toggleBar(true)"
     @mouseleave="toggleBar(false)"
   >

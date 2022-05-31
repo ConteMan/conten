@@ -1,4 +1,3 @@
-import { Op } from 'sequelize'
 import InfoModel from '@main/models/info'
 
 /**
@@ -35,15 +34,19 @@ export async function bulkCreateOrUpdate(infos: any[] = []) {
  * @param page - 页数
  * @param pageSize - 分页大小
  */
-export async function list(type: string, page = 1, pageSize = 10) {
+export async function list(type = '', page = 1, pageSize = 10) {
   try {
     const offset = (page - 1) * pageSize
+    let where = {}
+    if (type) {
+      where = {
+        ...where,
+        platform: type,
+      }
+    }
+
     const { count, rows } = await InfoModel.findAndCountAll({
-      where: {
-        platform: {
-          [Op.eq]: type,
-        },
-      },
+      where,
       offset,
       limit: pageSize,
       order: [
