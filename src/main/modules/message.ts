@@ -5,7 +5,7 @@ import fs from 'fs-extra'
 import { isString } from 'lodash'
 import { sendToRenderer as sendToRendererNew } from '@main/utils/ipcMessage'
 import { ConfigEnum } from '@main/enums/configEnum'
-import { start as koaStart, stop as koaStop } from '@main/server/koa'
+import { restart as KoaRestart, start as koaStart, stop as koaStop } from '@main/server/koa'
 import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '@main/modules/store'
 import { isObject } from '@main/utils'
 import { connectSqlite3, reconnectMongoDB } from '@main/modules/db'
@@ -122,6 +122,7 @@ async function messageInit() {
     }
   })
 
+  // 保存配置到 SQLite3
   ipcMain.handle('save-configs', async (event, data) => {
     try {
       if (!isObject(data))
@@ -170,42 +171,42 @@ async function messageInit() {
 
     const { name, data: apiData } = data
     switch (name) {
-      case 'wakatime-summaries': {
+      case 'wakatime-summaries': { // WakaTime 汇总数据
         const { range, refresh } = apiData
         return await WakaTime.getDataByCache(range ?? undefined, refresh ?? false)
       }
-      case 'juejin-checkin': {
+      case 'juejin-checkin': { // 掘金签到
         return await JuejinCheckIn()
       }
-      case 'hide-traffic-button': {
+      case 'hide-traffic-button': { // 隐藏窗口操作按钮（macOS）
         const { status } = apiData
         global.win?.setWindowButtonVisibility(status)
         return global.win?.getTrafficLightPosition()
       }
-      case 'get-weather': {
+      case 'get-weather': { // 获取天气
         const { source, refresh } = apiData
         return await getWeather(source ?? 'cma', refresh ?? false)
       }
-      case 'taptap-view-http-data': {
+      case 'taptap-view-http-data': { // TapTap HTTP 请求
         const { url } = apiData
         const winInfo = await TapTap.getViewHttpData(url ?? undefined)
         // eslint-disable-next-line no-console
         console.log('winInfo:', winInfo)
         return true
       }
-      case 'taptap-profile': {
+      case 'taptap-profile': { // TapTap 个人信息
         const { refresh } = apiData
         return TapTap.profile(refresh ?? false)
       }
-      case 'taptap-detail': {
+      case 'taptap-detail': { // TapTap 详情
         const { refresh } = apiData
         return TapTap.detail(refresh ?? false)
       }
-      case 'module-enable': {
+      case 'module-enable': { // 模块是否开启
         const { module } = apiData
         return await moduleEnable(module)
       }
-      case 'configs': {
+      case 'configs': { // 根据分组获取配置
         const { group_key } = apiData
         try {
           return await getConfigsByGroup(group_key)
@@ -214,7 +215,7 @@ async function messageInit() {
           return false
         }
       }
-      case 'save-configs': {
+      case 'save-configs': { // 保存配置到 SQLite3
         const { data } = apiData
         try {
           for (const item of data) {
@@ -231,7 +232,7 @@ async function messageInit() {
           return false
         }
       }
-      case 'config-store': { // 获取前端初始化状态的配置
+      case 'config-store': { // 获取前端初始化状态的 store 配置
         let configStore = {}
         const defaultStore = getStore()
         if (defaultStore) {
@@ -241,17 +242,35 @@ async function messageInit() {
         }
         return configStore
       }
-      case 'set-config-store': { // TODO 完善，封装
+      case 'get-config-store': { // 获取 store 配置
+        try {
+          const { key } = apiData
+          const defaultStore = getStore()
+          if (!defaultStore)
+            return false
+          const value: any = defaultStore.get(key, false)
+          return isString(value) ? value : value.toString()
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'set-config-store': { // 保存配置到 store // TODO 完善，封装
         try {
           const { key, value } = apiData
           const keys: any = {
             themeWithSystem: 'app.themeWithSystem',
             isTop: 'app.isTop',
+            serverPort: 'server.port',
           }
           if (Object.keys(keys).includes(key)) {
             const configKey = keys[key]
             const setRes = setStore(configKey, value)
             if (setRes) {
+              if (key === 'serverPort') {
+                if (global.koaApp)
+                  await KoaRestart(value)
+              }
               sendToRendererNew('store', {
                 [key]: value,
               })
@@ -263,7 +282,7 @@ async function messageInit() {
           return false
         }
       }
-      case 'get-store-path': {
+      case 'get-store-path': { // 获取 store 文件路径
         try {
           const { name } = apiData
           return getStorePath(name)
@@ -291,6 +310,64 @@ async function messageInit() {
         catch (e) {
           return false
         }
+      }
+      case 'reset-store-path': { // 重置默认路径
+        const { type, name } = apiData
+        if (type === 'config') {
+          const oldPath = getStorePath(name)
+          try {
+            const defaultPath = app.getPath('userData')
+            if (oldPath !== defaultPath) {
+              const setRes = setStorePath(name, defaultPath)
+              if (setRes) {
+                const newPath = path.join(defaultPath, `${name}.json`)
+                const exist = await fs.pathExists(newPath)
+                if (!exist)
+                  await fs.copy(path.join(oldPath, `${name}.json`), newPath)
+                storeInit(name, true)
+              }
+              return { path: defaultPath, change: true }
+            }
+            else {
+              return { path: oldPath, change: false }
+            }
+          }
+          catch (e) {
+            return { path: oldPath, change: false }
+          }
+        }
+        if (type === 'sqlite3') {
+          const store = getStore()
+          if (!store)
+            return false
+          const storeName = 'db.sqlite3.path'
+          const oldPath = store.get(storeName, '') as string
+          if (!oldPath)
+            return false
+          try {
+            const defaultPath = app.getPath('userData')
+            if (oldPath !== defaultPath) {
+              store.set(storeName, defaultPath)
+              const setRes = store.get(storeName, '')
+              if (setRes) {
+                const dbFileName = 'sqlite3.db'
+                const newPath = path.join(defaultPath, dbFileName)
+                const exist = await fs.pathExists(newPath)
+                if (!exist)
+                  await fs.copy(path.join(oldPath, dbFileName), newPath)
+                connectSqlite3(newPath)
+              }
+              return { path: defaultPath, change: true }
+            }
+            else {
+              return { path: oldPath, change: false }
+            }
+          }
+          catch (e) {
+            return { path: oldPath, change: false }
+          }
+        }
+        return false
       }
       case 'select-path-dialog': { // 通过对话窗口选择路径，且复制文件到目标路径，并进行处理
         const { type, name } = apiData
@@ -354,64 +431,6 @@ async function messageInit() {
           }
           catch (e) {
             return false
-          }
-        }
-        return false
-      }
-      case 'reset-store-path': { // 重置默认路径
-        const { type, name } = apiData
-        if (type === 'config') {
-          const oldPath = getStorePath(name)
-          try {
-            const defaultPath = app.getPath('userData')
-            if (oldPath !== defaultPath) {
-              const setRes = setStorePath(name, defaultPath)
-              if (setRes) {
-                const newPath = path.join(defaultPath, `${name}.json`)
-                const exist = await fs.pathExists(newPath)
-                if (!exist)
-                  await fs.copy(path.join(oldPath, `${name}.json`), newPath)
-                storeInit(name, true)
-              }
-              return { path: defaultPath, change: true }
-            }
-            else {
-              return { path: oldPath, change: false }
-            }
-          }
-          catch (e) {
-            return { path: oldPath, change: false }
-          }
-        }
-        if (type === 'sqlite3') {
-          const store = getStore()
-          if (!store)
-            return false
-          const storeName = 'db.sqlite3.path'
-          const oldPath = store.get(storeName, '') as string
-          if (!oldPath)
-            return false
-          try {
-            const defaultPath = app.getPath('userData')
-            if (oldPath !== defaultPath) {
-              store.set(storeName, defaultPath)
-              const setRes = store.get(storeName, '')
-              if (setRes) {
-                const dbFileName = 'sqlite3.db'
-                const newPath = path.join(defaultPath, dbFileName)
-                const exist = await fs.pathExists(newPath)
-                if (!exist)
-                  await fs.copy(path.join(oldPath, dbFileName), newPath)
-                connectSqlite3(newPath)
-              }
-              return { path: defaultPath, change: true }
-            }
-            else {
-              return { path: oldPath, change: false }
-            }
-          }
-          catch (e) {
-            return { path: oldPath, change: false }
           }
         }
         return false

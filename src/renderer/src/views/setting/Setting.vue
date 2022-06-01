@@ -54,7 +54,7 @@ const { currentModule } = toRefs(data)
       </div>
     </div>
 
-    <div class="h-full w-[calc(100%-120px)] p-4">
+    <div class="h-full w-[calc(100%-120px)] p-4 overflow-y-auto">
       <SystemModule v-if="currentModule === 'system'" />
       <DBModule v-if="currentModule === 'db'" />
       <WeatherModule v-if="currentModule === 'weather'" />

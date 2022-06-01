@@ -1,4 +1,4 @@
-import { ConfigEnum } from '~/main/enums/configEnum'
+import { ConfigEnum } from '@main/enums/configEnum'
 
 async function status() {
   if (global.store) {

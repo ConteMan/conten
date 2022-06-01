@@ -104,7 +104,7 @@ watch(() => refreshState.weather, (val) => {
     <div v-if="showDayWeather">
       <span class="text-xs text-gray-400 italic">Updated at {{ weatherData.lastUpdate }}</span>
     </div>
-    <div v-if="showDayWeather" class="mt-1 flex gap-4">
+    <div v-if="showDayWeather" class="mt-1 flex flex-wrap gap-4">
       <div v-for="day in weatherData.daily" :key="day.date">
         <p>{{ day.date }}</p>
         <div>{{ day.low }} / {{ day.high }}</div>

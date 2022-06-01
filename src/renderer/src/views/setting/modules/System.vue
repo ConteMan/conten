@@ -11,12 +11,16 @@ const data = reactive({
   formRef: null,
   formValue: formValueDefault as any,
   formSize: 'small',
+  customFormValue: {
+    serverPort: '',
+  },
   defaultPath: 'defaultPath',
-  pathStatusText: '',
   sqlite3Path: '',
+  pathStatusText: '',
 })
-const { formRef, formValue, formSize, defaultPath, pathStatusText, sqlite3Path } = toRefs(data)
+const { formRef, formValue, formSize, customFormValue, defaultPath, pathStatusText, sqlite3Path } = toRefs(data)
 
+// 根据模块获取配置数据
 const getConfig = async () => {
   const res = await invokeApi({
     name: 'configs',
@@ -24,14 +28,49 @@ const getConfig = async () => {
       group_key: module,
     },
   })
-  data.formValue = res
+  if (res)
+    data.formValue = res
 }
 getConfig()
+
+// 获取自定义配置
+const getCustomConfig = async () => {
+  const res = await invokeApi({
+    name: 'get-config-store',
+    data: {
+      key: 'server.port',
+    },
+  })
+  if (res) {
+    data.customFormValue = {
+      serverPort: res,
+    }
+  }
+}
+getCustomConfig()
+
+// 保存自定义配置
+const setCustomConfig = async () => {
+  const res = await invokeApi({
+    name: 'set-config-store',
+    data: {
+      key: 'serverPort',
+      value: customFormValue.value.serverPort,
+    },
+  })
+  if (res) {
+    message.create(res ? 'Custom Success' : 'Custom Error', {
+      type: res ? 'success' : 'error',
+      duration: 2000,
+    })
+  }
+}
 
 // 设置主题模式
 const systemState = useSystemState()
 const { themeWithSystem } = storeToRefs(systemState)
 
+// 主题模式修改
 const themeWithSystemChange = async (value: boolean) => {
   if (value)
     setSystemTheme()
@@ -105,7 +144,10 @@ const resetStorePath = async (type = 'config', name = 'default') => {
     data.pathStatusText = '配置已更新, 请重启'
 }
 
+// 保存设置
 const save = async () => {
+  await setCustomConfig()
+
   const saveData: any = []
   const formValueData = formValue.value as any
   for (const item in formValueData) {
@@ -121,7 +163,7 @@ const save = async () => {
       data: saveData,
     },
   })
-  message.create(`${res}` ? 'Success' : 'Error', {
+  message.create(res ? 'Success' : 'Error', {
     type: res ? 'success' : 'error',
     duration: 2000,
   })
@@ -138,6 +180,8 @@ const save = async () => {
       <n-form-item label="深色模式跟随系统">
         <n-switch v-model:value="themeWithSystem" size="small" @update:value="themeWithSystemChange" />
       </n-form-item>
+      <n-divider />
+
       <n-form-item label="配置文件路径">
         <div class="flex items-center">
           <div class="self">
@@ -166,14 +210,22 @@ const save = async () => {
           <span v-if="pathStatusText" class="ml-2 text-xs text-red-400">{{ pathStatusText }}</span>
         </div>
       </n-form-item>
+      <n-divider />
+
+      <n-form-item label="Koa 服务端口号">
+        <n-input v-model:value="customFormValue.serverPort" placeholder="" />
+      </n-form-item>
+      <n-divider />
+
       <n-form-item label="Schedule" path="`${module}_schedule`">
         <n-input v-model:value="formValue[`${module}_schedule`]" placeholder="" />
       </n-form-item>
       <n-form-item label="Schedule Enable" path="`${module}_schedule_enable`">
         <n-switch v-model:value="formValue[`${module}_schedule_enable`]" size="small" checked-value="1" unchecked-value="0" />
       </n-form-item>
+      <n-divider />
     </n-form>
-    <n-divider />
+
     <div class="pb-4">
       <n-button
         size="tiny"

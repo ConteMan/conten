@@ -110,8 +110,8 @@ const systemState = useSystemState()
 const { showSideNav } = storeToRefs(systemState)
 
 window.ipcRenderer.on('store', (event, data) => {
-  if (Object.keys(data)) {
-    const keys = Object.keys(data)
+  const keys = Object.keys(data)
+  if (keys) {
     if (keys.includes('themeWithSystem'))
       systemState.toggleThemeWithSystem(data.themeWithSystem)
     if (keys.includes('isTop'))
