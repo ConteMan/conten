@@ -10,23 +10,33 @@ import ConfigModel from '@main/models/config'
 import TaskModel from '@main/models/task'
 import InfoModel from '@main/models/info'
 import LogModel from '@main/models/log'
+import Migration from '@main/models/migration'
+import { migrate } from '@main/migrations'
 
 /**
  * 数据库初始化
  */
 export async function dbInit() {
   await sqlite3Init()
+  await migrate()
 }
 
 /**
  * SQLite3 初始化
  */
 async function sqlite3Init() {
-  await RequestCacheModel.sync()
-  await ConfigModel.sync()
-  await TaskModel.sync()
-  await InfoModel.sync()
-  await LogModel.sync()
+  try {
+    await RequestCacheModel.sync()
+    await ConfigModel.sync()
+    await TaskModel.sync()
+    await InfoModel.sync()
+    await LogModel.sync()
+    await Migration.sync()
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('>>> Log >> sqlite3Init', e)
+  }
 }
 
 /**

@@ -1,4 +1,5 @@
 import LogModel from '@main/models/log'
+import { LevelEnum } from '@main/enums/logEnum'
 
 /**
  * 添加日志
@@ -6,10 +7,11 @@ import LogModel from '@main/models/log'
  * @param desc - 日志描述
  * @param data - 其他数据
  */
-export async function addLog(type: string, desc: string, data: any = {}) {
+export async function logger(level: LevelEnum = LevelEnum.INFO, type: string, desc: string, data: any = {}) {
   try {
     const { detail = null, info_at = new Date() } = data
     const res = await LogModel.create({
+      level,
       type,
       detail,
       desc,

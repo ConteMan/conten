@@ -6,6 +6,10 @@ const Log = global.sequelize?.define('log', {
     primaryKey: true,
     autoIncrement: true,
   },
+  level: {
+    type: DataTypes.TINYINT,
+    defaultValue: 2,
+  },
   type: {
     type: DataTypes.STRING,
     allowNull: false,
