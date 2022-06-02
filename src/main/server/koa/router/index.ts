@@ -1,16 +1,10 @@
 import Router from '@koa/router'
-import { transform } from '../controller/transform'
-import { status } from '../controller/status'
+import Extension from '../controller/extension'
 
 const router = new Router()
 
-router.post('/transform', async (ctx) => {
-  const res = await transform(ctx.request.body)
-  ctx.body = res
-})
-
-router.get('/status', async (ctx) => {
-  const res = await status()
+router.post('/extension', async (ctx) => {
+  const res = await Extension.add(ctx)
   ctx.body = res
 })
 

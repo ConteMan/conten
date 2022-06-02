@@ -349,6 +349,18 @@
         "vue": "^3.2.25"
       }
     },
+    "@vueuse/components": {
+      "versionDefault": "^8.5.0",
+      "version": "8.5.0",
+      "resolved": "https://registry.npmmirror.com/@vueuse/components/-/components-8.5.0.tgz",
+      "integrity": "sha512-JZ5D56YQMoGCvE5UJPKsWmPG3ywedqaKVgl+d+1HiCBR//2ufHpsp1SlLZmkkLAgX3qoL0GX2LXi7uyr2PLfSw==",
+      "dev": true,
+      "dependencies": {
+        "@vueuse/core": "8.5.0",
+        "@vueuse/shared": "8.5.0",
+        "vue-demi": "*"
+      }
+    },
     "@vueuse/core": {
       "versionDefault": "^8.2.0",
       "version": "8.3.1",

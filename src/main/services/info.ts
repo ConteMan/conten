@@ -1,13 +1,39 @@
 import InfoModel from '@main/models/info'
+import type { Info } from '@main/types/info'
+
+/**
+ * 新建或更新
+ * @param data - 数据
+ */
+export async function createOrUpdate(data: Info) {
+  try {
+    const [res, created] = await InfoModel.findOrCreate({
+      where: {
+        slug: data.slug,
+      },
+    })
+    res.set(data)
+    await res.save()
+    return { res, created }
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('>>> Services Info >> createOrUpdate', e)
+    return false
+  }
+}
 
 /**
  * 批量新建或更新
- * @param infos - 更新数据
+ * @param infos - 数据
  */
 export async function bulkCreateOrUpdate(infos: any[] = []) {
   try {
     if (!infos.length)
       return false
+
+    let createdCount = 0
+    let updatedCount = 0
     for (const item of infos) {
       const [res, created] = await InfoModel.findOrCreate({
         where: {
@@ -15,16 +41,22 @@ export async function bulkCreateOrUpdate(infos: any[] = []) {
         },
         defaults: item,
       })
-      if (!created) {
+      if (created) {
+        createdCount++
+      }
+      else {
         res.set(item)
         await res.save()
+        updatedCount++
       }
     }
-    return true
+
+    return { createdCount, updatedCount }
   }
   catch (e) {
     // eslint-disable-next-line no-console
-    console.log('>>> bulkCreateOrUpdate', e)
+    console.log('>>> Services Info >> bulkCreateOrUpdate', e)
+    return false
   }
 }
 
@@ -63,7 +95,7 @@ export async function list(type = '', page = 1, pageSize = 10) {
   }
   catch (e) {
     // eslint-disable-next-line no-console
-    console.log('>>> info >> list', e)
+    console.log('>>> Services Info >> list', e)
     return []
   }
 }

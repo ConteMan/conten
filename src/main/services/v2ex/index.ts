@@ -6,7 +6,7 @@ import { viewWindowInit } from '@main/modules/window'
 import { bulkCreateOrUpdate } from '@main/services/info'
 import { retryAdapterEnhancer } from '@main/utils'
 import { sendToRenderer } from '@main/utils/ipcMessage'
-import { addLog } from '../log'
+import { addLog } from '@main/services/log'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Axios = require('axios').default
