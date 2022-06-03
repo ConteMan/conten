@@ -19,6 +19,7 @@ import WakaTime from '@main/services/wakatime'
 import TapTap from '@main/services/taptap'
 import { list as infoList } from '@main/services/info'
 import schedule from '@main/services/schedule'
+import { logList } from '@main/services/log'
 
 /**
  * 向渲染层发送消息
@@ -472,8 +473,8 @@ async function messageInit() {
         }
       }
       case 'info-list': { // Info 列表查询
-        const { type = 'v2ex', page = 1, pageSize = 10 } = apiData
         try {
+          const { type = 'v2ex', page = 1, pageSize = 10 } = apiData
           return await infoList(type, page, pageSize)
         }
         catch (e) {
@@ -497,6 +498,15 @@ async function messageInit() {
       case 'schedule-list': { // 定时任务列表
         try {
           return await schedule.list()
+        }
+        catch (e) {
+          return null
+        }
+      }
+      case 'log-list': { // 日志列表
+        try {
+          const { type = 'v2ex-schedule', page = 1, pageSize = 10 } = apiData
+          return await logList(type, page, pageSize)
         }
         catch (e) {
           return null

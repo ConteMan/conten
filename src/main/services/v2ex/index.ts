@@ -6,8 +6,7 @@ import { viewWindowInit } from '@main/modules/window'
 import { bulkCreateOrUpdate } from '@main/services/info'
 import { retryAdapterEnhancer } from '@main/utils'
 import { sendToRenderer } from '@main/utils/ipcMessage'
-import { logger } from '@main/services/log'
-import { LevelEnum } from '@main/enums/logEnum'
+import Logger from '@main/services/log'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Axios = require('axios').default
@@ -333,13 +332,13 @@ class V2EX {
         getUser: !!getUserRes,
         getTabList: !!getTabListRes,
       }
-      logger(LevelEnum.INFO, `${this.name}_schedule`, `定时任务：${JSON.stringify(res)}`, {})
+      Logger.info(`${this.name}_schedule`, `定时任务：${JSON.stringify(res)}`, {})
       return res
     }
     catch (e) {
       // eslint-disable-next-line no-console
       console.log('>>> v2ex schedule', e)
-      logger(LevelEnum.ERROR, `${this.name}_schedule`, `定时任务失败：${String(e)}`, {})
+      Logger.error(`${this.name}_schedule`, `定时任务失败：${String(e)}`, {})
       return false
     }
   }

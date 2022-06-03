@@ -42,4 +42,10 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/system/System.vue'),
     meta: { title: '', keepAlive: false },
   },
+  {
+    path: '/log',
+    name: 'Log',
+    component: () => import('../views/log/Log.vue'),
+    meta: { title: '', keepAlive: false },
+  },
 ]

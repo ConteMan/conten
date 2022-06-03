@@ -27,6 +27,10 @@ const navList = [
     path: '/setting',
   },
   {
+    name: '日志',
+    path: '/log',
+  },
+  {
     name: '关于',
     path: '/about',
   },
