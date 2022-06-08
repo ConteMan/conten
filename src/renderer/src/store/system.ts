@@ -23,4 +23,7 @@ export const useSystemState = defineStore('system', {
       this.isTop = status
     },
   },
+  persist: {
+    key: 'system',
+  },
 })

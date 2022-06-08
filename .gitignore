@@ -10,7 +10,10 @@ dist-ssr
 tmp
 **/.tmp
 release
+
+# IDE
 .vscode
+*.code-workspace
 
 src/**/auto-imports.d.ts
 src/**/components.d.ts

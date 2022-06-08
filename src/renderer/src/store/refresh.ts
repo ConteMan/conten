@@ -14,4 +14,7 @@ export const useRefreshState = defineStore('refresh', {
       this[module] = status
     },
   },
+  persist: {
+    key: 'refresh',
+  },
 })
