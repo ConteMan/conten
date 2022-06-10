@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-
 const command = (type = '', data: any = null) => {
   window.ipcRenderer.send('indexMsg', { type, data })
 }
@@ -31,8 +29,9 @@ const data = reactive({
   transitionWidth: 200,
   transitionShow: true,
   showTrafficButton: true,
+  tempInput: '',
 })
-const { transitionWidth, transitionShow, showTrafficButton } = toRefs(data)
+const { transitionWidth, transitionShow, showTrafficButton, tempInput } = toRefs(data)
 const transitionTest = (mode = 'width') => {
   if (mode === 'width')
     data.transitionWidth = data.transitionWidth === 200 ? 400 : 200
@@ -50,11 +49,11 @@ const changeTrafficButton = async () => {
   <div class="px-4 pb-8">
     <div class="flex flex-col items-start">
       <div class="p-2">
-        System
+        TEMP
       </div>
       <div class="flex flex-wrap gap-2">
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user-data-path')">Get UserData Path</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-package-info')">Get Package Info</span>
+        <n-input v-model:value="tempInput" />
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: tempInput })">豆瓣</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">

@@ -3,7 +3,7 @@ import { app, dialog, ipcMain } from 'electron'
 
 import fs from 'fs-extra'
 import { isString } from 'lodash'
-import { sendToRenderer as sendToRendererNew } from '@main/utils/ipcMessage'
+import { sendToRenderer } from '@main/utils/ipcMessage'
 import { ConfigEnum } from '@main/enums/configEnum'
 import { restart as KoaRestart, start as koaStart, stop as koaStop } from '@main/server/koa'
 import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '@main/modules/store'
@@ -20,19 +20,7 @@ import TapTap from '@main/services/taptap'
 import { list as infoList } from '@main/services/info'
 import schedule from '@main/services/schedule'
 import { logList } from '@main/services/log'
-
-/**
- * 向渲染层发送消息
- * @param type - 消息类型
- * @param data - 消息数据
- */
-function sendToRenderer(type: string, data: any) {
-  const message = {
-    type,
-    data,
-  }
-  global.win?.webContents.send('message', message)
-}
+import douban from '@main/services/douban'
 
 /**
  * 消息监听服务初始化
@@ -44,18 +32,12 @@ async function messageInit() {
       switch (type) {
         case 'start-koa': {
           const res = await koaStart()
-          sendToRenderer(`${res ? 'success' : 'error'}`, `启动${res ? '!' : '失败'}`)
           event.reply('indexMsg', { type, data: res })
           break
         }
         case 'stop-koa': {
           const res = await koaStop()
-          sendToRenderer(`${res ? 'success' : 'error'}`, `停止${res ? '!' : '失败'}`)
           event.reply('indexMsg', { type, data: res })
-          break
-        }
-        case 'get-user-data-path': {
-          event.reply('indexMsg', { type: 'get-user-data-path', data: await app.getPath('userData') })
           break
         }
         case 'drag-bar-pressed': {
@@ -91,13 +73,13 @@ async function messageInit() {
         if (newDBUrl !== oldUrl)
           await reconnectMongoDB()
 
-        sendToRenderer('success', '保存成功')
         return true
       }
       return false
     }
     catch (e) {
-      sendToRenderer('error', '保存失败')
+      // eslint-disable-next-line no-console
+      console.log('>>> momdules >> message > save-settings', e)
     }
     return true
   })
@@ -272,7 +254,7 @@ async function messageInit() {
                 if (global.koaApp)
                   await KoaRestart(value)
               }
-              sendToRendererNew('store', {
+              sendToRenderer('store', {
                 [key]: value,
               })
             }
@@ -444,7 +426,7 @@ async function messageInit() {
 
           const setRes = setStore('app.isTop', isTop)
           if (setRes) {
-            sendToRendererNew('store', {
+            sendToRenderer('store', {
               isTop,
             })
           }
@@ -512,12 +494,23 @@ async function messageInit() {
           return null
         }
       }
+      case 'douban': {
+        try {
+          const { type = 'html' } = apiData
+          if (type)
+            return await douban.movie({ status: 'do' })
+          return ''
+        }
+        catch (e) {
+          return null
+        }
+      }
       default:
         // eslint-disable-next-line no-console
-        console.log('>>>>default:', name)
+        console.log('>>> message >> messageInit > default:', name)
         break
     }
   })
 }
 
-export { sendToRenderer, messageInit }
+export { messageInit }

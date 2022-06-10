@@ -3,7 +3,6 @@ import { app } from 'electron'
 import { MongoClient } from 'mongodb'
 import { Sequelize } from 'sequelize'
 import { getStore } from '@main/modules/store'
-import { sendToRenderer } from '@main/modules/message'
 
 import RequestCacheModel from '@main/models/requestCache'
 import ConfigModel from '@main/models/config'
@@ -69,10 +68,8 @@ export function connectSqlite3(dbPath = '') {
 
 export async function connectMongoDB(url = '') {
   const store = getStore()
-  if (!store) {
-    sendToRenderer('error', 'NO AVAILABLE DB 1')
+  if (!store)
     return false
-  }
 
   if (!url) {
     const dbArray = store.get('db.mongodb', []) as Contea.DB[]
@@ -81,10 +78,9 @@ export async function connectMongoDB(url = '') {
       url = selectedDB?.url || ''
     }
   }
-  if (!url) {
-    sendToRenderer('error', 'NO AVAILABLE DB')
+  if (!url)
     return false
-  }
+
   try {
     global.mongoClient = new MongoClient(url)
     global.mongoClient.connect()
@@ -93,7 +89,6 @@ export async function connectMongoDB(url = '') {
     console.log('Connected to MongoDB!')
   }
   catch (error) {
-    sendToRenderer('error', error)
     return false
   }
   return true
@@ -107,11 +102,9 @@ export async function reconnectMongoDB() {
   try {
     await global.mongoClient?.close()
     await connectMongoDB()
-    sendToRenderer('success', 'Reconnected to MongoDB!')
     return true
   }
   catch (e) {
-    sendToRenderer('error', e)
     return false
   }
 }

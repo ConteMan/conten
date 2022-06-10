@@ -1,7 +1,7 @@
 {
   "name": "contea-desktop",
   "productName": "Contea",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "license": "MIT",
   "author": "ConteMan <real.conteman@gmail.com>",
   "main": "dist/main/index.cjs",
@@ -21,6 +21,7 @@
     "crypto-js": "^4.1.1",
     "electron-store": "^8.0.1",
     "fs-extra": "^10.1.0",
+    "got": "^11.8.5",
     "koa": "^2.13.4",
     "koa-body": "^5.0.0",
     "lodash": "^4.17.21",
