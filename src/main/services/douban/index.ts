@@ -38,7 +38,7 @@ interface Movie {
 class Douban {
   public name = 'douban'
   public moduleKey = `${module}_module`
-  public baseurl = 'douban.com'
+  public baseUrl = 'douban.com'
   public siteUrl = 'https://www.douban.com'
 
   /**
@@ -83,7 +83,7 @@ class Douban {
     const dealStart = (type === 'book' && start === 1) ? 0 : start
 
     const cookie = `bid=${randomStr(12)}; ll="${randomStr(6, '123456789')}"`
-    const url = `https://${type}.${this.baseurl}/people/${id}/${status}`
+    const url = `https://${type}.${this.baseUrl}/people/${id}/${status}`
     const query = {
       start: dealStart,
       sort,
@@ -224,7 +224,7 @@ class Douban {
       return false
 
     const cookie = `bid=${randomStr(12)}; ll="${randomStr(6, '123456789')}"`
-    const url = `https://${type}.${this.baseurl}/subject/${id}/`
+    const url = `https://${type}.${this.baseUrl}/subject/${id}/`
 
     const options: Options = {
       url,
@@ -349,6 +349,43 @@ class Douban {
     }
     catch (e) {
       return data
+    }
+  }
+
+  /**
+   * 电影搜索
+   * @param keyword - 关键字
+   */
+  async movieSearch(keyword: string) {
+    if (!keyword)
+      return false
+    const url = `https://movie.${this.baseUrl}/j/subject_suggest`
+    const cookie = `bid=${randomStr(12)}; ll="${randomStr(6, '123456789')}"`
+    const query = {
+      q: keyword,
+    }
+    const options: Options = {
+      url,
+      searchParams: query,
+      resolveBodyOnly: true,
+      responseType: 'json',
+      isStream: false,
+      headers: {
+        Cookie: cookie,
+        UserAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+      },
+    }
+    try {
+      const html = await GOT(options)
+      return html
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> douban', e)
+      Logger.error('douban', 'get douban html error', {
+        options,
+      })
+      return false
     }
   }
 }
