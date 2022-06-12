@@ -498,7 +498,7 @@ async function messageInit() {
         try {
           const { type = 'html' } = apiData
           if (type)
-            return await douban.movie({ status: 'do' })
+            return await douban.movie(type)
           return ''
         }
         catch (e) {

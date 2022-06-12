@@ -1,6 +1,6 @@
 import type { Options } from 'got'
 import GOT from 'got'
-import _ from 'lodash'
+import _, { isArray } from 'lodash'
 import * as cheerio from 'cheerio'
 import Logger from '@main/services/log'
 import { randomStr } from '@main/utils'
@@ -42,10 +42,10 @@ class Douban {
   public siteUrl = 'https://www.douban.com'
 
   /**
-   * 获取豆瓣电影数据
+   * 获取豆瓣电影数据列表
    * @param params - 参数
    */
-  async movie(params?: DoubanHtmlRequest) {
+  async movieList(params?: DoubanHtmlRequest) {
     try {
       const defaultParams: DoubanHtmlRequest = {
         id: 'bolu_zz',
@@ -58,7 +58,7 @@ class Douban {
       }
       params = params ? _.merge({}, defaultParams, params) : defaultParams
 
-      const html = await this.html(params)
+      const html = await this.listHtml(params)
       const { type } = params
       if (html && type) {
         const data = await this.format(type, html)
@@ -75,7 +75,7 @@ class Douban {
    * 获取豆瓣页面数据
    * @param params - 参数
    */
-  async html(params: DoubanHtmlRequest) {
+  async listHtml(params: DoubanHtmlRequest) {
     const { id, type, start, sort, filter, mode, status } = params
     if (!id || !type)
       return false
@@ -122,15 +122,15 @@ class Douban {
    */
   async format(type: DoubanType, htmlString: string) {
     if (type === 'movie')
-      return this.movieFormat(htmlString)
+      return this.movieListFormat(htmlString)
     return false
   }
 
   /**
-   * 电影页面数据格式化
+   * 电影列表数据格式化
    * @param htmlString - 页面数据
    */
-  async movieFormat(htmlString: string) {
+  async movieListFormat(htmlString: string) {
     const items: MovieItem[] = []
     const data: Movie = {}
     try {
@@ -192,6 +192,160 @@ class Douban {
       data.items = items
       data.next = total !== end
       return data
+    }
+    catch (e) {
+      return data
+    }
+  }
+
+  /**
+   * 获取电影详情数据
+   * @param id - douban id
+   */
+  async movie(id: string | number) {
+    try {
+      const htmlString = await this.html('movie', id)
+      if (!htmlString)
+        return {}
+      return this.movieDataFormat(htmlString)
+    }
+    catch (e) {
+      return {}
+    }
+  }
+
+  /**
+   * 获取详情页面数据
+   * @param type - 类型，电影、读书
+   * @param id - douban id
+   */
+  async html(type: string, id: string | number) {
+    if (!id || !type)
+      return false
+
+    const cookie = `bid=${randomStr(12)}; ll="${randomStr(6, '123456789')}"`
+    const url = `https://${type}.${this.baseurl}/subject/${id}/`
+
+    const options: Options = {
+      url,
+      resolveBodyOnly: true,
+      responseType: 'text',
+      isStream: false,
+      headers: {
+        Cookie: cookie,
+        UserAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+      },
+    }
+    try {
+      const html = await GOT(options)
+      return html as string
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> douban', e)
+      Logger.error('douban', 'get douban html error', {
+        options,
+      })
+      return false
+    }
+  }
+
+  /**
+   * 电影详情页面数据格式化
+   * @param htmlString - 页面数据
+   */
+  async movieDataFormat(htmlString: string) {
+    const relations: Record<string, string> = {
+      'IMDb': 'imdb',
+      '上映日期': 'release_date',
+      '主演': 'actors',
+      '制片国家/地区': 'countries',
+      '又名': 'alias',
+      '导演': 'directors',
+      '片名': 'title',
+      '片长': 'duration',
+      '单集片长': 'episode_duration',
+      '首播': 'first_date',
+      '简介': 'summary',
+      '类型': 'genres',
+      '编剧': 'writers',
+      '评分': 'rating',
+      '评分人数': 'rateNumber',
+      '语言': 'languages',
+      '集数': 'episodes',
+    }
+    const data: Record<string, string | number> = {}
+    try {
+      const $ = cheerio.load(htmlString)
+      const elArr = $('#wrapper > #content .subjectwrap .subject #info').first().contents().toString().trim().split('<br>')
+      if (!elArr.length)
+        return
+      elArr.forEach((item) => {
+        const $item = cheerio.load(item)
+        const key = $item('.pl').first().text().replace(/:|：/, '')
+        if (!key)
+          return
+
+        let value: any
+        if (/主演/.test(key)) {
+          const tempList = $item('.attrs a[rel="v:starring"]')
+          const actors: string[] = []
+          tempList.each(function () {
+            actors.push($(this).text())
+          })
+          value = actors
+        }
+        if (/IMDb|又名|制片国家|语言|集数|单集片长/.test(key)) {
+          const tempString = item.trim().replace(/^\<span.*\>.*\<\/span\>/, '').trim()
+          const tempArr = tempString.split('/')
+          if (tempArr.length > 1)
+            value = tempArr.map(tempItem => tempItem.trim())
+          else
+            value = tempString
+        }
+        if (/类型/.test(key)) {
+          const tempList = $item('span[property="v:genre"]')
+          const temp: string[] = []
+          tempList.each(function () {
+            temp.push($item(this).text())
+          })
+          value = temp
+        }
+        if (!value && $item('.pl').next() && !/官方网站/.test(key)) {
+          const tempString = $item('.pl').next().text()
+          const tempArr = tempString.split('/')
+          if (tempArr.length > 1)
+            value = tempArr.map(tempItem => tempItem.trim())
+        }
+        if (!value && $item('.pl').next())
+          value = $item('.pl').next().text()
+
+        if (/类型|制片国家|导演|语言|编剧|又名/.test(key)) {
+          if (!isArray(value))
+            value = [value]
+        }
+
+        data[key] = value
+      })
+      const title = $('#wrapper > #content > h1 span[property="v:itemreviewed"]').first().text()
+      const rateDom = $('#wrapper > #content .subjectwrap > #interest_sectl')
+      const rating = rateDom.find('strong.rating_num').first().text()
+      const rateNumber = parseInt(rateDom.find('a.rating_people > span[property="v:votes"]').first().text())
+      const summary = $('#wrapper > #content .article .related-info .indent > span[property="v:summary"]').first().text().trim()
+      Object.assign(data, { 片名: title, 评分: rating, 评分人数: rateNumber, 简介: summary })
+
+      const dealData: any = {}
+
+      const rKeys = Object.keys(relations)
+      rKeys.forEach((rKey) => {
+        if (!data[rKey])
+          return
+        dealData[relations[rKey]] = {
+          name: rKey,
+          value: data[rKey],
+        }
+      })
+      return dealData
     }
     catch (e) {
       return data
