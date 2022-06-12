@@ -3,21 +3,19 @@ import { useSystemState } from '@renderer/store/system'
 import { invokeApi } from '@renderer/utils/ipcMessage'
 
 const data = reactive({
-  hoverShowBar: false,
-  showBar: true,
   showMore: false,
   showMoreHold: false,
 })
-const { hoverShowBar, showBar, showMore, showMoreHold } = toRefs(data)
+const { showMore, showMoreHold } = toRefs(data)
 
 const systemState = useSystemState()
-const { showSideNav, isTop, isDark } = storeToRefs(systemState)
+const { showSideNav, isTop, isDark, showBar, hoverShowBar } = storeToRefs(systemState)
 
 const toggleSideNav = () => {
-  data.showBar = false
+  systemState.toggleBar(false)
   systemState.toggleSideNav(!showSideNav.value)
   setTimeout(() => {
-    data.showBar = true
+    systemState.toggleBar(true)
   }, 0.5)
 }
 
@@ -51,12 +49,12 @@ const toggleShowMore = (status: boolean) => {
 }
 
 const toggleHoverShowBar = (status: boolean) => {
-  data.hoverShowBar = status
+  systemState.toggleHoverShowBar(status)
 }
 
 const toggleBar = (status: boolean) => {
   if (hoverShowBar.value)
-    data.showBar = status
+    systemState.toggleBar(status)
 }
 </script>
 

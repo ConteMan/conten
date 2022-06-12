@@ -79,7 +79,7 @@ async function messageInit() {
     }
     catch (e) {
       // eslint-disable-next-line no-console
-      console.log('>>> momdules >> message > save-settings', e)
+      console.log('>>> modules >> message > save-settings', e)
     }
     return true
   })
