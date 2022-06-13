@@ -5,18 +5,19 @@ import WeatherModule from './modules/Weather.vue'
 import WakaTimeModule from './modules/WakeTime.vue'
 import TapTapModule from './modules/TapTap.vue'
 import V2exModule from './modules/V2ex.vue'
+import DoubanModule from './modules/Douban.vue'
 
 const modules = [
   {
-    name: 'System',
+    name: '系统',
     code: 'system',
   },
   {
-    name: 'DB',
+    name: '数据库',
     code: 'db',
   },
   {
-    name: 'Weather',
+    name: '天气',
     code: 'weather',
   },
   {
@@ -30,6 +31,10 @@ const modules = [
   {
     name: 'V2EX',
     code: 'v2ex',
+  },
+  {
+    name: '豆瓣',
+    code: 'douban',
   },
 ]
 const data = reactive({
@@ -61,6 +66,7 @@ const { currentModule } = toRefs(data)
       <WakaTimeModule v-if="currentModule === 'wakatime'" />
       <TapTapModule v-if="currentModule === 'taptap'" />
       <V2exModule v-if="currentModule === 'v2ex'" />
+      <DoubanModule v-if="currentModule === 'douban'" />
     </div>
   </div>
 </template>

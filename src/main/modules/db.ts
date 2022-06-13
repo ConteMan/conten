@@ -10,6 +10,7 @@ import TaskModel from '@main/models/task'
 import InfoModel from '@main/models/info'
 import LogModel from '@main/models/log'
 import Migration from '@main/models/migration'
+import Subject from '@main/models/subject'
 import { migrate } from '@main/migrations'
 
 /**
@@ -31,6 +32,7 @@ async function sqlite3Init() {
     await InfoModel.sync()
     await LogModel.sync()
     await Migration.sync()
+    await Subject.sync()
   }
   catch (e) {
     // eslint-disable-next-line no-console

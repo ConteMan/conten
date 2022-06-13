@@ -47,6 +47,8 @@ class Logger {
   public static async logger(level: LevelEnum = LevelEnum.INFO, type: string, desc: string, data: any = {}) {
     try {
       const { detail = null, info_at = new Date() } = data
+      // eslint-disable-next-line no-console
+      console.log('>>> Log >> logger', data)
       await LogModel.create({
         level,
         type,

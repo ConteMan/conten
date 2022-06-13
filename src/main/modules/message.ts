@@ -20,7 +20,8 @@ import TapTap from '@main/services/taptap'
 import { list as infoList } from '@main/services/info'
 import schedule from '@main/services/schedule'
 import { logList } from '@main/services/log'
-import douban from '@main/services/douban'
+import Douban from '@main/services/douban'
+import Subject from '@main/services/subject'
 
 /**
  * 消息监听服务初始化
@@ -497,8 +498,10 @@ async function messageInit() {
       case 'douban': {
         try {
           const { type = 'html' } = apiData
-          if (type)
-            return await douban.movieSearch(type)
+          if (type === 'sync')
+            return await Subject.sync()
+          else
+            return await Douban.movieSearch(type)
           return ''
         }
         catch (e) {

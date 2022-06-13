@@ -5,10 +5,10 @@ import * as cheerio from 'cheerio'
 import Logger from '@main/services/log'
 import { randomStr } from '@main/utils'
 
-type DoubanType = 'movie' | 'book' | 'music'
-type DoubanStatus = 'collect' | 'do' | 'wish'
-type DoubanMode = 'grid' | 'list'
-interface DoubanHtmlRequest {
+export type DoubanType = 'movie' | 'book' | 'music'
+export type DoubanStatus = 'collect' | 'do' | 'wish'
+export type DoubanMode = 'grid' | 'list'
+export interface DoubanHtmlRequest {
   id?: string
   type?: DoubanType
   status?: DoubanStatus
@@ -17,8 +17,8 @@ interface DoubanHtmlRequest {
   filter?: 'all'
   mode?: DoubanMode
 }
-interface MovieItem {
-  linkId?: string
+export interface MovieItem {
+  id?: string
   title?: string
   intro?: string
   link?: string
@@ -27,7 +27,7 @@ interface MovieItem {
   comment?: string
   rate?: number
 }
-interface Movie {
+export interface Movie {
   total_count?: number
   start?: number
   end?: number
@@ -51,7 +51,7 @@ class Douban {
         id: 'bolu_zz',
         type: 'movie',
         status: 'do',
-        start: 1,
+        start: 0,
         sort: 'time',
         filter: 'all',
         mode: 'grid',
@@ -107,9 +107,9 @@ class Douban {
     }
     catch (e) {
       // eslint-disable-next-line no-console
-      console.log('>>> douban', e)
+      console.log('>>> douban  listHtml', e)
       Logger.error('douban', 'get douban html error', {
-        options,
+        detail: options,
       })
       return false
     }
@@ -168,7 +168,7 @@ class Douban {
         const linkId = linkArray?.[linkArray.length - 2]
 
         items.push({
-          linkId,
+          id: linkId,
           title: titleValue,
           intro: introValue,
           link: linkValue,
