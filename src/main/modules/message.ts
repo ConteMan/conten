@@ -499,7 +499,7 @@ async function messageInit() {
         try {
           const { type = 'html' } = apiData
           if (type === 'sync')
-            return await Subject.sync()
+            return await Subject.sync('douban', 'full', { type: 'movie', status: 'collect', startPage: 1, endPage: 1 })
           else
             return await Douban.movieSearch(type)
           return ''

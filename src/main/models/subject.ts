@@ -26,6 +26,11 @@ const Subject = global.sequelize?.define('subject', {
     type: DataTypes.JSON,
     allowNull: true,
   },
+  info_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: new Date(),
+  },
   images: { // { default: xxx, medium: xxx, small: xxx }
     type: DataTypes.JSON,
     allowNull: true,

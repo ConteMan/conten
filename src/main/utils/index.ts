@@ -32,7 +32,7 @@ export function isWin7() {
 }
 
 /**
- * 重试适配器
+ * Axios 重试适配器
  * @param adapter - 适配器
  * @param options - 重试选项
  */
@@ -65,4 +65,16 @@ export function retryAdapterEnhancer(adapter: any, options = { times: 0, delay: 
     }
     return request()
   }
+}
+
+/**
+ * 休眠等待
+ * @param time - 毫秒数
+ */
+export function sleep(time: number): Promise<void> {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
 }

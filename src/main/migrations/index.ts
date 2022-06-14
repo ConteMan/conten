@@ -5,9 +5,33 @@ import { DataTypes } from 'sequelize'
 
 type Migration = Record<string, any>
 const migrations: Migration = {
+  log_2022_06_14_001: log_2022_06_14_001(),
   log_2022_06_02_001: log_2022_06_02_001(),
 }
 
+/**
+ * 条目表增加 info_at 字段
+ */
+async function log_2022_06_14_001() {
+  try {
+    const queryInterface = await LogModel.sequelize?.getQueryInterface()
+
+    if (queryInterface) {
+      await queryInterface.addColumn('subjects', 'info_at', {
+        type: DataTypes.DATE,
+        defaultValue: new Date(),
+      })
+    }
+    return true
+  }
+  catch (e) {
+    return false
+  }
+}
+
+/**
+ * 日志表增加 level 字段
+ */
 async function log_2022_06_02_001() {
   try {
     const queryInterface = await LogModel.sequelize?.getQueryInterface()

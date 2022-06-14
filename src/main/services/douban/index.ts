@@ -61,7 +61,7 @@ class Douban {
       const html = await this.listHtml(params)
       const { type } = params
       if (html && type) {
-        const data = await this.format(type, html)
+        const data = await this.listFormat(type, html)
         return data
       }
       return {}
@@ -72,7 +72,7 @@ class Douban {
   }
 
   /**
-   * 获取豆瓣页面数据
+   * 获取豆瓣列表页面数据
    * @param params - 参数
    */
   async listHtml(params: DoubanHtmlRequest) {
@@ -120,7 +120,7 @@ class Douban {
    * @param type - 类型，movie, book, music
    * @param htmlString - 页面数据
    */
-  async format(type: DoubanType, htmlString: string) {
+  async listFormat(type: DoubanType, htmlString: string) {
     if (type === 'movie')
       return this.movieListFormat(htmlString)
     return false
@@ -238,6 +238,8 @@ class Douban {
     }
     try {
       const html = await GOT(options)
+      if (!html)
+        return false
       return html as string
     }
     catch (e) {
@@ -387,6 +389,17 @@ class Douban {
       })
       return false
     }
+  }
+
+  /**
+   * 根据类型和 ID 获取豆瓣格式化后数据
+   * @param type - 类型，movie, book, music
+   * @param id - 豆瓣 ID
+   */
+  async data(type: DoubanType, id: string) {
+    if (type === 'movie')
+      return await this.movie(id)
+    return false
   }
 }
 

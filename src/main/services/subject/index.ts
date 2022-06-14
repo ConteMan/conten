@@ -1,9 +1,89 @@
 import type { DoubanHtmlRequest, DoubanStatus, DoubanType, MovieItem } from '@main/services/douban'
 import { getConfigByKey } from '@main/services/config'
 import Douban from '@main/services/douban'
-import SubjectMode from '@main/models/subject'
+import SubjectModel from '@main/models/subject'
+import { sleep } from '@main/utils'
+import { random } from 'lodash'
+
+export type SubjectPlatforms = 'douban' | 'bgm'
+export type SubjectMode = 'increment' | 'full'
+export interface SubjectSyncParams {
+  type: DoubanType
+  status: DoubanStatus
+  startPage: number
+  endPage: number
+}
 
 class Subject {
+  /**
+   * 同步数据
+   * @param platform - 平台，douban, bgm
+   */
+  async sync(platform: SubjectPlatforms = 'douban', mode: SubjectMode = 'increment', params: SubjectSyncParams) {
+    if (platform === 'douban')
+      return await this.syncDouban(mode, params)
+    return false
+  }
+
+  /**
+   * 同步豆瓣数据
+   * @param mode - 模式，increment, full
+   * @param params - 参数
+   * - @param type - 类型，movie, book, music
+   * - @param status - 状态，wish, do, collect
+   * - @param startPage - 开始页码
+   * - @param endPage - 结束页码
+   */
+  async syncDouban(mode: SubjectMode = 'increment', params: SubjectSyncParams) {
+    try {
+      const { type = 'movie', status = 'collect', startPage = 1 } = params
+      let { endPage = 1 } = params
+
+      if (mode === 'full') // TODO: 全量同步，暂时设置为极限判断
+        endPage = 1000
+
+      let count = 0
+      for (let page = startPage; page <= endPage; page++) {
+        const pageList = await this.doubanList(type, status, page)
+
+        if (!pageList)
+          break
+
+        const { items, next } = pageList
+        if (!items || !items.length)
+          break
+
+        for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+          await sleep(random(1, 5) * 1000)
+          const { id: douban_id } = items[itemIndex]
+
+          if (!douban_id)
+            continue
+
+          const itemData = await Douban.data(type, douban_id)
+          if (!itemData)
+            continue
+
+          const itemFormatData = await this.formatDouban(type, status, items[itemIndex], itemData)
+          // eslint-disable-next-line no-console
+          console.log(itemFormatData)
+
+          const res = await this.save(itemFormatData)
+          if (res)
+            count++
+        }
+        if (!next)
+          break
+      }
+      return count
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> Subject >> syncDouban error', e)
+      return false
+    }
+  }
+
   /**
    * 获取豆瓣列表
    * @param type - 类型，movie, book, music
@@ -34,60 +114,6 @@ class Subject {
   }
 
   /**
-   * 同步数据
-   * @param platform - 平台，douban, bgm
-   */
-  async sync(platform = 'douban') {
-    if (platform === 'douban')
-      return await this.syncDouban()
-    return false
-  }
-
-  /**
-   * 同步豆瓣数据
-   * @param type - 类型，movie, book, music
-   * @param status - 状态，wish, do, collect
-   * @param startPage - 开始页码
-   * @param endPage - 结束页码
-   */
-  async syncDouban(type: DoubanType = 'movie', status: DoubanStatus = 'collect', startPage = 1, endPage = 1) {
-    try {
-      let count = 0
-      for (let page = startPage; page <= endPage; page++) {
-        const pageList = await this.doubanList(type, status, page)
-        if (!pageList)
-          continue
-        const { items, next } = pageList
-        if (!items || !items.length)
-          continue
-        for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
-          const { id: douban_id } = items[itemIndex]
-          if (!douban_id)
-            continue
-          let itemFormatData
-          if (type === 'movie') {
-            const itemData = await Douban.movie(douban_id)
-            itemFormatData = await this.formatDouban(type, status, items[itemIndex], itemData)
-            // eslint-disable-next-line no-console
-            console.log(itemFormatData)
-          }
-          const res = await this.save(itemFormatData)
-          if (res)
-            count++
-        }
-        if (!next)
-          break
-      }
-      return count
-    }
-    catch (e) {
-      // eslint-disable-next-line no-console
-      console.log('>>> Subject >> syncDouban error', e)
-      return false
-    }
-  }
-
-  /**
    * 格式化豆瓣数据
    * @param type - 类型，movie, book, music
    * @param status - 状态，wish, do, collect
@@ -104,15 +130,16 @@ class Subject {
       const { imdb } = detailData
       if (!douban_id && !imdb)
         return false
-      data.slug = imdb.value || douban_id
+      data.slug = imdb?.value || douban_id
       data.name = detailData.title.value
-      data.status_at = { [status]: new Date() }
+      data.status_at = { [status]: introData.date }
+      data.info_at = introData.date ?? new Date()
       data.images = { detail: introData.pic }
       data.eps = detailData.episodes ? detailData.episodes.value : 1
-      data.collect_eps = []
+      data.collect_eps = null
       data.douban_id = douban_id
       data.douban_data = { ...introData, ...detailData }
-      data.imdb_id = imdb.value
+      data.imdb_id = imdb?.value
       data.bgm_id = ''
       data.bgm_data = {}
       return data
@@ -133,13 +160,13 @@ class Subject {
       const { slug } = data
       if (!slug)
         return false
-      const [res, created] = await SubjectMode.findOrCreate({
+      const [res, created] = await SubjectModel.findOrCreate({
         where: {
           slug,
         },
         defaults: data,
       })
-      if (!created) {
+      if (!created) { // TODO: 平台未有的状态类型更新，需要逻辑判断，比如：已经为 drop 状态数据，需要特殊标记（手动处理）才可以更新为其他状态
         delete data.slug
         res.set(data)
         await res.save()
