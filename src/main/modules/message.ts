@@ -508,6 +508,19 @@ async function messageInit() {
           return null
         }
       }
+      case 'subject': { // 条目接口
+        try {
+          const { method = 'list', params = {} } = apiData
+          if (method === 'list') {
+            const { type = 'movie', status = 'do', page = 1, pageSize = 20 } = params
+            return await Subject.list(type, status, page, pageSize)
+          }
+          return false
+        }
+        catch (e) {
+          return false
+        }
+      }
       default:
         // eslint-disable-next-line no-console
         console.log('>>> message >> messageInit > default:', name)

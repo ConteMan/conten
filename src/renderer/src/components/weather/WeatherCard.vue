@@ -80,7 +80,7 @@ watch(() => refreshState.weather, (val) => {
       >
         {{ weatherData.location.name }}
       </span>
-      <span v-if="todayText" class="ml-1 text-xs">{{ todayText }}</span>
+      <span v-if="todayText" class="ml-1">{{ todayText }}</span>
       <span
         class="weather-data-time ml-2 text-xs text-gray-400 italic cursor-pointer invisible"
         @click="getWeather(true)"

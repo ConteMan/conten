@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import _ from 'lodash'
+
 const cards = [
   'now',
   'weather',
   'wakatime',
   'taptap',
   'v2ex',
+  'subject',
 ]
 const data = reactive({
-  showCards: ['now', 'weather'] as string[],
+  showCards: cards as string[],
   showSetting: false,
 })
 const { showCards, showSetting } = toRefs(data)
@@ -29,12 +31,13 @@ const showDeal = (module: string) => {
 
 <template>
   <div class="flex flex-row items-start">
-    <div class="pl-4 flex-grow flex flex-row flex-wrap gap-2">
+    <div class="pl-4 flex-grow gap-2">
       <NowCard v-if="showCards.includes('now')" class="w-full flex-shrink-0" />
       <WeatherCard v-if="showCards.includes('weather')" />
       <WakaTimeCard v-if="showCards.includes('wakatime')" />
       <TapTapCard v-if="showCards.includes('taptap')" />
       <V2exCard v-if="showCards.includes('v2ex')" />
+      <SubjectCard v-if="showCards.includes('subject')" />
     </div>
     <div
       class="setting-action flex-shrink-0 w-[10px] h-full flex justify-center items-center cursor-pointer hover:(bg-light-400)"

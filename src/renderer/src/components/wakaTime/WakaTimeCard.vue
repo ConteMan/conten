@@ -59,8 +59,11 @@ watch(() => refreshState.wakatime, (val) => {
     class="wakatime-card p-2"
   >
     <div>
+      <span>[ WakaTime ]</span>
+    </div>
+    <div>
       <span>
-        Today has been coding for {{ summaries.cummulative_total.text }}.
+        今日开发时间：{{ summaries.cummulative_total.text }}.
       </span>
       <span
         class="wakatime-data-time invisible text-xs text-gray-400 italic cursor-pointer ml-2"

@@ -69,9 +69,9 @@ watch(() => refreshState[module], (val) => {
     v-if="enable && info"
     class="v2ex-card p-2"
   >
-    <div class="text-xs">
+    <div class="">
       <span>
-        [ V2EX ] {{ info.login ? 'online' : '' }}<span v-if="!info.login" class="cursor-pointer hover:(underline decoration-2 underline-offset-2)" @click="openWindow('https://v2ex.com')">offline</span> / {{ info.user.balance.gold }}-{{ info.user.balance.silver }}-{{ info.user.balance.bronze }}
+        [ V2EX ]
       </span>
       <span
         class="v2ex-data-time invisible text-xs text-gray-400 italic cursor-pointer ml-2"
@@ -79,6 +79,10 @@ watch(() => refreshState[module], (val) => {
       >
         {{ dayjs(updated_at).format('HH:mm') }}
       </span>
+    </div>
+    <div>
+      <span>{{ info.login ? 'online' : '' }}</span>
+      <span v-if="!info.login" class="cursor-pointer hover:(underline decoration-2 underline-offset-2)" @click="openWindow('https://v2ex.com')">offline</span> / {{ info.user.balance.gold }}-{{ info.user.balance.silver }}-{{ info.user.balance.bronze }}
     </div>
   </div>
 </template>

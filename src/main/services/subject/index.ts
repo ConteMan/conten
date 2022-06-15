@@ -13,6 +13,8 @@ export interface SubjectSyncParams {
   startPage: number
   endPage: number
 }
+export type SubjectType = DoubanType
+export type SubjectStatus = DoubanStatus
 
 class Subject {
   /**
@@ -176,6 +178,34 @@ class Subject {
     catch (e) {
       // eslint-disable-next-line no-console
       console.log('>>> Subject >> save error', e)
+      return false
+    }
+  }
+
+  /**
+   * 条目列表
+   * @param type - 类型，movie, book, music
+   * @param status - 状态，wish, do, collect
+   * @param page - 页码
+   * @param pageSize - 页大小
+   */
+  async list(type: SubjectType = 'movie', status: SubjectStatus = 'do', page = 1, pageSize = 15) {
+    try {
+      const res = await SubjectModel.findAndCountAll({
+        where: {
+          type,
+          status,
+        },
+        offset: (page - 1) * pageSize,
+        limit: pageSize,
+        order: [
+          ['info_at', 'DESC'],
+        ],
+        raw: true,
+      })
+      return res
+    }
+    catch (e) {
       return false
     }
   }
