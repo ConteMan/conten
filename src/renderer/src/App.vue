@@ -29,10 +29,14 @@ const systemState = useSystemState()
 const { themeWithSystem, isDark } = storeToRefs(systemState)
 
 const darkDeal = (isDark: boolean) => {
-  if (isDark)
+  if (isDark) {
     data.theme = darkTheme
-  else
+    document.body.classList.add('dark')
+  }
+  else {
     data.theme = null
+    document.body.classList.remove('dark')
+  }
 }
 darkDeal(isDark.value)
 

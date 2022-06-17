@@ -12,3 +12,9 @@
 ::-webkit-scrollbar-thumb {
   background-color: gray;
 }
+.bg {
+  background-color: #fff;
+}
+.dark .bg {
+  background-color: rgb(16, 16, 20);
+}

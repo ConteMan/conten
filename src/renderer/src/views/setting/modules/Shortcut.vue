@@ -174,7 +174,7 @@ const saveShortcut = async () => {
     <!-- 按键监听窗口 -->
     <div
       v-if="showKeyModal"
-      class="z-999 fixed top-0 left-0 w-full h-full gap-4 bg-light-200 flex flex-col justify-center items-center"
+      class="bg z-999 fixed top-0 left-0 w-full h-full gap-4 flex flex-col justify-center items-center"
     >
       <div class="text-xl bold mb-4">
         {{ des }}
@@ -187,7 +187,7 @@ const saveShortcut = async () => {
           <mdi-refresh class="cursor-pointer" @click="resetKey()" />
         </div>
       </div>
-      <div class="text-gray-600">
+      <div class="text-sm">
         {{ keyTip }}
       </div>
       <div class="flex gap-2">
