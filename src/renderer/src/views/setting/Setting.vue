@@ -6,6 +6,7 @@ import WakaTimeModule from './modules/WakeTime.vue'
 import TapTapModule from './modules/TapTap.vue'
 import V2exModule from './modules/V2ex.vue'
 import DoubanModule from './modules/Douban.vue'
+import ShortcutModule from './modules/Shortcut.vue'
 
 const modules = [
   {
@@ -35,6 +36,10 @@ const modules = [
   {
     name: '豆瓣',
     code: 'douban',
+  },
+  {
+    name: '快捷键',
+    code: 'shortcut',
   },
 ]
 const data = reactive({
@@ -67,6 +72,7 @@ const { currentModule } = toRefs(data)
       <TapTapModule v-if="currentModule === 'taptap'" />
       <V2exModule v-if="currentModule === 'v2ex'" />
       <DoubanModule v-if="currentModule === 'douban'" />
+      <ShortcutModule v-if="currentModule === 'shortcut'" />
     </div>
   </div>
 </template>

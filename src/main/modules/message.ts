@@ -22,6 +22,7 @@ import schedule from '@main/services/schedule'
 import { logList } from '@main/services/log'
 import Douban from '@main/services/douban'
 import Subject from '@main/services/subject'
+import { checkShortcut, resetShortcut } from '@main/modules/shortcuts'
 
 /**
  * 消息监听服务初始化
@@ -514,6 +515,33 @@ async function messageInit() {
           if (method === 'list') {
             const { type = 'movie', status = 'do', page = 1, pageSize = 20 } = params
             return await Subject.list(type, status, page, pageSize)
+          }
+          return false
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'check-shortcut': { // 校验快捷键是否可用
+        try {
+          const { name, shortcut } = apiData
+          return checkShortcut(name, shortcut)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'save-shortcut': { // 保存快捷键
+        try {
+          const { name, shortcut } = apiData
+          const resetRes = await resetShortcut(name, shortcut)
+          if (resetRes) {
+            const saveData = {
+              group_key: 'shortcut',
+              key: name,
+              value: shortcut,
+            }
+            return !!await setConfig(saveData)
           }
           return false
         }
