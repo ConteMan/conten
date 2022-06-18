@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { GlobalThemeOverrides } from 'naive-ui'
 import { NConfigProvider, darkTheme, dateZhCN, zhCN } from 'naive-ui'
-
+import { useRefreshState } from '@renderer/store/refresh'
 import { useSystemState } from './store/system'
-
 import AppContent from './layout/AppContent.vue'
 
 const data = reactive({
@@ -24,6 +23,17 @@ const themeOverrides: GlobalThemeOverrides = {
     boxShadowFocus: '#fff',
   },
 }
+
+// 状态更新
+const refreshState = useRefreshState()
+window.ipcRenderer.on('refresh', (event, data) => {
+  const { module, status } = data
+
+  // eslint-disable-next-line no-console
+  console.log('>>> App >> refreshState:', data)
+
+  refreshState.toggle(module, status)
+})
 
 const systemState = useSystemState()
 const { themeWithSystem, isDark } = storeToRefs(systemState)

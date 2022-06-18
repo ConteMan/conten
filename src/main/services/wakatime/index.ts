@@ -2,7 +2,6 @@ import fetch from 'node-fetch'
 
 import { getConfigByKey } from '@main/services/config'
 import RequestCache from '@main/services/requestCache'
-import { sendToRenderer } from '@main/utils/ipcMessage'
 
 class WakaTime {
   private name: string
@@ -60,9 +59,6 @@ class WakaTime {
    */
   async schedule() {
     await this.getDataByCache('Today', true)
-    sendToRenderer('refresh', {
-      module: 'wakatime',
-    })
   }
 }
 

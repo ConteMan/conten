@@ -1,14 +1,15 @@
 {
   "name": "contea-desktop",
   "productName": "Contea",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "license": "MIT",
   "author": "ConteMan <real.conteman@gmail.com>",
   "main": "dist/main/index.cjs",
   "scripts": {
-    "dev": "npm install && node scripts/package.mjs && node scripts/watch.mjs",
-    "build": "npm install && node scripts/package.mjs && vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder",
-    "build:win": "npm install && node scripts/package.mjs && vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder --win",
+    "dev": "npm run clear && npm install && node scripts/package.mjs && node scripts/watch.mjs",
+    "build": "npm run clear && npm install && node scripts/package.mjs && vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder",
+    "build:win": "npm run clear && npm install && node scripts/package.mjs && vue-tsc --project src/renderer/tsconfig.json --noEmit && node scripts/build.mjs && electron-builder --win",
+    "clear": "rimraf dist/main dist/preload dist/renderer",
     "lint:fix": "eslint . --fix"
   },
   "engines": {
@@ -53,6 +54,7 @@
     "node-fetch": "^3.2.3",
     "pinia": "^2.0.13",
     "pinia-plugin-persistedstate": "^1.5.1",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.5.4",
     "unplugin-auto-import": "^0.7.1",

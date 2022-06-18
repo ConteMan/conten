@@ -1,6 +1,7 @@
 import NodeSchedule from 'node-schedule'
 import dayjs from 'dayjs'
-
+import { sendToRenderer } from '@main/utils/ipcMessage'
+import { MODULES } from '@main/enums/scheduleEnum'
 import { getConfigByKey } from '@main/services/config'
 import WakaTime from '@main/services/wakatime'
 import { schedule as weatherSchedule } from '@main/services/weather'
@@ -57,32 +58,37 @@ class Schedule {
    */
   async moduleSchedule(moduleName: string) {
     switch (moduleName) { // TODO 不优雅
-      case 'system': {
+      case MODULES.SYSTEM: {
         await System.schedule()
         break
       }
-      case 'weather': {
+      case MODULES.WEATHER: {
         await weatherSchedule()
         break
       }
-      case 'wakatime':{
+      case MODULES.WAKATIME:{
         await WakaTime.schedule()
         break
       }
-      case 'taptap': {
+      case MODULES.TAPTAP: {
         await TapTap.schedule()
         break
       }
-      case 'v2ex': {
+      case MODULES.V2EX: {
         await V2ex.schedule()
         break
       }
       default: {
         // eslint-disable-next-line no-console
-        console.log('>>> SCHEDULE >> moduleSchedule: not find moduleName')
-        break
+        console.log('>>> SCHEDULE >> moduleSchedule: not find module')
+
+        return false
       }
     }
+    await sendToRenderer('refresh', {
+      module: moduleName,
+      status: new Date().toISOString(),
+    })
     return true
   }
 
@@ -105,6 +111,8 @@ class Schedule {
       return jobList
     }
     catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> Services >> schedule > list: ', e)
       return []
     }
   }
@@ -114,20 +122,21 @@ class Schedule {
  * 定时任务初始化
  */
 export async function scheduleInit() {
-  const scheduleInstance = new Schedule()
-  const modules = [
-    'system',
-    'wakatime',
-    'weather',
-    'taptap',
-    'v2ex',
-  ]
-  for (const moduleName of modules)
-    await scheduleInstance.dealByModule(moduleName)
-    // await this.moduleSchedule(moduleName) // TODO 任务多会影响启动体验，可以考虑延迟处理
+  try {
+    const scheduleInstance = new Schedule()
+    const modules = Object.values(MODULES)
+    for (const moduleName of modules)
+      await scheduleInstance.dealByModule(moduleName)
 
-  // eslint-disable-next-line no-console
-  console.log('>>> SCHEDULE >> init > jobs: ', Object.keys(global.jobs))
+    // eslint-disable-next-line no-console
+    console.log('>>> Services >> schedule > scheduleInit jobs: ', Object.keys(global.jobs))
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('>>> Services >> schedule > scheduleInit error: ', e)
+
+    return false
+  }
 }
 
 export default new Schedule()

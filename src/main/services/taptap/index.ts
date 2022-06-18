@@ -3,7 +3,6 @@ import { METHODS, TASK_STATUS } from '@main/enums/taptapEnum'
 import { getHttpData, viewWindowInit } from '@main/modules/window'
 import RequestCache from '@main/services/requestCache'
 import { addTask, updateTask } from '@main/services/task'
-import { sendToRenderer } from '@main/utils/ipcMessage'
 import { getConfigByKey } from '@main/services/config'
 
 class TapTap {
@@ -96,9 +95,6 @@ class TapTap {
       if (userId) {
         const url = `https://www.taptap.com/user/${userId.value}/most-played`
         await this.getViewHttpData(url)
-        sendToRenderer('refresh', {
-          module: 'taptap',
-        })
       }
       return true
     }

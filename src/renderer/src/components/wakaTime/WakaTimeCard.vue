@@ -3,20 +3,21 @@ import dayjs from 'dayjs'
 import { useRefreshState } from '@renderer/store/refresh'
 import { invokeApi } from '@renderer/utils/ipcMessage'
 
+const module = 'wakatime'
+
 const data = reactive({
-  module: 'wakatime',
   enable: false,
   summaries: null as any,
   summariesExpired: null as any,
   summariesUpdatedAt: null as any,
 })
-const { module, enable, summaries, summariesUpdatedAt } = toRefs(data)
+const { enable, summaries, summariesUpdatedAt } = toRefs(data)
 
 const moduleEnable = async () => {
   const res = await invokeApi({
     name: 'module-enable',
     data: {
-      module: module.value,
+      module,
     },
   })
   data.enable = res
@@ -45,11 +46,8 @@ const init = async () => {
 init()
 
 const refreshState = useRefreshState()
-watch(() => refreshState.wakatime, (val) => {
-  if (val) {
-    getSummaries(true)
-    refreshState.toggle('wakatime', false)
-  }
+watch(() => refreshState[module], async () => {
+  await getSummaries()
 })
 </script>
 
@@ -60,16 +58,16 @@ watch(() => refreshState.wakatime, (val) => {
   >
     <div>
       <span>[ WakaTime ]</span>
-    </div>
-    <div>
-      <span>
-        今日开发时间：{{ summaries.cummulative_total.text }}.
-      </span>
       <span
         class="wakatime-data-time invisible text-xs text-gray-400 italic cursor-pointer ml-2"
         @click="getSummaries(true)"
       >
         {{ dayjs(summariesUpdatedAt).format('HH:mm') }}
+      </span>
+    </div>
+    <div>
+      <span>
+        今日开发时间：{{ summaries.cummulative_total.text }}.
       </span>
     </div>
   </div>

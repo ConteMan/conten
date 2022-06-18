@@ -185,7 +185,7 @@ async function messageInit() {
       }
       case 'taptap-detail': { // TapTap 详情
         const { refresh } = apiData
-        return TapTap.detail(refresh ?? false)
+        return await TapTap.detail(refresh ?? false)
       }
       case 'module-enable': { // 模块是否开启
         const { module } = apiData

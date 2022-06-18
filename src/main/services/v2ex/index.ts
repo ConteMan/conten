@@ -5,7 +5,6 @@ import { getConfigByKey, mergeConfig } from '@main/services/config'
 import { viewWindowInit } from '@main/modules/window'
 import { bulkCreateOrUpdate } from '@main/services/info'
 import { retryAdapterEnhancer } from '@main/utils'
-import { sendToRenderer } from '@main/utils/ipcMessage'
 import Logger from '@main/services/log'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -321,10 +320,6 @@ class V2EX {
       const getUsernameRes = await this.getUsername(true)
       const getUserRes = await this.getUser(true)
       const getTabListRes = await this.getTabList()
-
-      sendToRenderer('refresh', {
-        module: this.name,
-      })
 
       const res = {
         login: !!loginRes,

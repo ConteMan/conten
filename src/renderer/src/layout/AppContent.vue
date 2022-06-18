@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { MessageType } from 'naive-ui'
 import { useMousePressed } from '@vueuse/core'
-import { useRefreshState } from '@renderer/store/refresh'
 import { useSystemState } from '@renderer/store/system'
 
 // 导航栏
@@ -100,13 +99,6 @@ window.ipcRenderer.on('message', (event, arg) => {
     type: types[type],
     duration: 5000,
   })
-})
-
-// 状态更新
-const refreshState = useRefreshState()
-window.ipcRenderer.on('refresh', (event, data) => {
-  const { module } = data
-  refreshState.toggle(module, true)
 })
 
 // 系统状态

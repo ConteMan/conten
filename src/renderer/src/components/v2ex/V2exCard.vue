@@ -8,9 +8,9 @@ const module = 'v2ex'
 const data = reactive({
   enable: false,
   info: null as any,
-  updated_at: null as any,
+  updatedAt: '',
 })
-const { enable, info, updated_at } = toRefs(data)
+const { enable, info, updatedAt } = toRefs(data)
 
 const moduleEnable = async () => {
   const res = await invokeApi({
@@ -34,7 +34,7 @@ const getModuleInfo = async (refresh = false) => {
 
   if (res) {
     data.info = JSON.parse(res.value)
-    data.updated_at = res.updated_at
+    data.updatedAt = res.updated_at
   }
 }
 
@@ -57,10 +57,7 @@ const openWindow = (url: string) => {
 
 const refreshState = useRefreshState()
 watch(() => refreshState[module], (val) => {
-  if (val) {
-    getModuleInfo(true)
-    refreshState.toggle(module, false)
-  }
+  getModuleInfo(true)
 })
 </script>
 
@@ -77,12 +74,12 @@ watch(() => refreshState[module], (val) => {
         class="v2ex-data-time invisible text-xs text-gray-400 italic cursor-pointer ml-2"
         @click="getModuleInfo(true)"
       >
-        {{ dayjs(updated_at).format('HH:mm') }}
+        {{ dayjs(updatedAt).format('HH:mm') }}
       </span>
     </div>
     <div>
-      <span>{{ info.login ? 'online' : '' }}</span>
-      <span v-if="!info.login" class="cursor-pointer hover:(underline decoration-2 underline-offset-2)" @click="openWindow('https://v2ex.com')">offline</span> / {{ info.user.balance.gold }}-{{ info.user.balance.silver }}-{{ info.user.balance.bronze }}
+      <span>{{ info.login ? 'Online' : '' }}</span>
+      <span v-if="!info.login" class="cursor-pointer hover:(underline decoration-2 underline-offset-2)" @click="openWindow('https://v2ex.com')">offline</span> / {{ info.user.balance.gold }} {{ info.user.balance.silver }} {{ info.user.balance.bronze }}
     </div>
   </div>
 </template>

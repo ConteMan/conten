@@ -1,16 +1,19 @@
 import { defineStore } from 'pinia'
 
 export const useRefreshState = defineStore('refresh', {
-  state: () => {
+  state: (): Record<string, string> => {
     return {
-      weather: false,
-      wakatime: false,
-      taptap: false,
-      v2ex: false,
+      weather: '',
+      wakatime: '',
+      taptap: '',
+      v2ex: '',
     }
   },
   actions: {
-    toggle(module: 'weather' | 'wakatime' | 'taptap' | 'v2ex', status = false) {
+    toggle(module: string, status: string) {
+      // eslint-disable-next-line no-console
+      console.log('>>> store >> refresh > toggle', module, status)
+
       this[module] = status
     },
   },

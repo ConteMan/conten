@@ -21,8 +21,6 @@ const getData = async (refresh = false) => {
       },
     },
   })
-  // eslint-disable-next-line no-console
-  console.log('res', res)
   data.list = res ?? null
 }
 
@@ -30,10 +28,6 @@ const init = async () => {
   await getData()
 }
 init()
-
-const dealJSON = (data: string) => {
-  return JSON.parse(data)
-}
 
 const openInBrowser = (url: string) => {
   window.shell.openExternal(url)
@@ -49,7 +43,7 @@ const openInBrowser = (url: string) => {
       <div v-for="item in list.rows" :key="item.id" class="p-2 border">
         <div
           class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
-          @click="openInBrowser(`https://movie.douban.com/subject/${dealJSON(item.douban_data).id}`)"
+          @click="openInBrowser(`https://movie.douban.com/subject/${JSON.parse(item.douban_data).id}`)"
         >
           {{ item.name }}
         </div>
