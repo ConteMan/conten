@@ -23,6 +23,7 @@ import { logList } from '@main/services/log'
 import Douban from '@main/services/douban'
 import Subject from '@main/services/subject'
 import { checkShortcut, resetShortcut } from '@main/modules/shortcuts'
+import V2ex from '@main/services/v2ex'
 
 /**
  * 消息监听服务初始化
@@ -449,7 +450,11 @@ async function messageInit() {
       }
       case 'module-info': { // 模块信息
         try {
-          const { module } = apiData
+          const { module, refresh = false } = apiData
+          if (refresh) {
+            if (module === 'v2ex')
+              await V2ex.schedule()
+          }
           return await getConfigByKey(`${module}_module`)
         }
         catch (e) {
