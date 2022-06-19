@@ -8,12 +8,13 @@ import { configDefault } from '@main/services/shortcut/model'
  */
 function showApp() {
   if (global.win?.isVisible()) {
-    global.win?.hide()
+    if (!global.win?.isFocused())
+      global.win?.show()
+    else
+      global.win?.hide()
   }
   else {
     global.win?.show()
-    global.win?.moveTop()
-    global.win?.focus()
   }
 }
 
