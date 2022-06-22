@@ -241,6 +241,25 @@ async function messageInit() {
           return false
         }
       }
+      case 'get-config-stores': { // 批量获取 store 配置
+        try {
+          const { keys } = apiData
+          const defaultStore = getStore()
+          if (!defaultStore)
+            return false
+
+          const values: any = {}
+          keys.forEach((key: string) => {
+            const res = defaultStore.get(key, false) as any
+            values[key] = res
+          })
+
+          return values
+        }
+        catch (e) {
+          return false
+        }
+      }
       case 'set-config-store': { // 保存配置到 store // TODO 完善，封装
         try {
           const { key, value } = apiData
@@ -262,6 +281,28 @@ async function messageInit() {
               })
             }
           }
+          return true
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'set-config-stores': { // 批量保存配置到 store
+        try {
+          const { data } = apiData
+          const dealData = JSON.parse(data)
+          // eslint-disable-next-line no-console
+          console.log('>>>>> data:', dealData)
+          const keys = Object.keys(dealData)
+          keys.forEach((key: string) => {
+            const setRes = setStore(key, dealData[key])
+            if (setRes) {
+              if (key === 'server.port') {
+                if (global.koaApp)
+                  KoaRestart(dealData[key])
+              }
+            }
+          })
           return true
         }
         catch (e) {

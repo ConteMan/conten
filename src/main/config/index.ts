@@ -13,6 +13,7 @@ export const CONFIG: Contea.Config = {
     },
     server: {
       port: 7788,
+      autoStart: true,
     },
     db: {
       sqlite3: {

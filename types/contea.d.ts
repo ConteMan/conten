@@ -35,6 +35,7 @@ declare namespace Contea {
     }
     server: {
       port: number | string
+      autoStart?: boolean
     }
     db: {
       sqlite3: {

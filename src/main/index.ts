@@ -20,8 +20,8 @@ app.whenReady().then(async () => {
   trayInit()
   menuInit()
 
-  appInit()
   dbInit()
+  appInit()
   messageInit()
   scheduleInit()
 

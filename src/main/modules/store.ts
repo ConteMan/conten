@@ -29,7 +29,7 @@ export function storeInit(name: ConfigEnum = ConfigEnum.DEFAULT_NAME, reload = f
       global.store[name].set(CONFIG[name] as object)
     }
     else {
-      const mergeConfig = _.merge({}, { ...CONFIG[name] }, global.store[name].store)
+      const mergeConfig = _.merge({}, { ...CONFIG[name] }, global.store[name].store) // 合并设置，后续增加设置项时可以无缝使用
       global.store[name].set(mergeConfig)
     }
     return global.store[name]

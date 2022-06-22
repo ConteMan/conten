@@ -37,7 +37,7 @@ const openInBrowser = (url: string) => {
 <template>
   <div v-if="list" class="p-2">
     <div>
-      <span class="pb-1">[ 在看 ]</span>
+      <span class="pb-1">[ 在看 / 影视 ]</span>
     </div>
     <div class="flex flex-row flex-wrap gap-2 mt-2">
       <div v-for="item in list.rows" :key="item.id" class="p-2 border">

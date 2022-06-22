@@ -7,13 +7,17 @@ import { setSystemTheme } from '@renderer/utils'
 const module = 'system'
 const message = useMessage()
 
+const customFormDefault = {
+  'server.port': '',
+  'server.autoStart': false,
+}
+const customFormKeys = Object.keys(customFormDefault)
+
 const data = reactive({
   formRef: null,
   formValue: formValueDefault as any,
   formSize: 'small',
-  customFormValue: {
-    serverPort: '',
-  },
+  customFormValue: customFormDefault,
   defaultPath: 'defaultPath',
   sqlite3Path: '',
   pathStatusText: '',
@@ -36,26 +40,22 @@ getConfig()
 // 获取自定义配置
 const getCustomConfig = async () => {
   const res = await invokeApi({
-    name: 'get-config-store',
+    name: 'get-config-stores',
     data: {
-      key: 'server.port',
+      keys: customFormKeys,
     },
   })
-  if (res) {
-    data.customFormValue = {
-      serverPort: res,
-    }
-  }
+  if (res)
+    data.customFormValue = res
 }
 getCustomConfig()
 
 // 保存自定义配置
 const setCustomConfig = async () => {
   const res = await invokeApi({
-    name: 'set-config-store',
+    name: 'set-config-stores',
     data: {
-      key: 'serverPort',
-      value: customFormValue.value.serverPort,
+      data: JSON.stringify(data.customFormValue),
     },
   })
   if (res) {
@@ -212,8 +212,11 @@ const save = async () => {
       </n-form-item>
       <n-divider />
 
+      <n-form-item label="Koa 服务随应用启动">
+        <n-switch v-model:value="customFormValue['server.autoStart']" size="small" :checked-value="true" :unchecked-value="false" />
+      </n-form-item>
       <n-form-item label="Koa 服务端口号">
-        <n-input v-model:value="customFormValue.serverPort" placeholder="" />
+        <n-input v-model:value="customFormValue['server.port']" placeholder="" />
       </n-form-item>
       <n-divider />
 
