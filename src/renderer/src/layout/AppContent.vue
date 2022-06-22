@@ -2,38 +2,7 @@
 import type { MessageType } from 'naive-ui'
 import { useMousePressed } from '@vueuse/core'
 import { useSystemState } from '@renderer/store/system'
-
-// 导航栏
-const navList = [
-  {
-    name: '面板',
-    path: '/dashboard',
-  },
-  {
-    name: '资讯',
-    path: '/info',
-  },
-  {
-    name: '实验',
-    path: '/test',
-  },
-  {
-    name: '系统',
-    path: '/system',
-  },
-  {
-    name: '设置',
-    path: '/setting',
-  },
-  {
-    name: '日志',
-    path: '/log',
-  },
-  {
-    name: '关于',
-    path: '/about',
-  },
-]
+import { NavList } from '@renderer/setting'
 
 // 导航栏拖拽调节宽度
 const resizeRef = ref<HTMLDivElement | null>(null)
@@ -133,7 +102,7 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
         <div v-if="showSideNav" class="sidebar-content mt-[80px]">
           <div class="nav-container flex flex-col items-center space-y-2">
             <div
-              v-for="item in navList" :key="item.path"
+              v-for="item in NavList" :key="item.path"
               class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
               :class="{ 'font-bold text-red-600': $route.path === item.path }"
               @click="$router.push({ path: item.path })"
@@ -160,7 +129,7 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
     <div class="relative flex-grow h-screen max-h-screen overflow-hidden">
       <div class="h-full flex flex-col">
         <Dragbar class="flex-grow-0 flex-shrink-0" />
-        <router-view v-slot="{ Component }" class="h-[calc(100% - 32px - 28px)] flex-grow flex-shrink overflow-auto">
+        <router-view v-slot="{ Component }" class="h-[calc(100% - 40px - 28px)] flex-grow flex-shrink overflow-auto">
           <keep-alive>
             <component :is="Component" v-if="$route.meta.keepAlive" />
           </keep-alive>

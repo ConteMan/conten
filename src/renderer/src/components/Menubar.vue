@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSystemState } from '@renderer/store/system'
 import { invokeApi } from '@renderer/utils/ipcMessage'
+import { NavList } from '@renderer/setting'
 
 const data = reactive({
   showMore: false,
@@ -60,7 +61,7 @@ const toggleBar = (status: boolean) => {
 
 <template>
   <div
-    class="menubar-container flex-grow-0 flex-shrink-0 h-[32px]"
+    class="menubar-container flex-grow-0 flex-shrink-0 h-[40px]"
     @mouseenter="toggleBar(true)"
     @mouseleave="toggleBar(false)"
   >
@@ -75,6 +76,17 @@ const toggleBar = (status: boolean) => {
             v-if="!showSideNav" class="bar-arrow bar-arrow-right"
             @click="toggleSideNav()"
           />
+        </div>
+
+        <div v-if="!showSideNav" class="nav-list flex gap-1 ml-4">
+          <div
+            v-for="item in NavList" :key="item.path"
+            class="text-[12px] px-1 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
+            :class="{ 'font-bold text-red-600': $route.path === item.path }"
+            @click="$router.push({ path: item.path })"
+          >
+            {{ item.name }}
+          </div>
         </div>
 
         <div class="flex-grow flex justify-end items-center gap-2 mr-6">
