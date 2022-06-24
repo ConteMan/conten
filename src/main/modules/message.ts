@@ -546,7 +546,7 @@ async function messageInit() {
         try {
           const { type = 'html' } = apiData
           if (type === 'sync')
-            return await Subject.sync('douban', 'full', { type: 'movie', status: 'collect', startPage: 1, endPage: 1 })
+            return await Subject.sync('douban', 'full', { type: 'movie', status: 'wish', startPage: 1, endPage: 1 })
           else
             return await Douban.movieSearch(type)
           return ''
@@ -566,6 +566,15 @@ async function messageInit() {
         }
         catch (e) {
           return false
+        }
+      }
+      case 'subject-list': {
+        try {
+          const { type = 'movie', status = 'do', page = 1, pageSize = 20 } = apiData
+          return await Subject.list(type, status, page, pageSize)
+        }
+        catch (e) {
+          return []
         }
       }
       case 'check-shortcut': { // 校验快捷键是否可用
