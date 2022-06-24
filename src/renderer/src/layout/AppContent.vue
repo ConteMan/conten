@@ -129,7 +129,7 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
     <div class="relative flex-grow h-screen max-h-screen overflow-hidden">
       <div class="h-full flex flex-col">
         <Dragbar class="flex-grow-0 flex-shrink-0" />
-        <router-view v-slot="{ Component }" class="h-[calc(100% - 40px - 28px)] flex-grow flex-shrink overflow-auto">
+        <router-view v-slot="{ Component }" class="h-[calc(100% - 40px - 32px)] flex-grow flex-shrink overflow-auto">
           <keep-alive>
             <component :is="Component" v-if="$route.meta.keepAlive" />
           </keep-alive>
