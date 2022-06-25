@@ -4,6 +4,7 @@ import _, { isArray } from 'lodash'
 import * as cheerio from 'cheerio'
 import Logger from '@main/services/log'
 import { randomStr } from '@main/utils'
+import Subject from '@main/services/subject'
 
 export type DoubanType = 'movie' | 'book' | 'music'
 export type DoubanStatus = 'collect' | 'do' | 'wish'
@@ -400,6 +401,33 @@ class Douban {
     if (type === 'movie')
       return await this.movie(id)
     return false
+  }
+
+  /**
+   * 定时任务
+   */
+  async schedule() {
+    try {
+      const doRes = await Subject.syncDouban('increment', { type: 'movie', status: 'do', startPage: 1, endPage: 1 })
+      const wishRes = await Subject.syncDouban('increment', { type: 'movie', status: 'wish', startPage: 1, endPage: 1 })
+      const collectRes = await Subject.syncDouban('increment', { type: 'movie', status: 'collect', startPage: 1, endPage: 1 })
+
+      const res = {
+        movie: {
+          do: !!doRes,
+          wish: !!wishRes,
+          collect: !!collectRes,
+        },
+      }
+      Logger.info(`${this.name}_schedule`, `定时任务：${JSON.stringify(res)}`, {})
+      return res
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> douban schedule', e)
+      Logger.error(`${this.name}_schedule`, `定时任务失败：${String(e)}`, {})
+      return false
+    }
   }
 }
 

@@ -5,4 +5,5 @@ export enum MODULES {
   WEATHER = 'weather',
   TAPTAP = 'taptap',
   V2EX = 'v2ex',
+  DOUBAN = 'douban',
 }

@@ -8,6 +8,7 @@ import { schedule as weatherSchedule } from '@main/services/weather'
 import TapTap from '@main/services/taptap'
 import System from '@main/services/system'
 import V2ex from '@main/services/v2ex'
+import Douban from '@main/services/douban'
 
 class Schedule {
   /**
@@ -76,6 +77,10 @@ class Schedule {
       }
       case MODULES.V2EX: {
         await V2ex.schedule()
+        break
+      }
+      case MODULES.DOUBAN: {
+        await Douban.schedule()
         break
       }
       default: {
