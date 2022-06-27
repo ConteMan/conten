@@ -504,7 +504,7 @@ async function messageInit() {
       }
       case 'info-list': { // Info 列表查询
         try {
-          const { type = 'v2ex', page = 1, pageSize = 10 } = apiData
+          const { type = 'v2ex,sspai', page = 1, pageSize = 10 } = apiData
           return await infoList(type, page, pageSize)
         }
         catch (e) {

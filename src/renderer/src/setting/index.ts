@@ -62,3 +62,14 @@ export const SubjectStatus = [
     value: 'collect',
   },
 ]
+
+export const InfoPlatform = [
+  {
+    name: 'V2EX',
+    value: 'v2ex',
+  },
+  {
+    name: '少数派',
+    value: 'sspai',
+  },
+]

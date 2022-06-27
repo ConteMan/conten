@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { vInfiniteScroll } from '@vueuse/components'
 import { invokeApi } from '@renderer/utils/ipcMessage'
+import { InfoPlatform } from '@renderer/setting'
+import _ from 'lodash'
 
 const data = reactive({
   list: [] as any,
   total: 0,
-  type: '',
+  type: ['sspai', 'v2ex'] as string[],
   page: 1,
   pageSize: 100,
   hasMore: true,
@@ -16,7 +18,7 @@ const getList = async () => {
   const res = await invokeApi({
     name: 'info-list',
     data: {
-      type: type.value,
+      type: data.type.join(','),
       page: page.value,
       pageSize: pageSize.value,
     },
@@ -42,35 +44,83 @@ const loadMore = async () => {
 const openInBrowser = (url: string) => {
   window.shell.openExternal(url)
 }
+
+const changeType = async (type: string) => {
+  if (data.type.includes(type))
+    _.remove(data.type, item => item === type)
+  else
+    data.type.push(type)
+
+  data.page = 1
+  data.list = []
+  await getList()
+}
 </script>
 
 <template>
-  <div
-    v-infinite-scroll="[loadMore, { distance: 10 }]"
-    class="py-2 px-8 flex flex-col gap-2"
-  >
-    <template v-if="total && list.length">
-      <div v-for="item in list" :key="item.id" class="text-xs">
-        <template v-if="item.platform === 'v2ex'">
-          <div>
-            <span
-              class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
-              @click="openInBrowser(`https://www.v2ex.com${item.data.title_link}`)"
-            >
-              {{ item.data.title }}
-            </span>
-            <span class="mx-[4px]">
-              /
-            </span>
-            <span
-              class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
-              @click="openInBrowser('https://www.v2ex.com')"
-            >
-              V2EX
-            </span>
-          </div>
-        </template>
-      </div>
-    </template>
+  <div class="flex flex-col">
+    <div class="px-8 pb-2 flex-grow-0 flex items-center gap-2">
+      <n-tag
+        v-for="typeItem in InfoPlatform" :key="typeItem.value"
+        :checked="data.type.includes(typeItem.value)"
+        size="small"
+        checkable
+        @click.stop="changeType(typeItem.value)"
+      >
+        {{ typeItem.name }}
+      </n-tag>
+    </div>
+    <div
+      v-infinite-scroll="[loadMore, { distance: 10 }]"
+      class="px-8 flex-grow flex flex-col gap-2 overflow-y-scroll"
+    >
+      <template v-if="total && list.length">
+        <div v-for="item in list" :key="item.id" class="text-xs">
+          <template v-if="item.platform === 'v2ex'">
+            <div class="hover-show-parent">
+              <span
+                class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser(`https://www.v2ex.com${item.data.title_link}`)"
+              >
+                {{ item.data.title }}
+              </span>
+              <span class="invisible hover-show mx-[4px]">
+                /
+              </span>
+              <span
+                class="invisible hover-show cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser('https://www.v2ex.com')"
+              >
+                V2EX
+              </span>
+            </div>
+          </template>
+          <template v-if="item.platform === 'sspai'">
+            <div class="hover-show-parent">
+              <span
+                class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser(`https://sspai.com/post/${item.data.ca_data_id}`)"
+              >
+                <template v-if="item.platform_type === 'sspai-followActivity'">
+                  {{ item.data.data.title }}
+                </template>
+                <template v-else>
+                  {{ item.data.title }}
+                </template>
+              </span>
+              <span class="invisible hover-show mx-[4px]">
+                /
+              </span>
+              <span
+                class="invisible hover-show cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser('https://www.sspai.com')"
+              >
+                少数派
+              </span>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
   </div>
 </template>

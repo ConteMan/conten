@@ -18,3 +18,7 @@
 .dark .bg {
   background-color: rgb(16, 16, 20);
 }
+
+.hover-show-parent:hover .hover-show{
+  visibility: visible;
+}

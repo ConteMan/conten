@@ -73,7 +73,7 @@ export async function list(type = '', page = 1, pageSize = 10) {
     if (type) {
       where = {
         ...where,
-        platform: type,
+        platform: type.split(','),
       }
     }
 
