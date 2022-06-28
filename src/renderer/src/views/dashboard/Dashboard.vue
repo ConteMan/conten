@@ -7,7 +7,6 @@ const cards = [
   'wakatime',
   'taptap',
   'v2ex',
-  'subject',
 ]
 const data = reactive({
   showCards: cards as string[],

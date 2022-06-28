@@ -24,6 +24,7 @@ import Douban from '@main/services/douban'
 import Subject from '@main/services/subject'
 import { checkShortcut, resetShortcut } from '@main/modules/shortcuts'
 import V2ex from '@main/services/v2ex'
+import System from '@main/services/system'
 
 /**
  * 消息监听服务初始化
@@ -599,6 +600,15 @@ async function messageInit() {
             return !!await setConfig(saveData)
           }
           return false
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'test-proxy': { // 测试代理
+        try {
+          const { protocol, host, port } = apiData
+          return await System.testProxy(protocol, host, port)
         }
         catch (e) {
           return false

@@ -4,11 +4,9 @@ import dayjs from 'dayjs'
 import { getConfigByKey, mergeConfig } from '@main/services/config'
 import { viewWindowInit } from '@main/modules/window'
 import { bulkCreateOrUpdate } from '@main/services/info'
-import { retryAdapterEnhancer } from '@main/utils'
-import Logger from '@main/services/log'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Axios = require('axios').default
+import Logger from '@main/services/log'
+import { customRequest } from '@main/utils/request'
 
 class V2EX {
   private name: string
@@ -66,14 +64,7 @@ class V2EX {
         })
         await global.wins?.[winInfo.name].close()
 
-        const axiosInstance = Axios.create({
-          adapter: retryAdapterEnhancer(Axios.defaults.adapter, {
-            times: 3,
-            delay: 1000,
-          }),
-        })
-
-        const res = await axiosInstance.request({
+        const res = await customRequest({
           url,
           headers: {
             Cookie: cookieStr,
@@ -82,6 +73,8 @@ class V2EX {
           responseType: 'text',
           timeout: 10000,
           maxRedirects: 5,
+
+          proxy: true,
         })
         return res ? { data: res.data, cookieStr } : false
       }
@@ -114,6 +107,8 @@ class V2EX {
         responseType: 'text',
         timeout: 10000,
         maxRedirects: 20,
+
+        proxy: true,
       }
 
       if (cookieStr) {
@@ -123,13 +118,8 @@ class V2EX {
           },
         })
       }
-      const axiosInstance = Axios.create({
-        adapter: retryAdapterEnhancer(Axios.defaults.adapter, {
-          times: 3,
-          delay: 1000,
-        }),
-      })
-      const res = await axiosInstance.request(options)
+
+      const res = await customRequest(options)
       return res ? { data: res.data } : null
     }
     catch (e) {

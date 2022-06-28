@@ -3,6 +3,7 @@ import { invokeApi } from '@renderer/utils/ipcMessage'
 import { formValueDefault } from '@main/services/system/type'
 import { useSystemState } from '@renderer/store/system'
 import { setSystemTheme } from '@renderer/utils'
+import { ProxyProtocols } from '@renderer/setting'
 
 const module = 'system'
 const message = useMessage()
@@ -15,14 +16,30 @@ const customFormKeys = Object.keys(customFormDefault)
 
 const data = reactive({
   formRef: null,
-  formValue: formValueDefault as any,
+  formValue: formValueDefault,
   formSize: 'small',
   customFormValue: customFormDefault,
   defaultPath: 'defaultPath',
   sqlite3Path: '',
   pathStatusText: '',
+  proxy_enable: false,
 })
-const { formRef, formValue, formSize, customFormValue, defaultPath, pathStatusText, sqlite3Path } = toRefs(data)
+const { formRef, formValue, formSize, customFormValue, defaultPath, pathStatusText, sqlite3Path, proxy_enable } = toRefs(data)
+
+// 测试代理
+const testProxy = async () => {
+  const res = await invokeApi({
+    name: 'test-proxy',
+    data: {
+      protocol: data.formValue.system_proxy_protocol,
+      host: data.formValue.system_proxy_host,
+      port: data.formValue.system_proxy_port,
+    },
+  })
+  // eslint-disable-next-line no-console
+  console.log('>>> test proxy', res)
+  data.proxy_enable = res
+}
 
 // 根据模块获取配置数据
 const getConfig = async () => {
@@ -33,7 +50,9 @@ const getConfig = async () => {
     },
   })
   if (res)
-    data.formValue = res
+    data.formValue = { ...data.formValue, ...res }
+
+  testProxy()
 }
 getConfig()
 
@@ -167,6 +186,7 @@ const save = async () => {
     type: res ? 'success' : 'error',
     duration: 2000,
   })
+  await testProxy()
 }
 </script>
 
@@ -220,11 +240,28 @@ const save = async () => {
       </n-form-item>
       <n-divider />
 
+      <div class="pb-[8px] flex items-center gap-2">
+        <span>
+          代理
+        </span>
+        <mdi-circle class="text-[8px]" :class="[proxy_enable ? 'text-green-400' : 'text-gray-300']" />
+        <mdi-access-point class="cursor-pointer" @click="testProxy()" />
+      </div>
+      <n-form-item :show-label="false">
+        <n-select v-model:value="formValue.system_proxy_protocol" :options="ProxyProtocols" placeholder="Protocol" />
+      </n-form-item>
+      <n-form-item :show-label="false">
+        <n-input v-model:value="formValue.system_proxy_host" placeholder="Host" />
+      </n-form-item>
+      <n-form-item :show-label="false">
+        <n-input v-model:value="formValue.system_proxy_port" placeholder="Port" />
+      </n-form-item>
+
       <n-form-item label="Schedule" path="`${module}_schedule`">
-        <n-input v-model:value="formValue[`${module}_schedule`]" placeholder="" />
+        <n-input v-model:value="formValue.system_schedule" placeholder="" />
       </n-form-item>
       <n-form-item label="Schedule Enable" path="`${module}_schedule_enable`">
-        <n-switch v-model:value="formValue[`${module}_schedule_enable`]" size="small" checked-value="1" unchecked-value="0" />
+        <n-switch v-model:value="formValue.system_schedule_enable" size="small" checked-value="1" unchecked-value="0" />
       </n-form-item>
       <n-divider />
     </n-form>

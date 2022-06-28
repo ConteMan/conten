@@ -73,3 +73,14 @@ export const InfoPlatform = [
     value: 'sspai',
   },
 ]
+
+export const ProxyProtocols = [
+  {
+    label: 'HTTP',
+    value: 'http',
+  },
+  {
+    label: 'HTTPS',
+    value: 'https',
+  },
+]
