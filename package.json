@@ -29,7 +29,7 @@
     "mongodb": "^4.5.0",
     "node-schedule": "^2.1.0",
     "sequelize": "^6.19.0",
-    "sqlite3": "^5.0.4"
+    "sqlite3": "^5.0.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.23.0",
@@ -46,8 +46,8 @@
     "animate.css": "^4.1.1",
     "chalk": "^5.0.0",
     "dayjs": "^1.11.1",
-    "electron": "^19.0.4",
-    "electron-builder": "^23.0.8",
+    "electron": "^19.0.6",
+    "electron-builder": "^23.1.0",
     "eslint": "^8.15.0",
     "less": "^4.1.2",
     "naive-ui": "^2.27.0",

@@ -236,10 +236,10 @@
       }
     },
     "sqlite3": {
-      "versionDefault": "^5.0.4",
-      "version": "5.0.5",
-      "resolved": "https://registry.npmmirror.com/sqlite3/-/sqlite3-5.0.5.tgz",
-      "integrity": "sha512-ZZFOMW31IOMbUeSiL23TuWSjNyS7Z83EDJ80HJxCe78OZ+5BJT6IhAwAUnQgPsUl5z+Er0DGx7VjuTP7PKPNcg==",
+      "versionDefault": "^5.0.8",
+      "version": "5.0.8",
+      "resolved": "https://registry.npmmirror.com/sqlite3/-/sqlite3-5.0.8.tgz",
+      "integrity": "sha512-f2ACsbSyb2D1qFFcqIXPfFscLtPVOWJr5GmUzYxf4W+0qelu5MWrR+FAQE1d5IUArEltBrzSDxDORG8P/IkqyQ==",
       "hasInstallScript": true,
       "dependencies": {
         "@mapbox/node-pre-gyp": "^1.0.0",
@@ -432,10 +432,10 @@
       "dev": true
     },
     "electron": {
-      "versionDefault": "^19.0.4",
-      "version": "19.0.4",
-      "resolved": "https://registry.npmmirror.com/electron/-/electron-19.0.4.tgz",
-      "integrity": "sha512-roRYr1VNAWIhjD9n8qZdmhROtrzsFpuZEXrjWAw+GqPbZlrUInmvFCviRDC2Lt+VBsTNRpTfPpfzXSlLL4reEw==",
+      "versionDefault": "^19.0.6",
+      "version": "19.0.6",
+      "resolved": "https://registry.npmmirror.com/electron/-/electron-19.0.6.tgz",
+      "integrity": "sha512-S9Yud32nKhB0iWC0lGl2JXz4FQnCiLCnP5Vehm1/CqyeICcQGmgQaZl2HYpCJ2pesKIsYL9nsgmku/10cxm/gg==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -451,18 +451,18 @@
       }
     },
     "electron-builder": {
-      "versionDefault": "^23.0.8",
-      "version": "23.0.8",
-      "resolved": "https://registry.npmmirror.com/electron-builder/-/electron-builder-23.0.8.tgz",
-      "integrity": "sha512-7WxdR4+l+VL4QN/K6NdqRQg7+cbIka4By1+4eN8odMPySSTI5d6nrV8R+SSRt9MXeWVdWlW8RCX5Pk6L0oaRug==",
+      "versionDefault": "^23.1.0",
+      "version": "23.1.0",
+      "resolved": "https://registry.npmmirror.com/electron-builder/-/electron-builder-23.1.0.tgz",
+      "integrity": "sha512-UEblaQY8N9m8/HriOwl7jgFJ4olpWDXwdDBqwUkQiRHVNRnCfrA0u8LV03li5ZYhma6zFWzfIZbHd+uk8y//lQ==",
       "dev": true,
       "dependencies": {
         "@types/yargs": "^17.0.1",
-        "app-builder-lib": "23.0.8",
-        "builder-util": "23.0.8",
+        "app-builder-lib": "23.1.0",
+        "builder-util": "23.0.9",
         "builder-util-runtime": "9.0.2",
         "chalk": "^4.1.1",
-        "dmg-builder": "23.0.8",
+        "dmg-builder": "23.1.0",
         "fs-extra": "^10.0.0",
         "is-ci": "^3.0.0",
         "lazy-val": "^1.0.5",
