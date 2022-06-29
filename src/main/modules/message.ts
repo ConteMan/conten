@@ -17,7 +17,7 @@ import { checkIn as JuejinCheckIn } from '@main/services/juejin'
 
 import WakaTime from '@main/services/wakatime'
 import TapTap from '@main/services/taptap'
-import { list as infoList } from '@main/services/info'
+import { action as infoAction, list as infoList } from '@main/services/info'
 import schedule from '@main/services/schedule'
 import { logList } from '@main/services/log'
 import Douban from '@main/services/douban'
@@ -503,13 +503,22 @@ async function messageInit() {
           return false
         }
       }
-      case 'info-list': { // Info 列表查询
+      case 'info-list': { // 资讯列表
         try {
           const { type = 'v2ex,sspai', page = 1, pageSize = 10 } = apiData
           return await infoList(type, page, pageSize)
         }
         catch (e) {
           return null
+        }
+      }
+      case 'info-action': { // 资讯操作
+        try {
+          const { action, id } = apiData
+          return await infoAction(action, id)
+        }
+        catch (e) {
+          return false
         }
       }
       case 'open-new-window': { // 新窗口打开网址
@@ -543,7 +552,7 @@ async function messageInit() {
           return null
         }
       }
-      case 'douban': {
+      case 'douban': { // 豆瓣
         try {
           const { type = 'html' } = apiData
           if (type === 'sync')
@@ -569,7 +578,7 @@ async function messageInit() {
           return false
         }
       }
-      case 'subject-list': {
+      case 'subject-list': { // 条目列表
         try {
           const { type = 'movie', status = 'do', page = 1, pageSize = 20 } = apiData
           return await Subject.list(type, status, page, pageSize)

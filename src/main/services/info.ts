@@ -99,3 +99,28 @@ export async function list(type = '', page = 1, pageSize = 10) {
     return []
   }
 }
+
+/**
+ * 操作 - 删除、收集等
+ * @param action - 操作 delete | collect
+ * @param id - ID
+ */
+export async function action(action: 'delete' | 'collect' = 'delete', id: number) {
+  try {
+    if (action === 'delete') {
+      if (!id)
+        return false
+
+      const item = await InfoModel.findByPk(id)
+      if (!item)
+        return false
+
+      item.destroy()
+      return await item.save()
+    }
+    return true
+  }
+  catch (e) {
+    return false
+  }
+}
