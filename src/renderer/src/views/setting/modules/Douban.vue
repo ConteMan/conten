@@ -56,7 +56,7 @@ const save = async () => {
       <n-form-item label="Schedule Enable" path="douban_schedule_enable">
         <n-switch v-model:value="formValue.douban_schedule_enable" size="small" checked-value="1" unchecked-value="0" />
       </n-form-item>
-      <n-form-item label="API Key" path="douban_id">
+      <n-form-item label="豆瓣 ID" path="douban_id">
         <n-input v-model:value="formValue.douban_id" placeholder="" />
       </n-form-item>
     </n-form>

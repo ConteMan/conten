@@ -25,6 +25,8 @@ import Subject from '@main/services/subject'
 import { checkShortcut, resetShortcut } from '@main/modules/shortcuts'
 import V2ex from '@main/services/v2ex'
 import System from '@main/services/system'
+import Dom from '@main/services/dom'
+import Info from '@main/services/info/index'
 
 /**
  * 消息监听服务初始化
@@ -521,6 +523,14 @@ async function messageInit() {
           return false
         }
       }
+      case 'info-schedule': { // 资讯同步
+        try {
+          return await Info.schedule()
+        }
+        catch (e) {
+          return false
+        }
+      }
       case 'open-new-window': { // 新窗口打开网址
         try {
           const { url } = apiData
@@ -618,6 +628,14 @@ async function messageInit() {
         try {
           const { protocol, host, port } = apiData
           return await System.testProxy(protocol, host, port)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'dom': {
+        try {
+          return await Dom.list('libvio', { type: 'film' })
         }
         catch (e) {
           return false

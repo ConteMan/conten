@@ -72,6 +72,10 @@ export const InfoPlatform = [
     name: '少数派',
     value: 'sspai',
   },
+  {
+    name: 'Libvio',
+    value: 'libvio',
+  },
 ]
 
 export const ProxyProtocols = [

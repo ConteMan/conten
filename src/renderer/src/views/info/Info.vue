@@ -132,6 +132,32 @@ const deleteItem = async (id: number) => {
                 少数派
               </span>
             </template>
+            <template v-if="item.platform === 'libvio'">
+              <span
+                class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser(`https://www.libvio.me/detail/${item.data.id}.html`)"
+              >
+                《{{ item.data.title }}》
+              </span>
+              <span class="invisible hover-show mx-[4px]">
+                /
+              </span>
+              <span
+                class="invisible hover-show cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser(`https://movie.douban.com/subject/${item.data.douban.id}`)"
+              >
+                豆瓣
+              </span>
+              <span class="invisible hover-show mx-[4px]">
+                /
+              </span>
+              <span
+                class="invisible hover-show cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser('https://www.libvio.me')"
+              >
+                Libvio
+              </span>
+            </template>
             <span class="invisible hover-show mx-[4px]">
               /
             </span>
