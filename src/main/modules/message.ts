@@ -4,10 +4,8 @@ import { app, dialog, ipcMain } from 'electron'
 import fs from 'fs-extra'
 import { isString } from 'lodash'
 import { sendToRenderer } from '@main/utils/ipcMessage'
-import { ConfigEnum } from '@main/enums/configEnum'
 import { restart as KoaRestart, start as koaStart, stop as koaStop } from '@main/server/koa'
-import { getStore, getStoreDetail, getStorePath, setStore, setStorePath, storeInit } from '@main/modules/store'
-import { isObject } from '@main/utils'
+import { getStore, getStorePath, setStore, setStorePath, storeInit } from '@main/modules/store'
 import { connectSqlite3, reconnectMongoDB } from '@main/modules/db'
 import { getWeather } from '@main/services/weather'
 import { getConfigByKey, getConfigsByGroup, moduleEnable, setConfig } from '@main/services/config'
@@ -32,128 +30,6 @@ import Info from '@main/services/info/index'
  * 消息监听服务初始化
  */
 async function messageInit() {
-  ipcMain.on('indexMsg', async (event, msg) => {
-    if (msg) {
-      const { type, data } = msg
-      switch (type) {
-        case 'start-koa': {
-          const res = await koaStart()
-          event.reply('indexMsg', { type, data: res })
-          break
-        }
-        case 'stop-koa': {
-          const res = await koaStop()
-          event.reply('indexMsg', { type, data: res })
-          break
-        }
-        case 'drag-bar-pressed': {
-          const dragBarPressed = data
-          // eslint-disable-next-line no-console
-          console.log('dragBarPressed:', dragBarPressed)
-          break
-        }
-        default:
-          break
-      }
-    }
-  })
-
-  ipcMain.handle('getStore', async () => {
-    return await global.store?.[ConfigEnum.DEFAULT_NAME].store
-  })
-
-  ipcMain.handle('getStorePath', () => {
-    return global.store?.[ConfigEnum.DEFAULT_NAME]?.path
-  })
-
-  ipcMain.handle('save-settings', async (event, data) => {
-    try {
-      if (!isObject(data))
-        data = JSON.parse(data)
-
-      const newDBUrl = data.mongodb?.[0].url
-      if (newDBUrl) {
-        const oldSetting = global.store?.[ConfigEnum.DEFAULT_NAME].get('db.mongodb') as Contea.DB[]
-        const oldUrl = oldSetting ? oldSetting?.find((item: any) => item.selected)?.url : ''
-        await global.store?.[ConfigEnum.DEFAULT_NAME].set('db.mongodb', data.mongodb)
-        if (newDBUrl !== oldUrl)
-          await reconnectMongoDB()
-
-        return true
-      }
-      return false
-    }
-    catch (e) {
-      // eslint-disable-next-line no-console
-      console.log('>>> modules >> message > save-settings', e)
-    }
-    return true
-  })
-
-  ipcMain.handle('get-settings', async () => {
-    return await getStoreDetail()
-  })
-
-  ipcMain.handle('get-weather', async () => {
-    return await getWeather()
-  })
-
-  ipcMain.handle('get-configs', async (event, data) => {
-    try {
-      if (!isObject(data))
-        data = JSON.parse(data)
-
-      const { group_key } = data
-      return await getConfigsByGroup(group_key)
-    }
-    catch (e) {
-      return false
-    }
-  })
-
-  // 保存配置到 SQLite3
-  ipcMain.handle('save-configs', async (event, data) => {
-    try {
-      if (!isObject(data))
-        data = JSON.parse(data)
-
-      for (const item of data) {
-        const saveData = {
-          group_key: item.group_key,
-          key: item.key,
-          value: item.value,
-        }
-        await setConfig(saveData)
-      }
-      return true
-    }
-    catch (e) {
-      return false
-    }
-  })
-
-  ipcMain.handle('get-package-info', async () => {
-    return getPackageInfo()
-  })
-
-  ipcMain.handle('init-view-window', async () => {
-    await viewWindowInit('https://v2ex.com', true)
-  })
-
-  ipcMain.handle('get-view-cookie', async () => {
-    const cookies = await global.wins.view.getBrowserView()?.webContents.session.cookies.get({})
-    return cookies
-  })
-
-  ipcMain.handle('hide-view-window', async () => {
-    global.wins.view.isVisible() ? global.wins.view.hide() : global.wins.view.show()
-    return true
-  })
-
-  ipcMain.handle('wakatime-summaries', async () => {
-    return await WakaTime.getData()
-  })
-
   ipcMain.handle('api', async (event, data) => {
     if (isString(data))
       data = JSON.parse(data)
@@ -303,6 +179,11 @@ async function messageInit() {
               if (key === 'server.port') {
                 if (global.koaApp)
                   KoaRestart(dealData[key])
+              }
+              if (key === 'db.mongodb') {
+                const newDBUrl = dealData[key]?.[0].url
+                if (newDBUrl)
+                  reconnectMongoDB()
               }
             }
           })
@@ -633,9 +514,29 @@ async function messageInit() {
           return false
         }
       }
-      case 'dom': {
+      case 'dom': { // Dom 服务
         try {
           return await Dom.list('libvio', { type: 'film' })
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'koa': { // Koa 服务
+        try {
+          const { action } = apiData
+          if (action === 'start')
+            return await koaStart()
+          else
+            return await koaStop()
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'package-info': { // 应用使用的库信息
+        try {
+          return getPackageInfo()
         }
         catch (e) {
           return false

@@ -11,6 +11,7 @@ const message = useMessage()
 const customFormDefault = {
   'server.port': '',
   'server.autoStart': false,
+  'db.mongodb': [],
 }
 const customFormKeys = Object.keys(customFormDefault)
 
@@ -188,6 +189,13 @@ const save = async () => {
   })
   await testProxy()
 }
+
+const onCreate = () => {
+  return {
+    isSelected: false,
+    url: '',
+  }
+}
 </script>
 
 <template>
@@ -229,6 +237,24 @@ const save = async () => {
           </div>
           <span v-if="pathStatusText" class="ml-2 text-xs text-red-400">{{ pathStatusText }}</span>
         </div>
+      </n-form-item>
+      <n-form-item label="MongoDB">
+        <n-dynamic-input
+          v-model:value="customFormValue['db.mongodb']"
+          :on-create="onCreate"
+          :min="1"
+          :max="3"
+          show-sort-button
+        >
+          <template #default="{ value, index }">
+            <div class="flex items-center w-full">
+              <div class="w-[48px]" :class="{ 'text-red-400': index === 0 }">
+                {{ `[ ${index + 1} ]` }}
+              </div>
+              <n-input v-model:value="value.url" size="small" type="text" />
+            </div>
+          </template>
+        </n-dynamic-input>
       </n-form-item>
       <n-divider />
 

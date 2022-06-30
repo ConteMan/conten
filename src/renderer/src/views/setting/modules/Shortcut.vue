@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import _ from 'lodash'
-import { invokeApi, invokeToMain } from '@renderer/utils/ipcMessage'
+import { invokeApi } from '@renderer/utils/ipcMessage'
 import { configDefault } from '@main/services/shortcut/model'
 
 const module = 'shortcut'
@@ -22,10 +22,13 @@ const data = reactive({
 const { formValue, keys, keyTip, showKeyModal, keyEnable, des } = toRefs(data)
 
 const getConfig = async () => {
-  const res = await invokeToMain('get-configs', {
-    group_key: module,
+  const res = await invokeApi({
+    name: 'configs',
+    data: {
+      group_key: module,
+    },
   })
-  if (Object.keys(res).length)
+  if (res)
     data.formValue = res
 }
 getConfig()

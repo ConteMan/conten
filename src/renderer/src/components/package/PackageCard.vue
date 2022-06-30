@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { invokeToMain } from '@renderer/utils/ipcMessage'
+import { invokeApi } from '@renderer/utils/ipcMessage'
 import VueJsonPretty from 'vue-json-pretty'
 
 const data = reactive({
@@ -26,8 +26,11 @@ const deal = (data: any) => {
 }
 
 const get = async () => {
-  const res = await invokeToMain('get-package-info')
-  data.packageInfo = deal(res)
+  const res = await invokeApi({
+    name: 'package-info',
+  })
+  if (res)
+    data.packageInfo = deal(res)
 }
 get()
 

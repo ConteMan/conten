@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { invokeToMain } from '@renderer/utils/ipcMessage'
+import { invokeApi } from '@renderer/utils/ipcMessage'
 import { formValueDefault } from '@main/services/taptap/type'
 
 const module = 'taptap'
@@ -12,10 +12,14 @@ const data = reactive({
 const { formRef, formValue, formSize } = toRefs(data)
 
 const getConfig = async () => {
-  const res = await invokeToMain('get-configs', {
-    group_key: module,
+  const res = await invokeApi({
+    name: 'configs',
+    data: {
+      group_key: module,
+    },
   })
-  data.formValue = res
+  if (res)
+    data.formValue = res
 }
 getConfig()
 
@@ -31,7 +35,12 @@ const save = async () => {
       value: formValueData[item],
     })
   }
-  const res = await invokeToMain('save-configs', JSON.stringify(saveData))
+  const res = await invokeApi({
+    name: 'save-configs',
+    data: {
+      data: saveData,
+    },
+  })
   message.create(`${res}` ? 'Success' : 'Error', {
     type: res ? 'success' : 'error',
     duration: 2000,

@@ -63,9 +63,6 @@ const changeTrafficButton = async () => {
       </div>
       <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="changeTrafficButton()">Show/Hide Traffic Button</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('init-view-window')">Init View Window</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-view-cookie')">Get View Cookie</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('hide-view-window')">Show/Hide View Window</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('juejin-checkin')">Run Script View Window - Juejin Check In</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('taptap-view-http-data')">Get View HTTP Data - TapTap</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('taptap-view-http-data', { url: 'https://www.taptap.com/user/5827457/most-played' })">Get View HTTP Data - TapTap User</span>
@@ -76,17 +73,8 @@ const changeTrafficButton = async () => {
         Koa Server
       </div>
       <div class="flex flex-wrap gap-2">
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('start-koa')">Start Koa</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('stop-koa')">Stop Koa</span>
-      </div>
-    </div>
-    <div class="flex flex-col items-start mt-4">
-      <div class="p-2">
-        Store
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStorePath')">Get Store Path</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('getStore', 'server')">Get Store</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('koa', { action: 'start' })">Start Koa</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('koa', { action: 'stop' })">Stop Koa</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">
@@ -96,22 +84,6 @@ const changeTrafficButton = async () => {
       <div class="flex flex-wrap gap-2">
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('sqlite3')">Sqlite3 Get</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user')">MongoDB Get</span>
-      </div>
-    </div>
-    <div class="flex flex-col items-start mt-4">
-      <div class="p-2">
-        Modules
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('get-weather')">Get CMA Weather</span>
-      </div>
-    </div>
-    <div class="flex flex-col items-start mt-4">
-      <div class="p-2">
-        WakaTime
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('wakatime-summaries')">Summaries</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">

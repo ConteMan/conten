@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import SystemModule from './modules/System.vue'
-import DBModule from './modules/DB.vue'
 import WeatherModule from './modules/Weather.vue'
 import WakaTimeModule from './modules/WakeTime.vue'
 import TapTapModule from './modules/TapTap.vue'
@@ -12,10 +11,6 @@ const modules = [
   {
     name: '系统',
     code: 'system',
-  },
-  {
-    name: '数据库',
-    code: 'db',
   },
   {
     name: '天气',
@@ -66,7 +61,6 @@ const { currentModule } = toRefs(data)
 
     <div class="h-full w-[calc(100%-120px)] p-4 overflow-y-auto">
       <SystemModule v-if="currentModule === 'system'" />
-      <DBModule v-if="currentModule === 'db'" />
       <WeatherModule v-if="currentModule === 'weather'" />
       <WakaTimeModule v-if="currentModule === 'wakatime'" />
       <TapTapModule v-if="currentModule === 'taptap'" />
