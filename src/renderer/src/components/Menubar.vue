@@ -67,7 +67,7 @@ const toggleBar = (status: boolean) => {
   >
     <Transition appear>
       <div v-if="showBar" class="h-full flex items-center">
-        <div class="flex items-center ml-4 text-xl">
+        <div class="flex items-center ml-4 text-[16px]">
           <mdi-chevron-double-left
             v-if="showSideNav" class="bar-arrow bar-arrow-left"
             @click="toggleSideNav()"
@@ -78,17 +78,23 @@ const toggleBar = (status: boolean) => {
           />
         </div>
 
-        <div v-if="!showSideNav" class="nav-list flex gap-1 ml-4">
+        <div v-if="!showSideNav" class="nav-list flex items-center ml-8">
           <div
             v-for="item in NavList" :key="item.path"
-            class="text-[12px] px-1 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
+            class="nav-container relative bg-light-300text-[14px] cursor-pointer mr-2 flex items-center hover:(underline decoration-2 underline-offset-4)"
             :class="{ 'font-bold text-red-600': $route.path === item.path }"
+            :title="item.name"
             @click="$router.push({ path: item.path })"
           >
-            {{ item.name }}
+            <div class="nav-des bg px-[8px] pt-2 w-auto">
+              {{ item.name }}
+            </div>
+            <mdi-view-dashboard-outline v-if="item.path === '/dashboard'" />
+            <mdi:format-float-left v-if="item.path === '/info'" />
+            <mdi-inbox-full-outline v-if="item.path === '/subject'" />
+            <mdi:view-grid-outline v-if="item.path === '/module'" />
           </div>
         </div>
-
         <div class="flex-grow flex justify-end items-center gap-2 mr-6">
           <div
             class=" flex items-center gap-2"
@@ -96,7 +102,7 @@ const toggleBar = (status: boolean) => {
             @mouseleave="toggleShowMore(false)"
           >
             <template v-if="showMore || showMoreHold">
-              <mdi:brightness-2
+              <mdi-brightness-2
                 v-if="isDark"
                 class="bar-theme"
                 @click="toggleDark()"
@@ -129,19 +135,19 @@ const toggleBar = (status: boolean) => {
               />
             </template>
 
-            <mdi:chevron-right-box
+            <mdi-chevron-right-box
               v-if="showMoreHold"
               class="bar-show-more ml-2"
               @click="() => data.showMoreHold = false"
             />
-            <mdi:chevron-left-box
+            <mdi-chevron-left-box
               v-else
               class="bar-show-more ml-2"
               @click="() => data.showMoreHold = true"
             />
           </div>
 
-          <mdi:chevron-down-box
+          <mdi-chevron-down-box
             class="bar-hide"
             @click="toggleHide()"
           />
@@ -177,5 +183,19 @@ const toggleBar = (status: boolean) => {
 .v-enter-from,
 .v-leave-from {
   opacity: 0 !important;
+}
+
+.nav-des {
+  display: none;
+  position: absolute;
+  bottom: 24px;
+  left: -7px;
+}
+.nav-container {
+  &:hover {
+    .nav-des {
+      display: inline-flex !important;
+    }
+  }
 }
 </style>

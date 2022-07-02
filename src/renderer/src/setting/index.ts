@@ -2,19 +2,26 @@ export const NavList = [
   {
     name: '面板',
     path: '/dashboard',
+    icon: 'mdi-view-dashboard-outline',
   },
   {
     name: '资讯',
     path: '/info',
+    icon: 'mdi-newspaper-variant-outline',
   },
   {
     name: '条目',
     path: '/subject',
+    icon: 'mdi-cube-outline',
   },
   {
-    name: '实验',
-    path: '/test',
+    name: '模块',
+    path: '/module',
+    icon: 'mdi-apps',
   },
+]
+
+export const ModuleNavList = [
   {
     name: '系统',
     path: '/system',

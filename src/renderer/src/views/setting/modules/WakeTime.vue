@@ -2,6 +2,8 @@
 import { invokeApi } from '@renderer/utils/ipcMessage'
 import { formValueDefault } from '@main/services/wakatime/type'
 
+const module = 'wakatime'
+
 const data = reactive({
   formRef: null,
   formValue: formValueDefault,

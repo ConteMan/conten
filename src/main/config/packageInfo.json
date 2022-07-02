@@ -371,6 +371,25 @@
         "vue": "^3.2.25"
       }
     },
+    "@vue/compiler-sfc": {
+      "versionDefault": "^3.2.37",
+      "version": "3.2.37",
+      "resolved": "https://registry.npmmirror.com/@vue/compiler-sfc/-/compiler-sfc-3.2.37.tgz",
+      "integrity": "sha512-+7i/2+9LYlpqDv+KTtWhOZH+pa8/HnX/905MdVmAcI/mPQOBwkHHIzrsEsucyOIZQYMkXUiTkmZq5am/NyXKkg==",
+      "dev": true,
+      "dependencies": {
+        "@babel/parser": "^7.16.4",
+        "@vue/compiler-core": "3.2.37",
+        "@vue/compiler-dom": "3.2.37",
+        "@vue/compiler-ssr": "3.2.37",
+        "@vue/reactivity-transform": "3.2.37",
+        "@vue/shared": "3.2.37",
+        "estree-walker": "^2.0.2",
+        "magic-string": "^0.25.7",
+        "postcss": "^8.1.10",
+        "source-map": "^0.6.1"
+      }
+    },
     "@vueuse/components": {
       "versionDefault": "^8.5.0",
       "version": "8.5.0",

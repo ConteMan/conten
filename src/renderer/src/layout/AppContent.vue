@@ -161,7 +161,6 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
 .sidebar-content-leave-to {
   opacity: 0;
 }
-
 .resize-enter-active {
   transition: opacity 0.5s ease 0.3s;
 }
