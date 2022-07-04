@@ -11,6 +11,7 @@ import InfoModel from '@main/models/info'
 import LogModel from '@main/models/log'
 import Migration from '@main/models/migration'
 import Subject from '@main/models/subject'
+import Schedule from '@main/models/schedule'
 import { migrate } from '@main/migrations'
 
 /**
@@ -26,13 +27,16 @@ export async function dbInit() {
  */
 async function sqlite3Init() {
   try {
-    await RequestCacheModel.sync()
-    await ConfigModel.sync()
-    await TaskModel.sync()
-    await InfoModel.sync()
-    await LogModel.sync()
-    await Migration.sync()
-    await Subject.sync()
+    Promise.all([
+      RequestCacheModel.sync(),
+      ConfigModel.sync(),
+      TaskModel.sync(),
+      InfoModel.sync(),
+      LogModel.sync(),
+      Migration.sync(),
+      Subject.sync(),
+      Schedule.sync(),
+    ])
   }
   catch (e) {
     // eslint-disable-next-line no-console

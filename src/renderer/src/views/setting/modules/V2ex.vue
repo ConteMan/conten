@@ -28,7 +28,7 @@ const message = useMessage()
 const save = async () => {
   const saveData: any = []
   const formValueData = formValue.value as any
-  for (const item in formValueData) {
+  for (const item of formValueData) {
     saveData.push({
       group_key: module,
       key: item,

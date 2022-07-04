@@ -6,11 +6,16 @@ import TapTapModule from './modules/TapTap.vue'
 import V2exModule from './modules/V2ex.vue'
 import DoubanModule from './modules/Douban.vue'
 import ShortcutModule from './modules/Shortcut.vue'
+import ScheduleModule from './modules/Schedule.vue'
 
 const modules = [
   {
     name: '系统',
     code: 'system',
+  },
+  {
+    name: '定时',
+    code: 'schedule',
   },
   {
     name: '天气',
@@ -61,6 +66,7 @@ const { currentModule } = toRefs(data)
 
     <div class="h-full w-[calc(100%-120px)] p-4 overflow-y-auto">
       <SystemModule v-if="currentModule === 'system'" />
+      <ScheduleModule v-if="currentModule === 'schedule'" />
       <WeatherModule v-if="currentModule === 'weather'" />
       <WakaTimeModule v-if="currentModule === 'wakatime'" />
       <TapTapModule v-if="currentModule === 'taptap'" />

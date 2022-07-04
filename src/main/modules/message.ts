@@ -25,6 +25,7 @@ import V2ex from '@main/services/v2ex'
 import System from '@main/services/system'
 import Dom from '@main/services/dom'
 import Info from '@main/services/info/index'
+import ScheduleSetting from '@main/services/schedule/index'
 
 /**
  * 消息监听服务初始化
@@ -537,6 +538,31 @@ async function messageInit() {
       case 'package-info': { // 应用使用的库信息
         try {
           return getPackageInfo()
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'schedule-setting-list': { // 定时任务设置列表
+        try {
+          return ScheduleSetting.list()
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'schedule-setting-init': { // 定时任务设置初始化
+        try {
+          return ScheduleSetting.init()
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'schedule-setting-save': { // 定时任务设置保存
+        try {
+          const { id, data } = apiData
+          return ScheduleSetting.save(id, data)
         }
         catch (e) {
           return false
