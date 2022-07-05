@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import dayjs from 'dayjs'
 import { invokeApi } from '@renderer/utils/ipcMessage'
 import type { ScheduleModel } from '@main/services/schedule/type'
 
@@ -18,15 +19,19 @@ const getList = async () => {
 }
 getList()
 
+const message = useMessage()
+
 const init = async () => {
   const res = await invokeApi({
     name: 'schedule-setting-init',
   })
   if (res)
     await getList()
+  message.create(`${res}` ? 'Success' : 'Error', {
+    type: res ? 'success' : 'error',
+    duration: 2000,
+  })
 }
-
-const message = useMessage()
 
 const change = async (index: number) => {
   // eslint-disable-next-line no-console
@@ -44,6 +49,8 @@ const change = async (index: number) => {
       },
     },
   })
+  if (res)
+    getList()
   message.create(`${res}` ? 'Success' : 'Error', {
     type: res ? 'success' : 'error',
     duration: 2000,
@@ -58,7 +65,7 @@ const change = async (index: number) => {
         <div class="hover-show-parent mb-8 flex flex-col gap-2">
           <div>
             {{ item.name }}
-            <span class="hover-show invisible text-gray-400">{{ item.key }}</span>
+            <span class="hover-show invisible text-gray-400 ml-2">{{ item.key }}</span>
           </div>
           <div>
             <n-input
@@ -68,7 +75,7 @@ const change = async (index: number) => {
               @blur="change(index)"
             />
           </div>
-          <div>
+          <div class="flex items-center gap-2">
             <n-switch
               v-model:value="item.enable"
               size="small"
@@ -76,6 +83,12 @@ const change = async (index: number) => {
               :unchecked-value="0"
               @change="change(index)"
             />
+            <div v-if="item.last_at" class="hover-show invisible text-gray-400">
+              LAST: {{ dayjs(item.last_at).format('DD HH:mm:ss') }}
+            </div>
+            <div v-if="item.next_at" class="hover-show invisible text-gray-400">
+              NEXT: {{ dayjs(item.next_at).format('DD HH:mm:ss') }}
+            </div>
           </div>
         </div>
       </template>

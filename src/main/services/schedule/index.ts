@@ -1,5 +1,7 @@
 import { ScheduleList } from '@main/setting'
 import ScheduleModel from '@main/models/schedule'
+import CrontabParser from 'cron-parser'
+import dayjs from 'dayjs'
 import type { ScheduleModel as ScheduleModelType } from './type'
 
 class ScheduleSetting {
@@ -49,8 +51,25 @@ class ScheduleSetting {
   async save(id: number, data: Pick<ScheduleModelType, 'crontab' | 'enable'>) {
     try {
       const res = await ScheduleModel.findByPk(id)
-      if (res)
-        return res.update(data)
+      if (res) {
+        if (data.crontab) {
+          const interval = CrontabParser.parseExpression(data.crontab)
+          if (interval) {
+            const next_at = dayjs(interval.next().toString())
+            res.update({
+              ...data,
+              next_at,
+            })
+          }
+        }
+        else {
+          res.update(data)
+        }
+        return await res.save()
+      }
+      else {
+        return false
+      }
     }
     catch (e) {
       return false

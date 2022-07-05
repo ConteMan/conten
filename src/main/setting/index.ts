@@ -1,21 +1,33 @@
-import WakaTime from '@main/services/wakatime'
-import { schedule as WeatherSchedule } from '@main/services/weather'
-
+import { KEYS } from '@main/enums/scheduleEnum'
 interface ScheduleListItem {
   name: string
   key: string
-  function: any
+  module?: string
 }
 
 export const ScheduleList: ScheduleListItem[] = [
   {
-    name: 'WakaTime 基础',
-    key: 'wakatime_base',
-    function: WakaTime.schedule(),
+    name: 'WakaTime',
+    key: KEYS.WAKATIME,
   },
   {
     name: '天气',
-    key: 'weather',
-    function: WeatherSchedule(),
+    key: KEYS.WEATHER,
+  },
+  {
+    name: '任务清理',
+    key: KEYS.TASK_CLEAN,
+  },
+  {
+    name: '豆瓣 - 影音书同步',
+    key: KEYS.DOUBAN,
+  },
+  {
+    name: 'V2EX',
+    key: KEYS.V2EX,
+  },
+  {
+    name: 'TapTap',
+    key: KEYS.TAPTAP,
   },
 ]
