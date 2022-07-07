@@ -8,7 +8,7 @@ import { restart as KoaRestart, start as koaStart, stop as koaStop } from '@main
 import { getStore, getStorePath, setStore, setStorePath, storeInit } from '@main/modules/store'
 import { connectSqlite3, reconnectMongoDB } from '@main/modules/db'
 import { getWeather } from '@main/services/weather'
-import { getConfigByKey, getConfigsByGroup, moduleEnable, setConfig } from '@main/services/config'
+import { getConfigByKey, getConfigsByGroup, getConfigsByKeys, moduleEnable, setConfig } from '@main/services/config'
 import { getPackageInfo } from '@main/services/package'
 import { viewWindowInit } from '@main/modules/window'
 import { checkIn as JuejinCheckIn } from '@main/services/juejin'
@@ -73,9 +73,20 @@ async function messageInit() {
         return await moduleEnable(module)
       }
       case 'configs': { // 根据分组获取配置
-        const { group_key } = apiData
         try {
+          const { group_key } = apiData
           return await getConfigsByGroup(group_key)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'configs-by-keys': { // 根据 key 数组获取配置
+        try {
+          const { keys } = apiData
+          // eslint-disable-next-line no-console
+          console.log('>>> keys >>', keys)
+          return await getConfigsByKeys(keys)
         }
         catch (e) {
           return false
@@ -86,7 +97,6 @@ async function messageInit() {
         try {
           for (const item of data) {
             const saveData = {
-              group_key: item.group_key,
               key: item.key,
               value: item.value,
             }

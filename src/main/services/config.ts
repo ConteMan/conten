@@ -55,15 +55,42 @@ async function getConfigByKey(key = '') {
 }
 
 /**
+ * 根据 Key 数组获取配置信息
+ * @param keys - Key 数组
+ */
+async function getConfigsByKeys(keys: string[], mode: 'all' | 'value' = 'value') {
+  try {
+    if (!keys.length)
+      return false
+    const res: any = {}
+    await Promise.all(keys.map(async (key: string) => {
+      const config: any = await ConfigModel.findOne({
+        where: {
+          key,
+        },
+        raw: true,
+      })
+      if (config && mode === 'value')
+        res[key] = config.value
+      else
+        res[key] = config
+    }))
+    return res
+  }
+  catch (e) {
+    return false
+  }
+}
+
+/**
  * 设置配置
  * @param data - 配置数据
  */
 async function setConfig(data: any) {
   try {
-    const { group_key, key, value } = data
+    const { key, value } = data
     const config = await ConfigModel.findOne({
       where: {
-        group_key,
         key,
       },
     })
@@ -76,7 +103,7 @@ async function setConfig(data: any) {
       await ConfigModel.create(data)
     }
 
-    await dealSetting(data)
+    // await dealSetting(data)
 
     return true
   }
@@ -190,4 +217,4 @@ async function moduleEnable(moduleName: string) {
   }
 }
 
-export { getConfigsByGroup, getConfigByKey, setConfig, mergeConfig, moduleEnable }
+export { getConfigsByGroup, getConfigByKey, getConfigsByKeys, setConfig, mergeConfig, moduleEnable }

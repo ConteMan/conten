@@ -165,7 +165,7 @@ class Schedule {
             return true
           }
           else {
-            await this.scheduleByKey(item.key)
+            this.scheduleByKey(item.key)
             const target = await ScheduleModel.findByPk(item.id)
             target?.set('last_at', new Date()) // 实际开始执行的时间
             target?.set('next_at', dayjs(interval.next().toString()))

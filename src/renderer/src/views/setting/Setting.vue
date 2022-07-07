@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import SystemModule from './modules/System.vue'
-import WeatherModule from './modules/Weather.vue'
-import WakaTimeModule from './modules/WakeTime.vue'
-import TapTapModule from './modules/TapTap.vue'
-import V2exModule from './modules/V2ex.vue'
-import DoubanModule from './modules/Douban.vue'
+// import WeatherModule from './modules/Weather.vue'
+// import WakaTimeModule from './modules/WakeTime.vue'
+// import TapTapModule from './modules/TapTap.vue'
+// import V2exModule from './modules/V2ex.vue'
+// import DoubanModule from './modules/Douban.vue'
 import ShortcutModule from './modules/Shortcut.vue'
 import ScheduleModule from './modules/Schedule.vue'
+import Module from './modules/Module.vue'
 
 const modules = [
   {
@@ -18,25 +19,29 @@ const modules = [
     code: 'schedule',
   },
   {
-    name: '天气',
-    code: 'weather',
+    name: '模块',
+    code: 'module',
   },
-  {
-    name: 'WakaTime',
-    code: 'wakatime',
-  },
-  {
-    name: 'TapTap',
-    code: 'taptap',
-  },
-  {
-    name: 'V2EX',
-    code: 'v2ex',
-  },
-  {
-    name: '豆瓣',
-    code: 'douban',
-  },
+  // {
+  //   name: '天气',
+  //   code: 'weather',
+  // },
+  // {
+  //   name: 'WakaTime',
+  //   code: 'wakatime',
+  // },
+  // {
+  //   name: 'TapTap',
+  //   code: 'taptap',
+  // },
+  // {
+  //   name: 'V2EX',
+  //   code: 'v2ex',
+  // },
+  // {
+  //   name: '豆瓣',
+  //   code: 'douban',
+  // },
   {
     name: '快捷键',
     code: 'shortcut',
@@ -67,11 +72,12 @@ const { currentModule } = toRefs(data)
     <div class="h-full w-[calc(100%-120px)] p-4 overflow-y-auto">
       <SystemModule v-if="currentModule === 'system'" />
       <ScheduleModule v-if="currentModule === 'schedule'" />
-      <WeatherModule v-if="currentModule === 'weather'" />
+      <Module v-if="currentModule === 'module'" />
+      <!-- <WeatherModule v-if="currentModule === 'weather'" />
       <WakaTimeModule v-if="currentModule === 'wakatime'" />
       <TapTapModule v-if="currentModule === 'taptap'" />
       <V2exModule v-if="currentModule === 'v2ex'" />
-      <DoubanModule v-if="currentModule === 'douban'" />
+      <DoubanModule v-if="currentModule === 'douban'" /> -->
       <ShortcutModule v-if="currentModule === 'shortcut'" />
     </div>
   </div>

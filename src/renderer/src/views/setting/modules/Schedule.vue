@@ -81,7 +81,7 @@ const change = async (index: number) => {
               size="small"
               :checked-value="1"
               :unchecked-value="0"
-              @change="change(index)"
+              @update:value="change(index)"
             />
             <div v-if="item.last_at" class="hover-show invisible text-gray-400">
               LAST: {{ dayjs(item.last_at).format('DD HH:mm:ss') }}

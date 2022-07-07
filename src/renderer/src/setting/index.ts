@@ -95,3 +95,10 @@ export const ProxyProtocols = [
     value: 'https',
   },
 ]
+
+export const ModuleSettingDefault = {
+  douban_id: '',
+  wakatime_api_key: '',
+  v2ex_api_key: '',
+  taptap_user_id: '',
+}
