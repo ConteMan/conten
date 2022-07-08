@@ -30,4 +30,8 @@ export const ScheduleList: ScheduleListItem[] = [
     name: 'TapTap',
     key: KEYS.TAPTAP,
   },
+  {
+    name: '资讯 - Libvio',
+    key: KEYS.INFO_LIBVIO,
+  },
 ]

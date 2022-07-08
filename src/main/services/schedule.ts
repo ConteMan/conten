@@ -12,6 +12,7 @@ import Douban from '@main/services/douban'
 import ScheduleModel from '@main/models/schedule'
 import { Op } from 'sequelize'
 import CrontabParser from 'cron-parser'
+import Info from '@main/services/info/index'
 
 class Schedule {
   /**
@@ -223,6 +224,11 @@ class Schedule {
         case KEYS.TAPTAP: {
           moduleName = 'taptap'
           await TapTap.schedule()
+          break
+        }
+        case KEYS.INFO_LIBVIO: {
+          moduleName = 'info'
+          await Info.schedule('libvio')
           break
         }
         default: {
