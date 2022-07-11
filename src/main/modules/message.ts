@@ -16,8 +16,9 @@ import { checkIn as JuejinCheckIn } from '@main/services/juejin'
 import WakaTime from '@main/services/wakatime'
 import TapTap from '@main/services/taptap'
 import { action as infoAction, list as infoList } from '@main/services/info'
-import schedule from '@main/services/schedule'
+import Schedule from '@main/services/schedule'
 import { logList } from '@main/services/log'
+import type { DoubanHtmlRequest } from '@main/services/douban'
 import Douban from '@main/services/douban'
 import Subject from '@main/services/subject'
 import { checkShortcut, resetShortcut } from '@main/modules/shortcuts'
@@ -36,6 +37,10 @@ async function messageInit() {
       data = JSON.parse(data)
 
     const { name, data: apiData } = data
+
+    // eslint-disable-next-line no-console
+    console.log('>>> modules >> message > api', name, apiData)
+
     switch (name) {
       case 'wakatime-summaries': { // WakaTime 汇总数据
         const { range, refresh } = apiData
@@ -439,7 +444,7 @@ async function messageInit() {
       }
       case 'schedule-list': { // 定时任务列表
         try {
-          return await schedule.list()
+          return await Schedule.list()
         }
         catch (e) {
           return null
@@ -456,12 +461,27 @@ async function messageInit() {
       }
       case 'douban': { // 豆瓣
         try {
-          const { type = 'html' } = apiData
-          if (type === 'sync')
-            return await Subject.sync('douban', 'full', { type: 'movie', status: 'wish', startPage: 1, endPage: 1 })
-          else
-            return await Douban.movieSearch(type)
-          return ''
+          const { type = 'html', data } = apiData
+          if (type === 'book') {
+            return await Douban.data('book', data)
+          }
+          else if (type === 'book-list') {
+            const doubanIdKey = 'douban_id'
+            const doubanIdRes = await getConfigByKey(doubanIdKey)
+            if (!doubanIdRes)
+              return false
+
+            const params: DoubanHtmlRequest = {
+              id: doubanIdRes.value,
+              type: 'book',
+              status: 'collect',
+              start: 0,
+            }
+            return await Douban.list(params)
+          }
+          else {
+            return await Douban.movieSearch(data)
+          }
         }
         catch (e) {
           return null
@@ -573,6 +593,17 @@ async function messageInit() {
         try {
           const { id, data } = apiData
           return ScheduleSetting.save(id, data)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'schedule-run': { // 根据 Key 执行定时任务
+        try {
+          const { key } = apiData
+          if (!key)
+            return false
+          return await Schedule.scheduleByKey(key)
         }
         catch (e) {
           return false

@@ -35,6 +35,8 @@ export async function customRequest(options: any) {
     return await axiosInstance.request(options)
   }
   catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('>>> utils >> request > customRequest', e)
     return false
   }
 }

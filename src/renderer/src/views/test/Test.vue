@@ -8,13 +8,6 @@ window.ipcRenderer.on('indexMsg', (event, arg) => {
   console.log(arg)
 })
 
-const invoke = async (command: string, key: any = '') => {
-  window.ipcRenderer.invoke(command, key).then((res) => {
-    // eslint-disable-next-line no-console
-    console.log(res)
-  })
-}
-
 const invokeApi = async (name: string, data: object = {}) => {
   window.ipcRenderer.invoke('api', {
     name,
@@ -53,8 +46,9 @@ const changeTrafficButton = async () => {
       </div>
       <div class="flex flex-wrap gap-2">
         <n-input v-model:value="tempInput" />
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: tempInput })">豆瓣</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('info-schedule')">资讯同步</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: 'movie-search', data: tempInput })">豆瓣-影视搜索</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: 'book', data: tempInput })">豆瓣-图书信息</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: 'book-list', data: tempInput })">豆瓣-图书列表</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">
@@ -82,7 +76,6 @@ const changeTrafficButton = async () => {
         DB
       </div>
       <div class="flex flex-wrap gap-2">
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invoke('sqlite3')">Sqlite3 Get</span>
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="command('get-user')">MongoDB Get</span>
       </div>
     </div>

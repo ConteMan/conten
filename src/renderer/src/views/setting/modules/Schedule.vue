@@ -3,8 +3,6 @@ import dayjs from 'dayjs'
 import { invokeApi } from '@renderer/utils/ipcMessage'
 import type { ScheduleModel } from '@main/services/schedule/type'
 
-const module = 'schedule'
-
 const data = reactive({
   list: [] as ScheduleModel[],
 })
@@ -56,6 +54,19 @@ const change = async (index: number) => {
     duration: 2000,
   })
 }
+
+const run = async (key: string) => {
+  const res = await invokeApi({
+    name: 'schedule-run',
+    data: {
+      key,
+    },
+  })
+  message.create(`${res}` ? 'Success' : 'Error', {
+    type: res ? 'success' : 'error',
+    duration: 2000,
+  })
+}
 </script>
 
 <template>
@@ -83,6 +94,9 @@ const change = async (index: number) => {
               :unchecked-value="0"
               @update:value="change(index)"
             />
+            <n-button size="small" @click="run(item.key)">
+              执行
+            </n-button>
             <div v-if="item.last_at" class="hover-show invisible text-gray-400">
               LAST: {{ dayjs(item.last_at).format('DD HH:mm:ss') }}
             </div>

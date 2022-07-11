@@ -1,4 +1,4 @@
-import type { DoubanHtmlRequest, DoubanStatus, DoubanType, MovieItem } from '@main/services/douban'
+import type { DoubanHtmlRequest, DoubanStatus, DoubanType, ItemType } from '@main/services/douban'
 import { getConfigByKey } from '@main/services/config'
 import Douban from '@main/services/douban'
 import SubjectModel from '@main/models/subject'
@@ -66,7 +66,7 @@ class Subject {
           if (!itemData)
             continue
 
-          const itemFormatData = await this.formatDouban(type, status, items[itemIndex], itemData)
+          const itemFormatData = await this.doubanFormat(type, status, items[itemIndex], itemData)
           // eslint-disable-next-line no-console
           console.log(itemFormatData)
 
@@ -106,7 +106,7 @@ class Subject {
         status,
         start: (page - 1) * PAGE_SIZE,
       }
-      return await Douban.movieList(params)
+      return await Douban.list(params)
     }
     catch (e) {
       // eslint-disable-next-line no-console
@@ -122,28 +122,48 @@ class Subject {
    * @param introData - 列表数据
    * @param detailData - 详情数据
    */
-  async formatDouban(type: DoubanType, status: DoubanStatus, introData: MovieItem, detailData: any) {
+  async doubanFormat(type: DoubanType, status: DoubanStatus, introData: ItemType, detailData: any) {
     try {
       const data: any = {}
       data.type = type
       data.status = status
 
       const { id: douban_id } = introData
-      const { imdb } = detailData
-      if (!douban_id && !imdb)
-        return false
-      data.slug = imdb?.value || douban_id
-      data.name = detailData.title.value
-      data.status_at = { [status]: introData.date }
-      data.info_at = introData.date ?? new Date()
-      data.images = { detail: introData.pic }
-      data.eps = detailData.episodes ? detailData.episodes.value : 1
-      data.collect_eps = null
-      data.douban_id = douban_id
-      data.douban_data = { ...introData, ...detailData }
-      data.imdb_id = imdb?.value
-      data.bgm_id = ''
-      data.bgm_data = {}
+
+      if (type === 'movie') {
+        const { imdb } = detailData
+        if (!douban_id && !imdb)
+          return false
+        data.slug = imdb?.value || douban_id
+        data.name = detailData.title.value
+        data.status_at = { [status]: introData.date }
+        data.info_at = introData.date ?? new Date()
+        data.images = { detail: introData.pic }
+        data.eps = detailData.episodes ? detailData.episodes.value : 1
+        data.collect_eps = null
+        data.douban_id = douban_id
+        data.douban_data = { ...introData, ...detailData }
+        data.imdb_id = imdb?.value
+        data.bgm_id = ''
+        data.bgm_data = {}
+      }
+      if (type === 'book') {
+        const { isbn } = detailData
+        if (!douban_id && !isbn)
+          return false
+        data.slug = isbn?.value || douban_id
+        data.name = detailData.title.value
+        data.status_at = { [status]: introData.date }
+        data.info_at = introData.date ?? new Date()
+        data.images = { detail: introData.pic }
+        data.eps = detailData.episodes ? detailData.episodes.value : 1
+        data.collect_eps = null
+        data.douban_id = douban_id
+        data.douban_data = { ...introData, ...detailData }
+        data.imdb_id = null
+        data.bgm_id = ''
+        data.bgm_data = {}
+      }
       return data
     }
     catch (e) {

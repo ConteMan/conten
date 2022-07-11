@@ -69,6 +69,9 @@ const save = async () => {
       <n-form-item label="ID">
         <n-input v-model:value="formValue.douban_id" placeholder="" />
       </n-form-item>
+      <n-form-item label="Cookie">
+        <n-input v-model:value="formValue.douban_cookie" placeholder="" />
+      </n-form-item>
       <n-divider />
 
       <div>

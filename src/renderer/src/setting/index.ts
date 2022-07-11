@@ -23,8 +23,8 @@ export const NavList = [
 
 export const ModuleNavList = [
   {
-    name: '系统',
-    path: '/system',
+    name: '实验',
+    path: '/test',
   },
   {
     name: '设置',
@@ -98,6 +98,7 @@ export const ProxyProtocols = [
 
 export const ModuleSettingDefault = {
   douban_id: '',
+  douban_cookie: '',
   wakatime_api_key: '',
   v2ex_api_key: '',
   taptap_user_id: '',
