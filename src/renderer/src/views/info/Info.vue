@@ -139,15 +139,17 @@ const deleteItem = async (id: number) => {
               >
                 《{{ item.data.title }}》
               </span>
-              <span class="invisible hover-show mx-[4px]">
-                /
-              </span>
-              <span
-                class="invisible hover-show cursor-pointer hover:(underline decoration-2 underline-offset-2)"
-                @click="openInBrowser(`https://movie.douban.com/subject/${item.data.douban.id}`)"
-              >
-                豆瓣
-              </span>
+              <template v-if="item.data.douban">
+                <span class="invisible hover-show mx-[4px]">
+                  /
+                </span>
+                <span
+                  class="invisible hover-show cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                  @click="openInBrowser(`https://movie.douban.com/subject/${item.data.douban.id}`)"
+                >
+                  豆瓣
+                </span>
+              </template>
               <span class="invisible hover-show mx-[4px]">
                 /
               </span>

@@ -49,10 +49,6 @@ export const SubjectType = [
     name: '图书',
     value: 'book',
   },
-  {
-    name: '音乐',
-    value: 'music',
-  },
 ]
 
 export const SubjectStatus = [
