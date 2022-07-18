@@ -111,6 +111,7 @@ watchDebounced(storageObj,
 
 <style lang="less">
 .drag-container {
+  font-family: 'JetBrainsMono';
   &:hover {
     .resize-btn{
       opacity: 100;

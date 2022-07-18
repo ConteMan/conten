@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useNow } from '@vueuse/core'
+import dayjs from 'dayjs'
 
 const now = useNow()
 </script>
 
 <template>
-  <div class="now-card p-2 text-gray-400 text-xs">
-    {{ now }}
+  <div class="now-card">
+    [ {{ dayjs(now).format('YYYY MMMM DD / dddd / HH:mm:ss ') }} ]
   </div>
 </template>
 

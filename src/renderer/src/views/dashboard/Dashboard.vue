@@ -30,7 +30,7 @@ const { showCards } = toRefs(data)
         <WeatherCard />
       </drag>
       <drag v-if="showCards.includes('now')" name="now">
-        <NowCard class="w-full flex-shrink-0 text-red-400 font-bold text-[14px]" />
+        <NowCard class="w-full font-bold text-[14px]" />
       </drag>
     </div>
   </div>
