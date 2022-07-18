@@ -19,6 +19,13 @@
   background-color: rgb(16, 16, 20);
 }
 
+.bg-gray {
+  background-color: gainsboro;
+}
+.dark .bg-gray {
+  background-color: rgb(16, 16, 20);
+}
+
 .hover-show-parent:hover .hover-show{
   visibility: visible;
 }

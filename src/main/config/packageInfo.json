@@ -194,6 +194,15 @@
         "node": ">=6"
       }
     },
+    "remove": {
+      "versionDefault": "^0.1.5",
+      "version": "0.1.5",
+      "resolved": "https://registry.npmmirror.com/remove/-/remove-0.1.5.tgz",
+      "integrity": "sha512-AJMA9oWvJzdTjwIGwSQZsjGQiRx73YTmiOWmfCp1fpLa/D4n7jKcpoA+CZiVLJqKcEKUuh1Suq80c5wF+L/qVQ==",
+      "dependencies": {
+        "seq": ">= 0.3.5"
+      }
+    },
     "sequelize": {
       "versionDefault": "^6.19.0",
       "version": "6.19.0",
@@ -842,6 +851,18 @@
         }
       }
     },
+    "v3-grid-layout": {
+      "versionDefault": "^1.0.1",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmmirror.com/v3-grid-layout/-/v3-grid-layout-1.0.1.tgz",
+      "integrity": "sha512-p5GG5ITvRaEdIcVDUA8VYhjQEXqKjJcdcrwrfeNjbjY9qYG2shgf6rBAmr0oLpsuLmSlkiXwhj61rSXFzSEbDA==",
+      "dev": true,
+      "dependencies": {
+        "@vueuse/core": "^8.1.2",
+        "interactjs": "^1.10.11",
+        "mitt": "^3.0.0"
+      }
+    },
     "vite": {
       "versionDefault": "^2.7.10",
       "version": "2.9.5",
@@ -926,6 +947,21 @@
         "@vue/runtime-dom": "3.2.33",
         "@vue/server-renderer": "3.2.33",
         "@vue/shared": "3.2.33"
+      }
+    },
+    "vue-grid-layout": {
+      "versionDefault": "^2.3.12",
+      "version": "2.3.12",
+      "resolved": "https://registry.npmmirror.com/vue-grid-layout/-/vue-grid-layout-2.3.12.tgz",
+      "integrity": "sha512-x9l4KxfH0MeB4xImanrnnTihksq8LYk3f40hm1sdiTHF2bYM+Xhae6eQsvFWEFwbYq7RVNvB80qwis1vInB+WQ==",
+      "dev": true,
+      "dependencies": {
+        "@interactjs/actions": "^1.10.2",
+        "@interactjs/auto-start": "^1.10.2",
+        "@interactjs/dev-tools": "^1.10.2",
+        "@interactjs/interactjs": "^1.10.2",
+        "@interactjs/modifiers": "^1.10.2",
+        "element-resize-detector": "^1.2.1"
       }
     },
     "vue-json-pretty": {
