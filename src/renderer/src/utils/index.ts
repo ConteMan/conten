@@ -20,3 +20,13 @@ export function setSystemTheme() {
   else
     systemState.toggleDark(false)
 }
+
+/**
+ * 浏览器打开链接
+ * @param url - 网址
+ */
+export function openInBrowser(url: string) {
+  window.shell.openExternal(url)
+}
+
+export * from '@renderer/utils/ipcMessage'

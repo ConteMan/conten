@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Drag from '@renderer/components/drag/Drag.vue'
 import ActivityCard from '@renderer/components/activity/ActivityCard.vue'
+import OneCard from '@renderer/components/one/OneCard.vue'
 
 const cards = [
   'now',
@@ -9,6 +10,7 @@ const cards = [
   'taptap',
   'v2ex',
   'activity',
+  'one',
 ]
 const data = reactive({
   showCards: cards as string[],
@@ -36,6 +38,9 @@ const { showCards } = toRefs(data)
       </drag>
       <drag v-if="showCards.includes('activity')" name="activity">
         <ActivityCard />
+      </drag>
+      <drag v-if="showCards.includes('one')" name="one">
+        <OneCard />
       </drag>
     </div>
   </div>

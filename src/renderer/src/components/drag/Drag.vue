@@ -24,11 +24,9 @@ const data = reactive({
   width: props.dWidth,
   height: props.dHeight,
 
-  show: false,
   clientXStart: 0,
   clientYStart: 0,
 })
-const { show } = toRefs(data)
 
 const key = `dashboard-drag-${props?.name}`
 
@@ -46,7 +44,6 @@ const getData = async () => {
     data.width = width
     data.height = height
   }
-  data.show = true
 }
 getData()
 
@@ -125,7 +122,6 @@ watchDebounced(storageObj,
 
 <template>
   <div
-    v-if="show"
     class="drag-container absolute overflow-auto z-auto hover:(shadow shadow-sm shadow-gray-400)"
     :style="dealStyle"
   >
