@@ -42,13 +42,5 @@ const { showCards } = toRefs(data)
 </template>
 
 <style lang="less">
-.setting-action {
-  border-radius: 4px 0 0 4px;
-}
-.vue-resizable-handle {
-  visibility: hidden;
-}
-.vue-grid-item:hover > .vue-resizable-handle {
-  visibility: visible;
-}
+
 </style>

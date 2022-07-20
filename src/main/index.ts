@@ -8,9 +8,9 @@ import { trayInit } from '@main/modules/tray'
 import { menuInit } from '@main/modules/menu'
 import { appInit } from '@main/modules/app'
 import { dbInit } from '@main/modules/db'
-import { messageInit } from '@main/modules/message'
 import { scheduleInit } from '@main/services/schedule'
 import { windowInit } from '@main/modules/window'
+import { messageInit } from '@main/modules/api'
 
 app.whenReady().then(async () => {
   appStoreInit()

@@ -27,6 +27,7 @@ import System from '@main/services/system'
 import Dom from '@main/services/dom'
 import Info from '@main/services/info/index'
 import ScheduleSetting from '@main/services/schedule/index'
+import RequestCache from '@main/services/requestCache'
 
 /**
  * 消息监听服务初始化
@@ -604,6 +605,28 @@ async function messageInit() {
           if (!key)
             return false
           return await Schedule.scheduleByKey(key)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'kv': { // 根据键获取值
+        try {
+          const { key } = apiData
+          if (!key)
+            return false
+          return await RequestCache.get(key, true)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'kv-save': { // 根据键保存值
+        try {
+          const { key, data } = apiData
+          if (!key)
+            return false
+          return await RequestCache.set(key, data)
         }
         catch (e) {
           return false

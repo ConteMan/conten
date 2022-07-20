@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDraggable, useStorage, watchDebounced } from '@vueuse/core'
+import { invokeApi } from '@renderer/utils/ipcMessage'
 
 const props = defineProps({
   name: {
@@ -16,17 +17,38 @@ const props = defineProps({
   },
 })
 
-const storageValue = useStorage(`drag-${props?.name}`, {} as any)
-
 const data = reactive({
   name: props.name,
-  x: storageValue.value?.x ?? 100,
-  y: storageValue.value?.y ?? 200,
-  width: storageValue.value?.width ?? props.dWidth,
-  height: storageValue.value?.height ?? props.dHeight,
+  x: 100,
+  y: 200,
+  width: props.dWidth,
+  height: props.dHeight,
+
+  show: false,
   clientXStart: 0,
   clientYStart: 0,
 })
+const { show } = toRefs(data)
+
+const key = `dashboard-drag-${props?.name}`
+
+const getData = async () => {
+  const res = await invokeApi({
+    name: 'kv',
+    data: {
+      key,
+    },
+  })
+  if (res) {
+    const { x, y, width, height } = res.data
+    data.x = x
+    data.y = y
+    data.width = width
+    data.height = height
+  }
+  data.show = true
+}
+getData()
 
 const el = ref<HTMLElement | null>(null)
 const resizeEl = ref<HTMLElement | null>(null)
@@ -35,8 +57,10 @@ const { x, y } = useDraggable(el, {
   initialValue: { x: data.x, y: data.y },
   preventDefault: true,
 })
-data.x = x
-data.y = y
+watch([x, y], () => {
+  data.x = x.value
+  data.y = y.value
+})
 
 const dealStyle = computed(() => {
   return {
@@ -74,6 +98,16 @@ onMounted(() => {
   })
 })
 
+const saveData = async (data: any) => {
+  await invokeApi({
+    name: 'kv-save',
+    data: {
+      key,
+      data,
+    },
+  })
+}
+
 const storageObj = computed(() => {
   return {
     x: data.x,
@@ -82,16 +116,16 @@ const storageObj = computed(() => {
     height: data.height,
   }
 })
-storageValue.value = storageObj.value
 
 watchDebounced(storageObj,
   () => {
-    storageValue.value = storageObj.value
+    saveData(storageObj.value)
   }, { debounce: 500 })
 </script>
 
 <template>
   <div
+    v-if="show"
     class="drag-container absolute overflow-auto z-auto hover:(shadow shadow-sm shadow-gray-400)"
     :style="dealStyle"
   >
