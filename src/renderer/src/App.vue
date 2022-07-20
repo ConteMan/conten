@@ -23,6 +23,11 @@ const themeOverrides: GlobalThemeOverrides = {
     boxShadowFocus: '#fff',
   },
 }
+const darkThemeOverrides: GlobalThemeOverrides = {
+  common: {
+    bodyColor: '#000',
+  },
+}
 
 // 状态更新
 const refreshState = useRefreshState()
@@ -69,7 +74,7 @@ watch(isDark, (dark) => {
   <n-config-provider
     class="config-container"
     :theme="data.theme"
-    :theme-overrides="themeOverrides"
+    :theme-overrides="data.theme ? darkThemeOverrides : themeOverrides"
     :locale="zhCN"
     :date-locale="dateZhCN"
   >
