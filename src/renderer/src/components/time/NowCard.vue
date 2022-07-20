@@ -6,7 +6,7 @@ const now = useNow()
 </script>
 
 <template>
-  <div class="now-card">
+  <div class="now-card px-4">
     [ {{ dayjs(now).format('YYYY MMMM DD / dddd / HH:mm:ss ') }} ]
   </div>
 </template>

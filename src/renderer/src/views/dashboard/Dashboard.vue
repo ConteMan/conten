@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Drag from '@renderer/components/drag/Drag.vue'
+import ActivityCard from '@renderer/components/activity/ActivityCard.vue'
 
 const cards = [
   'now',
@@ -7,6 +8,7 @@ const cards = [
   'wakatime',
   'taptap',
   'v2ex',
+  'activity',
 ]
 const data = reactive({
   showCards: cards as string[],
@@ -31,6 +33,9 @@ const { showCards } = toRefs(data)
       </drag>
       <drag v-if="showCards.includes('now')" name="now">
         <NowCard class="w-full font-bold text-[14px]" />
+      </drag>
+      <drag v-if="showCards.includes('activity')" name="activity">
+        <ActivityCard />
       </drag>
     </div>
   </div>
