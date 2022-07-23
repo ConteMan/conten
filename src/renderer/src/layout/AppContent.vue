@@ -3,6 +3,7 @@ import type { MessageType } from 'naive-ui'
 import { useMousePressed } from '@vueuse/core'
 import { useSystemState } from '@renderer/store/system'
 import { NavList } from '@renderer/setting'
+import Search from '@renderer/components/search/Search.vue'
 
 // 导航栏拖拽调节宽度
 const resizeRef = ref<HTMLDivElement | null>(null)
@@ -138,6 +139,8 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
         <Menubar class="w-full" />
       </div>
     </div>
+
+    <Search />
   </div>
 </template>
 

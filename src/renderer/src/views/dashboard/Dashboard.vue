@@ -34,7 +34,7 @@ const { showCards } = toRefs(data)
         <WeatherCard />
       </drag>
       <drag v-if="showCards.includes('now')" name="now">
-        <NowCard class="w-full font-bold text-[14px]" />
+        <NowCard />
       </drag>
       <drag v-if="showCards.includes('activity')" name="activity">
         <ActivityCard />

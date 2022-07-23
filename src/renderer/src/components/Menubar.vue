@@ -94,6 +94,15 @@ const toggleBar = (status: boolean) => {
             <mdi-inbox-full-outline v-if="item.path === '/subject'" />
             <mdi:view-grid-outline v-if="item.path === '/module'" />
           </div>
+          <n-divider vertical class="mr-2" />
+          <div class="nav-container flex items-center relative">
+            <div class="flex items-center">
+              <div class="nav-des bg px-[8px] pt-2 w-auto">
+                搜索
+              </div>
+              <mdi:target-variant class="cursor-pointer" @click="systemState.toggleSearch()" />
+            </div>
+          </div>
         </div>
         <div class="flex-grow flex justify-end items-center gap-2 mr-6">
           <div

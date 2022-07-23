@@ -9,6 +9,7 @@ export const useSystemState = defineStore('system', {
       isTop: false, // 是否窗口置顶
       showBar: true, // 是否显示状态栏
       hoverShowBar: false, // 是否鼠标悬停显示状态栏
+      showSearch: false, // 是否显示搜索
     }
   },
   actions: {
@@ -33,6 +34,9 @@ export const useSystemState = defineStore('system', {
     },
     toggleHoverShowBar(status = true) {
       this.hoverShowBar = status
+    },
+    toggleSearch(status = true) {
+      this.showSearch = status
     },
   },
   persist: {

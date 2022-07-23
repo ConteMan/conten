@@ -26,6 +26,8 @@ const themeOverrides: GlobalThemeOverrides = {
 const darkThemeOverrides: GlobalThemeOverrides = {
   common: {
     bodyColor: '#000',
+    primaryColor: '#ff4f49',
+    primaryColorHover: '#fd2720',
   },
 }
 

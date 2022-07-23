@@ -7,7 +7,7 @@ const now = useNow()
 
 <template>
   <div class="now-card px-4">
-    [ {{ dayjs(now).format('YYYY MMMM DD / dddd / HH:mm:ss ') }} ]
+    [ {{ dayjs(now).format('YYYY MMMM DD / dddd ') }} / <span class="text-[20px] font-bold text-red-600 text-shadow-xl">{{ dayjs(now).format('HH:mm:ss') }}</span> ]
   </div>
 </template>
 
