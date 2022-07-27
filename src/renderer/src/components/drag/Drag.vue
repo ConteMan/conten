@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDraggable, useStorage, watchDebounced } from '@vueuse/core'
+import { useDraggable, watchDebounced } from '@vueuse/core'
 import { invokeApi } from '@renderer/utils/ipcMessage'
 
 const props = defineProps({
@@ -14,6 +14,10 @@ const props = defineProps({
   dHeight: {
     type: Number,
     default: 100,
+  },
+  showScroll: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -117,12 +121,20 @@ const storageObj = computed(() => {
 watchDebounced(storageObj,
   () => {
     saveData(storageObj.value)
-  }, { debounce: 500 })
+  },
+  { debounce: 500 })
+
+const dealClass = computed(() => {
+  return [
+    props.showScroll ? 'overflow-auto' : 'overflow-auto hover-scroll',
+  ]
+})
 </script>
 
 <template>
   <div
-    class="drag-container absolute overflow-auto z-auto hover:(shadow shadow-sm shadow-gray-400)"
+    class="drag-container absolute z-auto hover:(shadow shadow-sm shadow-gray-400)"
+    :class="dealClass"
     :style="dealStyle"
   >
     <div

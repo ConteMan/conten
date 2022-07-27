@@ -29,3 +29,13 @@
 .hover-show-parent:hover .hover-show{
   visibility: visible;
 }
+
+.hidden-scroll::-webkit-scrollbar{
+  display: none;
+}
+.hover-scroll::-webkit-scrollbar {
+  display: none;
+}
+.hover-scroll:hover::-webkit-scrollbar {
+  display: block;
+}

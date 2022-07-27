@@ -1,7 +1,11 @@
+import process from 'process'
+import { app } from 'electron'
 import { checkTask } from '@main/services/task'
 import type { Axios as AxiosType } from 'axios'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Axios: AxiosType = require('axios').default
+
 class System {
   /**
  * 定时任务
@@ -35,6 +39,26 @@ class System {
     catch (e) {
       // eslint-disable-next-line no-console
       console.log('>>> services >> system >> testProxy', e)
+      return false
+    }
+  }
+
+  /**
+   * 获取应用自身信息
+   */
+  async info() {
+    try {
+      return {
+        metrics: app.getAppMetrics(),
+        creationTime: process.getCreationTime(),
+        cpu: process.getCPUUsage(),
+        memory: await process.getProcessMemoryInfo(),
+        version: process.getSystemVersion(),
+      }
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> services >> system >> info', e)
       return false
     }
   }

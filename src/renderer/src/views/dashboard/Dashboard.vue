@@ -2,6 +2,7 @@
 import Drag from '@renderer/components/drag/Drag.vue'
 import ActivityCard from '@renderer/components/activity/ActivityCard.vue'
 import OneCard from '@renderer/components/one/OneCard.vue'
+import SystemCard from '@renderer/components/system/SystemCard.vue'
 
 const cards = [
   'now',
@@ -11,6 +12,7 @@ const cards = [
   'v2ex',
   'activity',
   'one',
+  'system-info',
 ]
 const data = reactive({
   showCards: cards as string[],
@@ -19,7 +21,7 @@ const { showCards } = toRefs(data)
 </script>
 
 <template>
-  <div>
+  <div class="hover-scroll">
     <div class="w-full h-full relative">
       <drag v-if="showCards.includes('v2ex')" name="v2ex">
         <V2exCard />
@@ -41,6 +43,9 @@ const { showCards } = toRefs(data)
       </drag>
       <drag v-if="showCards.includes('one')" name="one">
         <OneCard />
+      </drag>
+      <drag v-if="showCards.includes('system-info')" name="system-info" :show-scroll="false">
+        <SystemCard />
       </drag>
     </div>
   </div>

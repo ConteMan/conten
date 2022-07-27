@@ -632,6 +632,9 @@ async function messageInit() {
           return false
         }
       }
+      case 'system-info': { // 获取系统信息
+        return System.info()
+      }
       default:
         // eslint-disable-next-line no-console
         console.log('>>> message >> messageInit > default:', name)
