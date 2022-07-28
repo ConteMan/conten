@@ -94,21 +94,25 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
     :class="{ 'cursor-col-resize-important': onResize }"
   >
     <div
-      class="h-screen max-h-screen sidebar-container"
+      class="h-screen max-h-screen sidebar-container flex flex-col"
       :class="{ 'sidebar-transition': !resizePressed }"
       :style="{ 'width': `${showSideNav ? sideWidth : 0}px`, 'min-width': `${showSideNav ? sideWidth : 0}px`, 'max-width': `${showSideNav ? sideWidth : 0}px` }"
     >
-      <Dragbar />
+      <Dragbar class="flex-grow-0" />
       <Transition name="sidebar-content">
-        <div v-if="showSideNav" class="sidebar-content mt-[80px]">
-          <div class="nav-container flex flex-col items-center space-y-2">
+        <div v-if="showSideNav" class="flex-grow flex flex-col justify-end">
+          <div class="nav-container flex flex-col gap-2 pb-[200px]">
             <div
               v-for="item in NavList" :key="item.path"
-              class="px-2 cursor-pointer hover:(underline decoration-2 underline-offset-4)"
-              :class="{ 'font-bold text-red-600': $route.path === item.path }"
+              class="h-[28px] text-[14px] cursor-pointer flex flex-col justify-center items-center hover:(text-red-400)"
+              :class="{ 'font-bold bg-red-400 !text-white !no-underline': $route.path === item.path }"
+              :title="item.name"
               @click="$router.push({ path: item.path })"
             >
-              {{ item.name }}
+              <mdi-view-dashboard-outline v-if="item.path === '/dashboard'" />
+              <mdi:format-float-left v-if="item.path === '/info'" />
+              <mdi-inbox-full-outline v-if="item.path === '/subject'" />
+              <mdi:view-grid-outline v-if="item.path === '/module'" />
             </div>
           </div>
         </div>
@@ -120,10 +124,10 @@ const { pressed: resizePressed } = useMousePressed({ target: resizeRef })
         v-show="showSideNav"
         ref="resizeRef"
         class="flex-grow-0 flex flex-col justify-end w-[1px] cursor-col-resize"
-        :style="{ width: `${showSideNav ? 1 : 0}px` }"
+        :style="{ width: `${showSideNav ? 2 : 0}px` }"
       >
-        <div class="h-[32px] w-[1px] bg-gray-100" />
-        <div class="h-[calc(100%-32px)] w-[1px] bg-gray-100" />
+        <div class="h-[32px] w-[2px] bg-gray-100 opacity-60" />
+        <div class="h-[calc(100%-32px)] w-[2px] bg-gray-100 opacity-60" />
       </div>
     </Transition>
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { vInfiniteScroll } from '@vueuse/components'
-import { invokeApi } from '@renderer/utils/ipcMessage'
-import { InfoPlatform } from '@renderer/setting'
 import _ from 'lodash'
+import { vInfiniteScroll } from '@vueuse/components'
+import { invokeApi, openInBrowser } from '@renderer/utils'
+import { InfoPlatform } from '@renderer/setting'
 
 const data = reactive({
   list: [] as any,
@@ -24,8 +24,6 @@ const getList = async () => {
     },
   })
   if (res) {
-    // eslint-disable-next-line no-console
-    console.log('res', res.rows.length, pageSize.value)
     data.hasMore = !(res.rows.length < pageSize.value)
 
     data.list = [...data.list, ...res.rows]
@@ -41,15 +39,11 @@ const loadMore = async () => {
   }
 }
 
-const openInBrowser = (url: string) => {
-  window.shell.openExternal(url)
-}
-
 const changeType = async (type: string) => {
-  if (data.type.includes(type))
-    _.remove(data.type, item => item === type)
+  if (!type)
+    data.type = []
   else
-    data.type.push(type)
+    data.type = [type]
 
   data.page = 1
   data.list = []
@@ -73,22 +67,20 @@ const deleteItem = async (id: number) => {
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="px-8 pb-2 flex-grow-0 flex items-center gap-2">
-      <n-tag
+  <div class="flex">
+    <div class="w-[80px] pr-4 pb-[160px] flex-grow-0 flex-shrink-0 flex flex-col justify-end gap-2">
+      <div
         v-for="typeItem in InfoPlatform" :key="typeItem.value"
-        class="font-bold"
-        :checked="data.type.includes(typeItem.value)"
-        size="small"
-        checkable
+        class="pl-4 text-[12px] h-[28px] flex flex-col justify-center cursor-pointer hover:(underline decoration-2 underline-offset-4)"
+        :class="{ 'font-bold text-red-600 bg-blue-300 text-white !no-underline': data.type.includes(typeItem.value) || (!data.type.length && !typeItem.value) }"
         @click.stop="changeType(typeItem.value)"
       >
         {{ typeItem.name }}
-      </n-tag>
+      </div>
     </div>
     <div
       v-infinite-scroll="[loadMore, { distance: 10 }]"
-      class="px-8 flex-grow flex flex-col overflow-y-scroll"
+      class="hover-scroll px-8 flex-grow flex flex-col overflow-y-scroll"
     >
       <template v-if="total && list.length">
         <div v-for="item in list" :key="item.id" class="hover-show-parent py-1">

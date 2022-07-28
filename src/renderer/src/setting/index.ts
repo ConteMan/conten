@@ -68,6 +68,10 @@ export const SubjectStatus = [
 
 export const InfoPlatform = [
   {
+    name: '全部',
+    value: '',
+  },
+  {
     name: 'V2EX',
     value: 'v2ex',
   },
