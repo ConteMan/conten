@@ -152,6 +152,23 @@ const deleteItem = async (id: number) => {
                 Libvio
               </span>
             </template>
+            <template v-if="item.platform === 'ddrk'">
+              <span
+                class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser(`https://www.ddrk.me/${item.data.id}`)"
+              >
+                《{{ item.data.title }}》
+              </span>
+              <span class="invisible hover-show mx-[4px]">
+                /
+              </span>
+              <span
+                class="invisible hover-show cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser('https://www.ddrk.me')"
+              >
+                低端影视
+              </span>
+            </template>
             <span class="invisible hover-show mx-[4px]">
               /
             </span>

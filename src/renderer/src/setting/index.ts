@@ -83,6 +83,10 @@ export const InfoPlatform = [
     name: 'Libvio',
     value: 'libvio',
   },
+  {
+    name: '低端影视',
+    value: 'ddrk',
+  },
 ]
 
 export const ProxyProtocols = [

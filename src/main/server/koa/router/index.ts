@@ -18,8 +18,9 @@ router.post('/extension', async (ctx) => {
 
   let res
   switch (type) {
-    case 'libvio': {
-      res = await Extension.libvio(ctx)
+    case 'libvio':
+    case 'ddrk': {
+      res = await Extension.movie(ctx)
       break
     }
     default: {

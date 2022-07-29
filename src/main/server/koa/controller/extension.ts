@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import { bulkCreateOrUpdate as infoBulkCreateOrUpdate } from '@main/services/info'
 import RequestCache from '@main/services/requestCache'
 import { listFormat as libvioListFormat } from '@main/services/dom/modules/libvio'
+import { listFormat as ddrkListFormat } from '@main/services/dom/modules/ddrk'
 import type { Info as InfoType } from '@main/types/info'
 
 class ExtensionController {
@@ -46,41 +47,50 @@ class ExtensionController {
   }
 
   /**
-   * 处理 Libvio 数据
+   * 处理 movie 数据
    * @param ctx - 请求信息
    */
-  async libvio(ctx: Context) {
+  async movie(ctx: Context) {
     try {
-      const { data } = ctx.request.body
+      const { data, type: platform } = ctx.request.body
       const { type, html } = data
 
-      switch (type) {
-        case 'list-latest':
-        default: {
-          const list = await libvioListFormat(html)
-          const infoList: InfoType[] = []
-          if (list) {
-            const platform = 'libvio'
-            const platform_type = 'latest'
-            list.forEach((lItem: any) => {
-              infoList.push(
-                {
-                  platform,
-                  platform_type,
-                  slug: `${platform}_${platform_type}_${lItem.id}`,
-                  info_at: dayjs(lItem.updated_at).toISOString(),
-                  data: lItem,
-                })
-            })
+      const dealType = `${platform}_${type}`
 
-            // eslint-disable-next-line no-console
-            console.log(infoList)
-
-            if (infoList.length)
-              await infoBulkCreateOrUpdate(infoList)
-          }
+      let list = []
+      let platform_type = ''
+      switch (dealType) {
+        case 'ddrk_list-latest': {
+          list = await ddrkListFormat(html)
+          platform_type = 'latest'
           break
         }
+        case 'libvio_list-latest':
+        default: {
+          list = await libvioListFormat(html)
+          platform_type = 'latest'
+          break
+        }
+      }
+
+      const infoList: InfoType[] = []
+      if (list && list.length) {
+        list.forEach((lItem: any) => {
+          infoList.push(
+            {
+              platform,
+              platform_type,
+              slug: `${platform}_${platform_type}_${lItem.id}`,
+              info_at: dayjs().toISOString(),
+              data: lItem,
+            })
+        })
+
+        // eslint-disable-next-line no-console
+        console.log(infoList)
+
+        if (infoList.length)
+          await infoBulkCreateOrUpdate(infoList)
       }
       return ctx.body = true
     }
