@@ -87,6 +87,10 @@ export const InfoPlatform = [
     name: '低端影视',
     value: 'ddrk',
   },
+  {
+    name: '足球',
+    value: 'football',
+  },
 ]
 
 export const ProxyProtocols = [

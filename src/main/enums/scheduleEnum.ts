@@ -17,4 +17,5 @@ export enum KEYS {
   V2EX = 'v2ex',
   TAPTAP = 'taptap',
   INFO_LIBVIO = 'info_libvio',
+  INFO_FOOTBALL = 'info_football',
 }

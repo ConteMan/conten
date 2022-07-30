@@ -226,11 +226,12 @@ class Schedule {
           await TapTap.schedule()
           break
         }
-        case KEYS.INFO_LIBVIO: {
+        case KEYS.INFO_FOOTBALL: {
           moduleName = 'info'
-          await Info.schedule('libvio')
+          await Info.schedule('football')
           break
         }
+        case KEYS.INFO_LIBVIO:
         default: {
           // eslint-disable-next-line no-console
           console.log('>>> SCHEDULE >> moduleSchedule: not find module')

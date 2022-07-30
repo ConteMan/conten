@@ -34,4 +34,8 @@ export const ScheduleList: ScheduleListItem[] = [
     name: '资讯 - Libvio',
     key: KEYS.INFO_LIBVIO,
   },
+  {
+    name: '资讯 - 足球',
+    key: KEYS.INFO_FOOTBALL,
+  },
 ]

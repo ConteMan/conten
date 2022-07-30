@@ -14,6 +14,16 @@ const data = reactive({
 })
 const { list, total, page, pageSize, hasMore } = toRefs(data)
 
+const dealList = computed(() => {
+  return data.list.filter((item: any) => {
+    if (item.platform === 'football') {
+      if (item.data.status)
+        return false
+    }
+    return true
+  })
+})
+
 const getList = async () => {
   const res = await invokeApi({
     name: 'info-list',
@@ -68,7 +78,7 @@ const deleteItem = async (id: number) => {
 
 <template>
   <div class="flex">
-    <div class="w-[80px] pr-4 pb-[160px] flex-grow-0 flex-shrink-0 flex flex-col justify-end gap-2">
+    <div class="w-[120px] pr-4 pb-[160px] flex-grow-0 flex-shrink-0 flex flex-col justify-end gap-2">
       <div
         v-for="typeItem in InfoPlatform" :key="typeItem.value"
         class="pl-4 text-[12px] h-[28px] flex flex-col justify-center cursor-pointer hover:(underline decoration-2 underline-offset-4)"
@@ -83,7 +93,7 @@ const deleteItem = async (id: number) => {
       class="hover-scroll px-8 flex-grow flex flex-col overflow-y-scroll"
     >
       <template v-if="total && list.length">
-        <div v-for="item in list" :key="item.id" class="hover-show-parent py-1">
+        <div v-for="item in dealList" :key="item.id" class="hover-show-parent py-1">
           <div class="flex items-center">
             <template v-if="item.platform === 'v2ex'">
               <span
@@ -155,7 +165,7 @@ const deleteItem = async (id: number) => {
             <template v-if="item.platform === 'ddrk'">
               <span
                 class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
-                @click="openInBrowser(`https://www.ddrk.me/${item.data.id}`)"
+                @click="openInBrowser(`https://www.ddrk.me/${item.data.id}/`)"
               >
                 《{{ item.data.title }}》
               </span>
@@ -167,6 +177,29 @@ const deleteItem = async (id: number) => {
                 @click="openInBrowser('https://www.ddrk.me')"
               >
                 低端影视
+              </span>
+            </template>
+            <template v-if="item.platform === 'football'">
+              <span
+                class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser(item.data.home_team_url)"
+              >
+                {{ item.data.home_team }}
+              </span>
+              <span class="mx-[4px]">
+                VS
+              </span>
+              <span
+                class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                @click="openInBrowser(item.data.visiting_team_url)"
+              >
+                {{ item.data.visiting_team }}
+              </span>
+              <span class="mx-[4px]">
+                /
+              </span>
+              <span>
+                {{ item.data.time }}
               </span>
             </template>
             <span class="invisible hover-show mx-[4px]">

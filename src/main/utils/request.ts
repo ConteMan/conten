@@ -32,7 +32,20 @@ export async function customRequest(options: any) {
       }
     }
 
-    return await axiosInstance.request(options)
+    const { decode = '' } = options
+    delete options.decode
+
+    const res = await axiosInstance.request(options)
+
+    if (['GKB', 'GB2312'].includes(decode)) {
+      const utf8decoder = new TextDecoder(decode)
+      const decodeBody = utf8decoder.decode(res.data)
+      res.data = decodeBody
+      return res
+    }
+    else {
+      return res
+    }
   }
   catch (e) {
     // eslint-disable-next-line no-console

@@ -82,6 +82,7 @@ export async function list(type = '', page = 1, pageSize = 10) {
       offset,
       limit: pageSize,
       order: [
+        ['info_at', 'DESC'],
         ['id', 'DESC'],
       ],
     })

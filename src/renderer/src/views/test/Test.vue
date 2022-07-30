@@ -42,13 +42,12 @@ const changeTrafficButton = async () => {
   <div class="px-4 pb-8">
     <div class="flex flex-col items-start">
       <div class="p-2">
-        TEMP
+        请求测试
       </div>
       <div class="flex flex-wrap gap-2">
         <n-input v-model:value="tempInput" />
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: 'movie-search', data: tempInput })">豆瓣-影视搜索</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: 'book', data: tempInput })">豆瓣-图书信息</span>
-        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('douban', { type: 'book-list', data: tempInput })">豆瓣-图书列表</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('request-data', { url: tempInput })">请求数据</span>
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('football-sina', { tid: tempInput })">请求新浪足球数据</span>
       </div>
     </div>
     <div class="flex flex-col items-start mt-4">

@@ -18,7 +18,6 @@ import TapTap from '@main/services/taptap'
 import { action as infoAction, list as infoList } from '@main/services/info'
 import Schedule from '@main/services/schedule'
 import { logList } from '@main/services/log'
-import type { DoubanHtmlRequest } from '@main/services/douban'
 import Douban from '@main/services/douban'
 import Subject from '@main/services/subject'
 import { checkShortcut, resetShortcut } from '@main/modules/shortcuts'
@@ -28,6 +27,7 @@ import Dom from '@main/services/dom'
 import Info from '@main/services/info/index'
 import ScheduleSetting from '@main/services/schedule/index'
 import RequestCache from '@main/services/requestCache'
+import { format as footballSinaFormat } from '@main/services/dom/modules/footballSina'
 
 /**
  * 消息监听服务初始化
@@ -460,29 +460,13 @@ async function messageInit() {
           return null
         }
       }
-      case 'douban': { // 豆瓣
+      case 'douban': { // 豆瓣：根据 ID 获取图书详情；影视搜索；
         try {
           const { type = 'html', data } = apiData
-          if (type === 'book') {
+          if (type === 'book')
             return await Douban.data('book', data)
-          }
-          else if (type === 'book-list') {
-            const doubanIdKey = 'douban_id'
-            const doubanIdRes = await getConfigByKey(doubanIdKey)
-            if (!doubanIdRes)
-              return false
-
-            const params: DoubanHtmlRequest = {
-              id: doubanIdRes.value,
-              type: 'book',
-              status: 'collect',
-              start: 0,
-            }
-            return await Douban.list(params)
-          }
-          else {
+          else
             return await Douban.movieSearch(data)
-          }
         }
         catch (e) {
           return null
@@ -634,6 +618,31 @@ async function messageInit() {
       }
       case 'system-info': { // 获取系统信息
         return System.info()
+      }
+      case 'request-data': { // 请求数据
+        try {
+          const { url } = apiData
+          return await Dom.requestData(url)
+        }
+        catch (e) {
+          return false
+        }
+      }
+      case 'football-sina': { // 请求新浪足球数据
+        try {
+          const { tid } = apiData
+          const htmlData = await Dom.requestData(`http://match.sports.sina.com.cn/iframe/football/team_iframe.php?id=${tid}&year=2022&dpc=1`, {
+            responseType: 'arraybuffer', // 关键步骤
+            responseEncoding: 'utf8',
+            decode: 'GB2312',
+          })
+          if (htmlData && htmlData?.data)
+            return await footballSinaFormat(htmlData?.data, { tid: parseInt(tid) })
+          return false
+        }
+        catch (e) {
+          return false
+        }
       }
       default:
         // eslint-disable-next-line no-console
