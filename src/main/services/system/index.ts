@@ -12,6 +12,7 @@ class System {
  */
   async schedule() {
     await checkTask()
+    await this.relaunchByMemory()
     return true
   }
 
@@ -59,6 +60,22 @@ class System {
     catch (e) {
       // eslint-disable-next-line no-console
       console.log('>>> services >> system >> info', e)
+      return false
+    }
+  }
+
+  /**
+   * 内存超出限定后，重启应用
+   */
+  async relaunchByMemory() {
+    try {
+      const limitMemory = 300
+      const memory = await process.getProcessMemoryInfo()
+      if (memory.private > limitMemory * 1024)
+        app.relaunch()
+      return true
+    }
+    catch (e) {
       return false
     }
   }
