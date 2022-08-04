@@ -644,6 +644,26 @@ async function messageInit() {
           return false
         }
       }
+      case 'global-status': { // 全局变量状态
+        try {
+          const { win, wins, views, store: globalStore, serverSockets, jobs } = global
+          return {
+            win: win?.getTitle(),
+            win_parent: win?.getParentWindow()?.getTitle(),
+            win_children: win?.getChildWindows()?.length,
+            wins: wins ? Object.keys(wins) : '',
+            views: views ? Object.keys(views) : '',
+            store: globalStore ? Object.keys(globalStore) : '',
+            sockets: serverSockets ? Object.keys(serverSockets) : '',
+            jobs: jobs ? Object.keys(jobs) : '',
+          }
+        }
+        catch (e) {
+          // eslint-disable-next-line no-console
+          console.log('>>> message >> messageInit > global-status:', e)
+          return false
+        }
+      }
       default:
         // eslint-disable-next-line no-console
         console.log('>>> message >> messageInit > default:', name)

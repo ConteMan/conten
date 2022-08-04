@@ -50,6 +50,14 @@ const changeTrafficButton = async () => {
         <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('football-sina', { tid: tempInput })">请求新浪足球数据</span>
       </div>
     </div>
+    <div class="flex flex-col items-start">
+      <div class="p-2">
+        APP
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <span class="rounded-md cursor-pointer py-1 px-2 bg-dark-50 text-light-50 hover:(bg-light-800 text-black)" @click="invokeApi('global-status')">GLOBAL STATUS</span>
+      </div>
+    </div>
     <div class="flex flex-col items-start mt-4">
       <div class="p-2">
         Window

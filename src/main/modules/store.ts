@@ -101,10 +101,10 @@ export async function appStoreInit() {
  * 获取配置文件路径
  * @param storeName - 配置文件名称
  */
-export function getStorePath(storeName = ConfigEnum.DEFAULT_NAME) {
+export function getStorePath(storeName = ConfigEnum.DEFAULT_NAME): string {
   if (!global.appStore)
     appStoreInit()
-  return global.appStore.get(`${storeName}Path`)
+  return global.appStore.get(`${storeName}Path`) as string
 }
 
 /**

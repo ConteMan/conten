@@ -46,7 +46,7 @@ async function sqlite3Init() {
 
 /**
  * 连接 SQLite3
- * @param dbPath - db 文件地址
+ * @param dbPath - DB 文件地址
  */
 export function connectSqlite3(dbPath = '') {
   try {
@@ -61,17 +61,21 @@ export function connectSqlite3(dbPath = '') {
     global.sequelize = sequelize
 
     // eslint-disable-next-line no-console
-    console.log('>>> sqlite2Init connectSqlite3')
+    console.log('>>> modules >> db > connectSqlite3')
 
     return true
   }
   catch (e) {
     // eslint-disable-next-line no-console
-    console.log('connectSqlite3', e)
+    console.log('>>> modules >> db > connectSqlite3 error', e)
     return false
   }
 }
 
+/**
+ * 连接 MongoDB
+ * @param url - DB URL
+ */
 export async function connectMongoDB(url = '') {
   const store = getStore()
   if (!store)

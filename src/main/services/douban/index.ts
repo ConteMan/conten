@@ -629,15 +629,15 @@ class Douban {
    */
   async schedule() {
     try {
+      const collectRes = await Subject.syncDouban('increment', { type: 'movie', status: 'collect', startPage: 1, endPage: 1 })
       const wishRes = await Subject.syncDouban('increment', { type: 'movie', status: 'wish', startPage: 1, endPage: 1 })
       const doRes = await Subject.syncDouban('increment', { type: 'movie', status: 'do', startPage: 1, endPage: 1 })
-      const collectRes = await Subject.syncDouban('increment', { type: 'movie', status: 'collect', startPage: 1, endPage: 1 })
 
+      const bookCollectRes = await Subject.syncDouban('increment', { type: 'book', status: 'collect', startPage: 1, endPage: 1 })
       const bookWishRes = await Subject.syncDouban('increment', { type: 'book', status: 'wish', startPage: 1, endPage: 1 })
       const bookDoRes = await Subject.syncDouban('increment', { type: 'book', status: 'do', startPage: 1, endPage: 1 })
-      const bookCollectRes = await Subject.syncDouban('increment', { type: 'book', status: 'collect', startPage: 1, endPage: 1 })
 
-      // TODO: 处理修改标记的数据，比如从想看到再看，从再看到一看
+      // TODO: 处理修改标记的数据，比如从「想看」到「再看」，从「在看」到「已看」
 
       const res = {
         movie: {

@@ -14,7 +14,7 @@ declare global {
   var wins: Record<string, BrowserWindow>
   var views: Record<string, BrowserView>
   var store: Record<string, ElectronStore> | null
-  var appStore: Electron
+  var appStore: ElectronStore
   var mongoClient: MongoClient | null
   var sequelize: Sequelize
   var koaApp: koa | null

@@ -37,6 +37,7 @@ export async function windowInit() {
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
       spellcheck: false,
+      nodeIntegrationInWorker: true,
     },
   })
 
@@ -123,6 +124,7 @@ export function viewWindowInit(url = '', show = false, once = false, winBounds: 
       alwaysOnTop: false,
       webPreferences: {
         webSecurity: false,
+        nodeIntegrationInWorker: true,
       },
     })
 

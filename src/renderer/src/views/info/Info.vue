@@ -7,7 +7,7 @@ import { InfoPlatform } from '@renderer/setting'
 const data = reactive({
   list: [] as any,
   total: 0,
-  type: [] as string[],
+  type: ['libvio'] as string[],
   page: 1,
   pageSize: 100,
   hasMore: true,

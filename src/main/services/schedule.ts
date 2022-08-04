@@ -261,16 +261,12 @@ class Schedule {
 export async function scheduleInit() {
   try {
     const scheduleInstance = new Schedule()
-    // const modules = Object.values(MODULES)
-    // for (const moduleName of modules)
-    //   await scheduleInstance.dealByModule(moduleName)
 
     const job = NodeSchedule.scheduleJob('* * * * *', async () => {
       await scheduleInstance.run()
     })
     global.jobs = {
       BASE: job,
-      ...global.jobs,
     }
 
     // eslint-disable-next-line no-console
