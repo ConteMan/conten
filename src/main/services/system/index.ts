@@ -69,10 +69,15 @@ class System {
    */
   async relaunchByMemory() {
     try {
-      const limitMemory = 300
+      const limitMemory = 200
       const memory = await process.getProcessMemoryInfo()
-      if (memory.private > limitMemory * 1024)
+      // eslint-disable-next-line no-console
+      console.log('>>> services >> system >> relaunchByMemory', memory.private > limitMemory * 1024)
+      if (memory.private > limitMemory * 1024) {
         app.relaunch()
+        app.exit() // 立即退出
+        // app.quit() // 平滑退出
+      }
       return true
     }
     catch (e) {
