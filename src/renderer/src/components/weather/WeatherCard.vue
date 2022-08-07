@@ -10,7 +10,7 @@ const data = reactive({
   updatedAt: '',
   weatherData: null as any,
   todayText: '',
-  showDayWeather: false,
+  showDayWeather: true,
 })
 const { enable, weatherData, showDayWeather, updatedAt, todayText } = toRefs(data)
 

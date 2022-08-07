@@ -2,7 +2,7 @@ import path from 'path'
 import { BrowserView, BrowserWindow, app } from 'electron'
 
 import { randomStr } from '@main/utils'
-import { getStore } from '~/main/modules/store'
+import { getStore } from '@main/modules/store'
 
 global.win = null
 
@@ -71,7 +71,7 @@ export async function windowInit() {
     const url = `http://${pkg.env.HOST || '127.0.0.1'}:${pkg.env.PORT}`
 
     win.loadURL(url)
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
   }
 }
 

@@ -133,15 +133,17 @@ const dealClass = computed(() => {
 
 <template>
   <div
-    class="drag-container absolute z-auto hover:(shadow shadow-sm shadow-gray-400)"
+    class="drag-container flex flex-col absolute z-auto hover:(shadow shadow-sm shadow-gray-400)"
     :class="dealClass"
     :style="dealStyle"
   >
     <div
       ref="el"
-      class="drag-bar h-[20px] w-full cursor-move"
+      class="drag-bar h-[20px] w-full flex-grow-0 cursor-move"
     />
-    <slot />
+    <div class="flex-grow overflow-auto hover-scroll">
+      <slot />
+    </div>
     <div
       ref="resizeEl"
       class="resize-btn absolute flex bottom-0 right-0 cursor-pointer opacity-0"

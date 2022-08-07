@@ -40,6 +40,7 @@ export async function bulkCreateOrUpdate(infos: any[] = []) {
           slug: item.slug,
         },
         defaults: item,
+        paranoid: false,
       })
       if (created) {
         createdCount++

@@ -2,8 +2,6 @@
 const data = ref('')
 
 window.ipcRenderer.on('activity', (event, msg) => {
-  // eslint-disable-next-line no-console
-  console.log('>>> renderer >> components > activity', msg)
   data.value = msg
 })
 </script>
