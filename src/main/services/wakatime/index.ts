@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import { customRequest } from '@main/utils/request'
 
 import { getConfigByKey } from '@main/services/config'
 import RequestCache from '@main/services/requestCache'
@@ -23,10 +23,13 @@ class WakaTime {
 
     try {
       const url = `${this.apiUrl}/users/current/summaries?api_key=${wakatimeApiKey.value}&range=${range}`
-      const res = await fetch(url, {
+      const res = await customRequest({
+        url,
         method: 'GET',
       })
-      return await res.json()
+      if (!res)
+        return false
+      return res.data
     }
     catch (e) {
       return false

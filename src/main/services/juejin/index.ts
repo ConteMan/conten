@@ -1,5 +1,5 @@
-import { viewWindowInit } from '~/main/modules/window'
-import { isObject } from '~/main/utils'
+import { viewWindowInit } from '@main/modules/window'
+import { isObject } from '@main/utils'
 
 async function execScript(scriptStr = '') {
   try {

@@ -23,30 +23,30 @@ const { showCards } = toRefs(data)
 <template>
   <div class="hover-scroll">
     <div class="w-full h-full relative">
-      <drag v-if="showCards.includes('v2ex')" name="v2ex">
+      <Drag v-if="showCards.includes('v2ex')" name="v2ex">
         <V2exCard />
-      </drag>
-      <drag v-if="showCards.includes('taptap')" name="taptap">
+      </Drag>
+      <Drag v-if="showCards.includes('taptap')" name="taptap">
         <TapTapCard />
-      </drag>
-      <drag v-if="showCards.includes('wakatime')" name="wakatime">
+      </Drag>
+      <Drag v-if="showCards.includes('wakatime')" name="wakatime">
         <WakaTimeCard />
-      </drag>
-      <drag v-if="showCards.includes('weather')" name="weather">
+      </Drag>
+      <Drag v-if="showCards.includes('weather')" name="weather">
         <WeatherCard />
-      </drag>
-      <drag v-if="showCards.includes('now')" name="now">
+      </Drag>
+      <Drag v-if="showCards.includes('now')" name="now">
         <NowCard />
-      </drag>
-      <drag v-if="showCards.includes('activity')" name="activity">
+      </Drag>
+      <Drag v-if="showCards.includes('activity')" name="activity">
         <ActivityCard />
-      </drag>
-      <drag v-if="showCards.includes('one')" name="one">
+      </Drag>
+      <Drag v-if="showCards.includes('one')" name="one">
         <OneCard />
-      </drag>
-      <drag v-if="showCards.includes('system-info')" name="system-info" :show-scroll="false">
+      </Drag>
+      <Drag v-if="showCards.includes('system-info')" name="system-info" :show-scroll="false">
         <SystemCard />
-      </drag>
+      </Drag>
     </div>
   </div>
 </template>

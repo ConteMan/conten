@@ -1,5 +1,5 @@
+import RequestCache from '@main/services/requestCache'
 import { getWeather as cmaWeather } from './cma'
-import RequestCache from '~/main/services/requestCache'
 
 /**
  * 获取天气数据

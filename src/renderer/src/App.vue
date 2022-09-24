@@ -73,7 +73,7 @@ watch(isDark, (dark) => {
 </script>
 
 <template>
-  <n-config-provider
+  <NConfigProvider
     class="config-container"
     :theme="data.theme"
     :theme-overrides="data.theme ? darkThemeOverrides : themeOverrides"
@@ -86,5 +86,5 @@ watch(isDark, (dark) => {
       </n-message-provider>
     </n-notification-provider>
     <n-global-style />
-  </n-config-provider>
+  </NConfigProvider>
 </template>

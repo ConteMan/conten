@@ -20,12 +20,12 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: '@renderer/',
-        replacement: `${r('src/renderer/src')}/`,
-      },
-      {
         find: '@main/',
         replacement: `${r('src/main')}/`,
+      },
+      {
+        find: '@renderer/',
+        replacement: `${r('src/renderer/src')}/`,
       },
     ],
   },

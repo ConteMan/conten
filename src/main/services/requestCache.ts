@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import RequestCacheModel from '~/main/models/requestCache'
+import RequestCacheModel from '@main/models/requestCache'
 
 class RequestCache {
   /**

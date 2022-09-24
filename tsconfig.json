@@ -18,14 +18,11 @@
       "./types/global.d.ts"
     ],
     "paths": {
-      "~/*": [
-        "src/*"
+      "@main/*": [
+        "src/main/*"
       ],
       "@renderer/*": [
         "src/renderer/src/*"
-      ],
-      "@main/*": [
-        "src/main/*"
       ]
     }
   }
