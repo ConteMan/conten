@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: contea-desktop-3
+productName: Contea
 directories:
   buildResources: build
 files:
