@@ -88,28 +88,6 @@
         "node": ">=12"
       }
     },
-    "got": {
-      "versionDefault": "^11.8.5",
-      "version": "11.8.5",
-      "resolved": "https://registry.npmmirror.com/got/-/got-11.8.5.tgz",
-      "integrity": "sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==",
-      "dependencies": {
-        "@sindresorhus/is": "^4.0.0",
-        "@szmarczak/http-timer": "^4.0.5",
-        "@types/cacheable-request": "^6.0.1",
-        "@types/responselike": "^1.0.0",
-        "cacheable-lookup": "^5.0.3",
-        "cacheable-request": "^7.0.2",
-        "decompress-response": "^6.0.0",
-        "http2-wrapper": "^1.0.0-beta.5.2",
-        "lowercase-keys": "^2.0.0",
-        "p-cancelable": "^2.0.0",
-        "responselike": "^2.0.0"
-      },
-      "engines": {
-        "node": ">=10.19.0"
-      }
-    },
     "koa": {
       "versionDefault": "^2.13.4",
       "version": "2.13.4",
@@ -191,15 +169,6 @@
       },
       "engines": {
         "node": ">=6"
-      }
-    },
-    "remove": {
-      "versionDefault": "^0.1.5",
-      "version": "0.1.5",
-      "resolved": "https://registry.npmmirror.com/remove/-/remove-0.1.5.tgz",
-      "integrity": "sha512-AJMA9oWvJzdTjwIGwSQZsjGQiRx73YTmiOWmfCp1fpLa/D4n7jKcpoA+CZiVLJqKcEKUuh1Suq80c5wF+L/qVQ==",
-      "dependencies": {
-        "seq": ">= 0.3.5"
       }
     },
     "sequelize": {

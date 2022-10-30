@@ -8,8 +8,8 @@ const Axios: AxiosType = require('axios').default
 
 class System {
   /**
- * 定时任务
- */
+   * 定时任务
+   */
   async schedule() {
     await checkTask()
     await this.relaunchByMemory()
@@ -69,7 +69,7 @@ class System {
    */
   async relaunchByMemory() {
     try {
-      const limitMemory = 200
+      const limitMemory = 1000
       const memory = await process.getProcessMemoryInfo()
       // eslint-disable-next-line no-console
       console.log('>>> services >> system >> relaunchByMemory', memory.private > limitMemory * 1024)

@@ -1,4 +1,5 @@
 import { KEYS } from '@main/enums/scheduleEnum'
+
 interface ScheduleListItem {
   name: string
   key: string

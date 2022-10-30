@@ -596,7 +596,7 @@ async function messageInit() {
       }
       case 'kv': { // 根据键获取值
         try {
-          const { key } = apiData
+          const { key = '' } = apiData
           if (!key)
             return false
           return await RequestCache.get(key, true)
