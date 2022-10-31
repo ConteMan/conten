@@ -1,6 +1,9 @@
 import { app } from 'electron'
 import ElectronStore from 'electron-store'
 
+/**
+ * 配置文件名
+ */
 export enum StoreName {
   APP = 'contea',
   DEFAULT = 'default',
