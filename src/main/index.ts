@@ -1,7 +1,7 @@
 import { BrowserWindow, app } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import ipc from '../preload/ipc'
-import { WindowsMain } from './windows'
+import { WindowsMain } from './app/windows'
 
 function createWindow(): void {
   // Create the browser window.

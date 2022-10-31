@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { WindowsMain } from '../main/windows'
+import { WindowsMain } from '../main/app/windows'
 import type {
   PreloadBackColorOptions,
   PreloadOptions,

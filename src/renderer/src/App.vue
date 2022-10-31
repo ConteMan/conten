@@ -3,6 +3,7 @@ import Versions from './components/Versions.vue'
 </script>
 
 <template>
+  <div class="drag" style="position: fixed; width: 100vw;height: 16px;top: 0; left: 0;" />
   <Versions />
 
   <svg class="hero-logo" viewBox="0 0 900 300">
