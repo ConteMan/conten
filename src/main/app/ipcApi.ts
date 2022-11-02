@@ -3,17 +3,24 @@ import { ipcMain } from 'electron'
 
 export function ipcApiInit() {
   ipcMain.handle('api', async (_event, data) => {
-    const { name, args = undefined } = data
+    const { name, args } = data
 
-    const api = {
-      // 条目
-      subjectList: Subject.list(args),
-      subjectTypes: Subject.types(),
-      subjectStatuses: Subject.statuses(),
-    }
+    if (!name)
+      return false
 
-    if (api[name])
-      return await api[name]
+    // 条目
+    const subjectApi = [
+      ['subjectList', Subject.list(args)],
+      ['subjectTypes', Subject.types()],
+      ['subjectStatuses', Subject.statuses()],
+    ]
+
+    const apiMap = new Map([
+      ...subjectApi,
+    ] as Iterable<[string, any]>)
+
+    if (apiMap.has(name))
+      return await apiMap.get(name)
 
     return false
   })
