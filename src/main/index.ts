@@ -1,8 +1,10 @@
 import { BrowserWindow, app } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import ipc from '../preload/ipc'
+
 import { WindowsMain } from './app/windows'
 import { sync as SqliteSync } from './app/dbSqlite3'
+import { ipcApiInit } from './app/ipcApi'
 
 function createWindow(): void {
   // Create the browser window.
@@ -16,7 +18,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.isconte')
+  electronApp.setAppUserModelId('me.conteman.contea')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -27,7 +29,10 @@ app.whenReady().then(async () => {
 
   await createWindow()
 
+  // 数据库初始化
   await SqliteSync()
+  // 主线程接口初始化
+  await ipcApiInit()
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

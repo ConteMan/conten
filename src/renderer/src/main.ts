@@ -1,4 +1,12 @@
+import '@unocss/reset/normalize.css'
+import 'uno.css'
+import './assets/css/styles.less'
+
 import { createApp } from 'vue'
+import router from './router'
+
 import App from './App.vue'
 
-createApp(App).mount('#app')
+createApp(App)
+  .use(router)
+  .mount('#app')

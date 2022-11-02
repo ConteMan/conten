@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 import DB, { DBType } from '../app/db'
 
-const Subject = DB.getDB(DBType.SQLITE3)?.define('subject', {
+const Subject = DB.getDB(DBType.SQLITE3).define('subject', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

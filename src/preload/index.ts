@@ -1,4 +1,4 @@
-import { clipboard, contextBridge, ipcRenderer } from 'electron'
+import { clipboard, contextBridge, ipcRenderer, shell } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 import type {
@@ -8,6 +8,27 @@ import type {
   PreloadStatusOptions,
   PreloadUrlOptions,
 } from './type'
+
+// `exposeInMainWorld` can not detect `prototype` attribute and methods, manually patch it.
+function withPrototype(obj: Record<string, any>) {
+  const protos = Object.getPrototypeOf(obj)
+
+  for (const [key, value] of Object.entries(protos)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key))
+      continue
+
+    if (typeof value === 'function') {
+      // Some native API not work in Renderer-process, like `NodeJS.EventEmitter['on']`. Wrap a function patch it.
+      obj[key] = function (...args: any) {
+        return value.call(obj, ...args)
+      }
+    }
+    else {
+      obj[key] = value
+    }
+  }
+  return obj
+}
 
 // Custom APIs for renderer
 const api = {
@@ -35,6 +56,7 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('shell', withPrototype(shell))
   }
   catch (error) {
     console.error(error)
@@ -45,4 +67,6 @@ else {
   window.electron = electronAPI
   // @ts-expect-error (define in dts)
   window.api = api
+  // @ts-expect-error (define in dts)
+  window.shell = withPrototype(shell)
 }

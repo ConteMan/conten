@@ -34,7 +34,8 @@ class DB {
   }
 
   getDB(type = DBType.SQLITE3) {
-    return this.DBMap.get(type)
+    // 保证初始化后再获取
+    return this.DBMap.get(type) as Sequelize
   }
 
   async initSqlite3() {
