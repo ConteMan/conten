@@ -69,6 +69,18 @@ class Store {
       return false
     return appStore.get(key)
   }
+
+  /**
+   * 设置配置
+   * @param key - 键名
+   * @param value - 值
+   */
+  setConf(key: string, value: string, storeName = StoreName.DEFAULT) {
+    const appStore = this.StoreMap.get(storeName)
+    if (!appStore)
+      return false
+    return appStore.set(key, value)
+  }
 }
 
 export default new Store()

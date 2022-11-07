@@ -1,17 +1,21 @@
 import { BrowserWindow, app } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import ipc from '../preload/ipc'
-import { WINDOW_NAME } from './constants'
+import { WINDOW_NAME, WINDOW_STORE_KEY } from './constants'
 
 import { WindowsMain } from './app/windows'
 import { sync as SqliteSync } from './app/dbSqlite3'
 import { ipcApiInit } from './app/ipcApi'
 import { shortcutInit } from './app/shortcut'
+import Store from './app/store'
 
-function createWindow(): void {
-  // Create the browser window.
+function createAppWindow(): void {
+  let windowOption = { module: WINDOW_NAME.APP }
+  const winStore = Store.getConf(WINDOW_STORE_KEY.BOUNDS)
+  if (winStore)
+    windowOption = { ...windowOption, ...winStore }
   const windowMain = WindowsMain.getInstance()
-  windowMain.newWindow({ module: WINDOW_NAME.APP })
+  windowMain.newWindow(windowOption)
   ipc()
 }
 
@@ -29,7 +33,7 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  await createWindow()
+  await createAppWindow()
 
   await SqliteSync() // 数据库初始化
   await ipcApiInit() // 主线程接口初始化
@@ -39,7 +43,7 @@ app.whenReady().then(async () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0)
-      createWindow()
+      createAppWindow()
   })
 })
 

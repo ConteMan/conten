@@ -1,12 +1,16 @@
 import * as path from 'path'
 import { BrowserWindow, app, shell } from 'electron'
 import { is } from '@electron-toolkit/utils'
-import { WINDOW_NAME } from '@main/constants'
+import _ from 'lodash'
+import { WINDOW_NAME, WINDOW_STORE_KEY } from '@main/constants'
+import Store from './store'
 
 export interface CreateWindowOptions {
   module: string
   center?: boolean
   url?: string
+  x?: number
+  y?: number
   width?: number
   height?: number
   maximizable?: boolean
@@ -77,17 +81,19 @@ export class WindowsMain {
       win?.focus()
       return win!
     }
+
     options.url = options.url || ''
     options.width = options.width || 990
     options.height = options.height || 570
     options.maximizable = options.maximizable !== undefined ? options.maximizable : true
     const currentWindow = BrowserWindow.getFocusedWindow()
-    const coord: { x: number | undefined; y: number | undefined } = { x: undefined, y: undefined }
+    const coord: { x: number | undefined; y: number | undefined } = { x: options.x ?? undefined, y: options.y ?? undefined }
     if (currentWindow && !options.center) {
       const [currentWindowX, currentWindowY] = currentWindow.getPosition()
       coord.x = currentWindowX + 15
       coord.y = currentWindowY + 15
     }
+
     const mainWindow = new BrowserWindow({
       width: options.width,
       height: options.height,
@@ -138,6 +144,21 @@ export class WindowsMain {
       shell.openExternal(details.url)
       return { action: 'deny' }
     })
+
+    function storeBound() {
+      const store = Store.getStore()
+      if (store)
+        store.set(WINDOW_STORE_KEY.BOUNDS, mainWindow.getNormalBounds())
+    }
+
+    mainWindow.on('resize', _.debounce(() => {
+      storeBound()
+    }, 150))
+
+    mainWindow.on('move', _.debounce(() => {
+      storeBound()
+    }, 150))
+
     // HMR for renderer base on electron-vite cli.
     // Load the remote URL for development or the local html file for production.
     if (is.dev && process.env.ELECTRON_RENDERER_URL) {
