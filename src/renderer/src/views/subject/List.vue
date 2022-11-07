@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { vInfiniteScroll } from '@vueuse/components'
+import { API } from '@constants/index'
 import { ipcApi } from '@renderer/api'
 
 const data = reactive({
@@ -17,8 +18,8 @@ const data = reactive({
 const { listTypes, listStatuses, type, status, list, total, pageSize, hasMore } = toRefs(data)
 
 const getConst = async () => {
-  data.listTypes = await ipcApi({ name: 'subjectTypes' })
-  data.listStatuses = await ipcApi({ name: 'subjectStatuses' })
+  data.listTypes = await ipcApi({ name: API.SUBJECT_TYPES })
+  data.listStatuses = await ipcApi({ name: API.SUBJECT_STATUSES })
 }
 getConst()
 

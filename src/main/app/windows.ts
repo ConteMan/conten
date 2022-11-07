@@ -16,6 +16,11 @@ export interface winModule {
   url: string
 }
 
+export interface PinTopParams {
+  moduleName: string
+  status: boolean
+}
+
 export class WindowsMain {
   BrowserWindowsMap = new Map<number, BrowserWindow>()
   winModulesMap = new Map<string, winModule>()
@@ -34,6 +39,11 @@ export class WindowsMain {
     return this.BrowserWindowsMap.get(winId)
   }
 
+  getWinByModule(moduleName: string) {
+    const winInfo = this.winModulesMap.get(moduleName)
+    return winInfo ? this.BrowserWindowsMap.get(winInfo.id) : false
+  }
+
   detWin(winId: number) {
     const win = this.BrowserWindowsMap.get(winId)
     try {
@@ -50,7 +60,18 @@ export class WindowsMain {
       }
       win?.close()
     }
-    catch (error) {}
+    catch (e) {}
+  }
+
+  detWinByModule(moduleName: string) {
+    const winInfo = this.winModulesMap.get(moduleName)
+    if (winInfo) {
+      this.winModulesMap.delete(moduleName)
+      const winId = winInfo.id
+      const win = this.BrowserWindowsMap.get(winId)
+      this.BrowserWindowsMap.delete(winId)
+      win?.close()
+    }
   }
 
   newWindow(options: CreateWindowOptions): BrowserWindow {
@@ -137,4 +158,21 @@ export class WindowsMain {
     this.winModulesMap.set(options.module, { id: mainWindow.id, url: options.url || '' })
     return mainWindow
   }
+}
+
+/**
+ * 窗口置顶
+ * @param moduleName - 窗口模块名
+ * @param status - 是否置顶
+ */
+export const pinTop = (args: PinTopParams) => {
+  const { moduleName = '', status = undefined } = args
+  const windowMain = WindowsMain.getInstance()
+  const win = windowMain.getWinByModule(moduleName)
+  if (win) {
+    const isOnTop = win.isAlwaysOnTop()
+    win.setAlwaysOnTop(status ?? !isOnTop)
+    return win.isAlwaysOnTop()
+  }
+  return false
 }

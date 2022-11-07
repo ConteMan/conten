@@ -1,5 +1,8 @@
-import Subject from '@main/modules/subject'
 import { ipcMain } from 'electron'
+import { API } from '@main/constants/index'
+
+import Subject from '@main/modules/subject'
+import { pinTop } from '@main/app/windows'
 
 export function ipcApiInit() {
   ipcMain.handle('api', async (_event, data) => {
@@ -8,19 +11,19 @@ export function ipcApiInit() {
     if (!name)
       return false
 
-    // 条目
-    const subjectApi = [
-      ['subjectList', Subject.list(args)],
-      ['subjectTypes', Subject.types()],
-      ['subjectStatuses', Subject.statuses()],
-    ]
-
     const apiMap = new Map([
-      ...subjectApi,
+      // 条目
+      [API.SUBJECT_LIST, Subject.list(args)],
+      [API.SUBJECT_TYPES, Subject.types()],
+      [API.SUBJECT_STATUSES, Subject.statuses()],
     ] as Iterable<[string, any]>)
 
     if (apiMap.has(name))
       return await apiMap.get(name)
+
+    // 窗口
+    if (name === API.WINDOW_PIN_TOP)
+      return pinTop(args)
 
     return false
   })

@@ -1,6 +1,7 @@
 import { BrowserWindow, app } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import ipc from '../preload/ipc'
+import { WINDOW_NAME } from './constants'
 
 import { WindowsMain } from './app/windows'
 import { sync as SqliteSync } from './app/dbSqlite3'
@@ -9,7 +10,7 @@ import { ipcApiInit } from './app/ipcApi'
 function createWindow(): void {
   // Create the browser window.
   const windowMain = WindowsMain.getInstance()
-  windowMain.newWindow({ module: 'app' })
+  windowMain.newWindow({ module: WINDOW_NAME.APP })
   ipc()
 }
 

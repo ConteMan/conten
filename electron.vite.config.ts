@@ -2,8 +2,7 @@ import { resolve } from 'path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import vue from '@vitejs/plugin-vue'
 import Unocss from 'unocss/vite'
-import presetAttributify from '@unocss/preset-attributify'
-import presetIcons from '@unocss/preset-icons'
+import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -36,18 +35,14 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
+        '@constants': resolve('src/main/constants'),
       },
     },
     plugins: [
       vue({
         reactivityTransform: true,
       }),
-      Unocss({
-        presets: [
-          presetAttributify(),
-          presetIcons(),
-        ],
-      }),
+      Unocss(),
       AutoImport({
         imports: [
           'vue',
@@ -64,6 +59,10 @@ export default defineConfig({
             componentPrefix: '',
           }),
         ],
+      }),
+      Icons({
+        autoInstall: true,
+        compiler: 'vue3',
       }),
     ],
   },

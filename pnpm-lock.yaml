@@ -5,6 +5,7 @@ specifiers:
   '@electron-toolkit/preload': ^1.0.2
   '@electron-toolkit/tsconfig': ^1.0.1
   '@electron-toolkit/utils': ^1.0.2
+  '@iconify-json/mdi': ^1.1.33
   '@rushstack/eslint-patch': ^1.2.0
   '@types/node': 16.11.22
   '@types/sqlite3': ^3.1.8
@@ -49,6 +50,7 @@ dependencies:
 devDependencies:
   '@antfu/eslint-config': 0.27.0_wyqvi574yv7oiwfeinomdzmc3m
   '@electron-toolkit/tsconfig': 1.0.1_@types+node@16.11.22
+  '@iconify-json/mdi': 1.1.33
   '@rushstack/eslint-patch': 1.2.0
   '@types/node': 16.11.22
   '@types/sqlite3': 3.1.8
@@ -523,6 +525,12 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    dev: true
+
+  /@iconify-json/mdi/1.1.33:
+    resolution: {integrity: sha512-P8zIjwYvQ6SsmHc02O4oNV3jsqbL4bXcfKSt9MfCPMBvF9CLzz6QHMzQgt/Okgsb8wfhkfSQeREp+dSxV9pLRA==}
+    dependencies:
+      '@iconify/types': 2.0.0
     dev: true
 
   /@iconify/types/2.0.0:

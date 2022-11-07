@@ -5,7 +5,8 @@
     "src/main/**/**.ts",
     "src/preload/*",
     "src/main/app/**/**.ts",
-    "src/main/models/**/**.ts"
+    "src/main/models/**/**.ts",
+    "src/main/constants/**/**.ts"
   ],
   "compilerOptions": {
     "composite": true,
