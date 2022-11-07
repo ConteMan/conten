@@ -4,4 +4,6 @@ export enum API {
   SUBJECT_LIST = 'subjectList',
   SUBJECT_TYPES = 'subjectTypes',
   SUBJECT_STATUSES = 'subjectStatuses',
+
+  GET_STORE = 'getStore',
 }

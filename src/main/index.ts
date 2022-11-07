@@ -1,8 +1,9 @@
 import { BrowserWindow, app } from 'electron'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import ipc from '../preload/ipc'
+import type { CreateWindowOptions } from './app/windows'
+import type { StoreWin } from './types'
 import { WINDOW_NAME, WINDOW_STORE_KEY } from './constants'
-
 import { WindowsMain } from './app/windows'
 import { sync as SqliteSync } from './app/dbSqlite3'
 import { ipcApiInit } from './app/ipcApi'
@@ -10,10 +11,10 @@ import { shortcutInit } from './app/shortcut'
 import Store from './app/store'
 
 function createAppWindow(): void {
-  let windowOption = { module: WINDOW_NAME.APP }
-  const winStore = Store.getConf(WINDOW_STORE_KEY.BOUNDS)
+  let windowOption: CreateWindowOptions = { module: WINDOW_NAME.APP }
+  const winStore = Store.getConf(WINDOW_STORE_KEY.ROOT) as StoreWin
   if (winStore)
-    windowOption = { ...windowOption, ...winStore }
+    windowOption = { ...windowOption, ...winStore.bounds, alwaysOnTop: winStore.pinTop }
   const windowMain = WindowsMain.getInstance()
   windowMain.newWindow(windowOption)
   ipc()

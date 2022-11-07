@@ -3,6 +3,7 @@ import { API } from '@main/constants/index'
 
 import Subject from '@main/modules/subject'
 import { pinTop } from '@main/app/windows'
+import Store from './store'
 
 export function ipcApiInit() {
   ipcMain.handle('api', async (_event, data) => {
@@ -24,6 +25,12 @@ export function ipcApiInit() {
     // 窗口
     if (name === API.WINDOW_PIN_TOP)
       return pinTop(args)
+
+    // 获取应用配置
+    if (name === API.GET_STORE) {
+      const { key } = args
+      return Store.getConf(key)
+    }
 
     return false
   })

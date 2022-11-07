@@ -5,4 +5,5 @@ export enum WINDOW_NAME {
 export enum WINDOW_STORE_KEY {
   ROOT = 'win',
   BOUNDS = 'win.bounds',
+  PIN_TOP = 'win.pinTop',
 }

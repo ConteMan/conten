@@ -13,6 +13,7 @@ export interface CreateWindowOptions {
   y?: number
   width?: number
   height?: number
+  alwaysOnTop?: boolean
   maximizable?: boolean
 }
 
@@ -85,6 +86,7 @@ export class WindowsMain {
     options.url = options.url || ''
     options.width = options.width || 990
     options.height = options.height || 570
+    options.alwaysOnTop = options.alwaysOnTop || false
     options.maximizable = options.maximizable !== undefined ? options.maximizable : true
     const currentWindow = BrowserWindow.getFocusedWindow()
     const coord: { x: number | undefined; y: number | undefined } = { x: options.x ?? undefined, y: options.y ?? undefined }
@@ -100,6 +102,7 @@ export class WindowsMain {
       show: false,
       frame: false,
       ...coord,
+      alwaysOnTop: options.alwaysOnTop,
       center: options.center,
       maximizable: options.maximizable,
       autoHideMenuBar: true,
@@ -198,7 +201,12 @@ export const pinTop = (args: PinTopParams = { moduleName: WINDOW_NAME.APP, statu
   if (win) {
     const isOnTop = win.isAlwaysOnTop()
     win.setAlwaysOnTop(status ?? !isOnTop)
-    return win.isAlwaysOnTop()
+
+    const resIsOnTop = win.isAlwaysOnTop()
+    const store = Store.getStore()
+    if (store)
+      store.set(WINDOW_STORE_KEY.PIN_TOP, resIsOnTop)
+    return resIsOnTop
   }
   return false
 }
