@@ -1,6 +1,7 @@
 import * as path from 'path'
 import { BrowserWindow, app, shell } from 'electron'
 import { is } from '@electron-toolkit/utils'
+import { WINDOW_NAME } from '@main/constants'
 
 export interface CreateWindowOptions {
   module: string
@@ -14,11 +15,6 @@ export interface CreateWindowOptions {
 export interface winModule {
   id: number
   url: string
-}
-
-export interface PinTopParams {
-  moduleName: string
-  status: boolean
 }
 
 export class WindowsMain {
@@ -160,19 +156,58 @@ export class WindowsMain {
   }
 }
 
+export interface PinTopParams {
+  moduleName: string
+  status?: boolean
+}
+
 /**
  * 窗口置顶
- * @param moduleName - 窗口模块名
- * @param status - 是否置顶
+ * @param args
+ * - @param moduleName - 窗口模块名
+ * - @param status - 是否置顶
  */
-export const pinTop = (args: PinTopParams) => {
-  const { moduleName = '', status = undefined } = args
+export const pinTop = (args: PinTopParams = { moduleName: WINDOW_NAME.APP, status: undefined }) => {
+  const { moduleName, status } = args
+  if (!moduleName)
+    return false
+
   const windowMain = WindowsMain.getInstance()
   const win = windowMain.getWinByModule(moduleName)
   if (win) {
     const isOnTop = win.isAlwaysOnTop()
     win.setAlwaysOnTop(status ?? !isOnTop)
     return win.isAlwaysOnTop()
+  }
+  return false
+}
+
+export type ShowAppParams = PinTopParams
+
+/**
+ * 窗口显隐
+ * @param args
+ * - @param moduleName - 窗口模块名
+ * - @param status - 是否显示
+ */
+export const showApp = (args: ShowAppParams = { moduleName: WINDOW_NAME.APP, status: undefined }) => {
+  const { moduleName } = args
+  if (!moduleName)
+    return false
+
+  const windowMain = WindowsMain.getInstance()
+  const win = windowMain.getWinByModule(moduleName)
+  if (win) {
+    if (win.isVisible()) {
+      if (win.isFocused())
+        win.hide()
+      else
+        win.show()
+    }
+    else {
+      win.show()
+    }
+    return true
   }
   return false
 }

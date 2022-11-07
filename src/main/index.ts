@@ -6,6 +6,7 @@ import { WINDOW_NAME } from './constants'
 import { WindowsMain } from './app/windows'
 import { sync as SqliteSync } from './app/dbSqlite3'
 import { ipcApiInit } from './app/ipcApi'
+import { shortcutInit } from './app/shortcut'
 
 function createWindow(): void {
   // Create the browser window.
@@ -30,10 +31,9 @@ app.whenReady().then(async () => {
 
   await createWindow()
 
-  // 数据库初始化
-  await SqliteSync()
-  // 主线程接口初始化
-  await ipcApiInit()
+  await SqliteSync() // 数据库初始化
+  await ipcApiInit() // 主线程接口初始化
+  await shortcutInit() // 注册全局快捷键
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
