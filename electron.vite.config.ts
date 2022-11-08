@@ -47,6 +47,9 @@ export default defineConfig({
         imports: [
           'vue',
           '@vueuse/core',
+          {
+            pinia: ['storeToRefs'],
+          },
         ],
         dirs: [resolve('src/renderer/src')],
         dts: resolve('src/renderer/src/auto-imports.d.ts'),

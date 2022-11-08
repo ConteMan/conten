@@ -71,13 +71,13 @@ const openInDouban = (type: string, id: string | number) => {
 </script>
 
 <template>
-  <div class="flex-grow flex flex-col">
-    <div class="flex-shrink-0 flex-grow-0 px-8 pb-6">
+  <div>
+    <div class="pb-2 px-8">
       <div class="flex gap-4">
         <span
           v-for="item in listTypes" :key="item"
           :class="{ 'text-red-400 font-bold': item === type }"
-          class="cursor-pointer"
+          class="cursor-pointer uppercase"
           @click="changeType(item)"
         >
           {{ item }}
@@ -87,7 +87,7 @@ const openInDouban = (type: string, id: string | number) => {
         <span
           v-for="item in listStatuses" :key="item"
           :class="{ 'text-red-400 font-bold': item === status }"
-          class="cursor-pointer"
+          class="cursor-pointer uppercase"
           @click="changeStatus(item)"
         >
           {{ item }}
@@ -96,7 +96,7 @@ const openInDouban = (type: string, id: string | number) => {
     </div>
     <div
       v-infinite-scroll="[loadMore, { distance: 10 }]"
-      class="flex-grow py-2 px-8 flex-grow flex flex-col gap-2 overflow-y-scroll"
+      class="py-2 px-8 flex flex-col gap-2 overflow-auto"
     >
       <template v-if="total && list.length">
         <div

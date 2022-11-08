@@ -10,7 +10,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/subject',
     name: 'Subject',
-    component: () => import('../views/subject/List.vue'),
+    component: () => import('../views/subject/Subject.vue'),
+    meta: { title: '', keepAlive: false },
+  },
+  {
+    path: '/setting',
+    name: 'Setting',
+    component: () => import('../views/setting/Setting.vue'),
     meta: { title: '', keepAlive: false },
   },
 ]
