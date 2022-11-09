@@ -11,9 +11,6 @@ export const shortcutInit = () => {
     [SHORTCUTS.APP_VISIBLE, 'Alt+X'],
   ] as Iterable<[string, string]>)
 
-  // eslint-disable-next-line no-console
-  console.log('[ shortcutMap ] >', shortcutMap)
-
   try {
     shortcutMap.forEach((val, key) => {
       const shortcutKey = shortcutKeyMap.get(key)

@@ -46,6 +46,7 @@ export default defineConfig({
       AutoImport({
         imports: [
           'vue',
+          'vue-router',
           '@vueuse/core',
           {
             pinia: ['storeToRefs'],
@@ -55,7 +56,10 @@ export default defineConfig({
         dts: resolve('src/renderer/src/auto-imports.d.ts'),
       }),
       Components({
-        dirs: [resolve('src/renderer/src/components')],
+        dirs: [
+          resolve('src/renderer/src/components'),
+          resolve('src/renderer/src/layout'),
+        ],
         dts: resolve('src/renderer/src/components.d.ts'),
         resolvers: [
           IconsResolver({

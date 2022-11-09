@@ -12,10 +12,12 @@ const data = reactive({
   type: 'movie',
   status: 'collect',
   page: 1,
-  pageSize: 100,
+  pageSize: 50,
   hasMore: true,
+
+  listSign: true,
 })
-const { listTypes, listStatuses, type, status, list, total, pageSize, hasMore } = toRefs(data)
+const { listTypes, listStatuses, type, status, list, total, pageSize, hasMore, listSign } = toRefs(data)
 
 const getConst = async () => {
   data.listTypes = await ipcApi({ name: API.SUBJECT_TYPES })
@@ -23,7 +25,7 @@ const getConst = async () => {
 }
 getConst()
 
-const getList = async () => {
+const getList = async (append = true) => {
   const res = await ipcApi({
     name: 'subjectList',
     args: {
@@ -35,8 +37,15 @@ const getList = async () => {
   })
   if (res) {
     data.hasMore = !(res.rows.length < pageSize.value)
-
-    data.list = [...data.list, ...res.rows]
+    if (append) {
+      data.list = [...data.list, ...res.rows]
+    }
+    else {
+      data.listSign = !data.listSign
+      if (data.list.length > data.pageSize)
+        data.list = []
+      data.list = res.rows
+    }
     data.total = res.count
   }
 }
@@ -54,14 +63,12 @@ const loadMore = async () => {
 const changeType = async (type: string) => {
   data.type = type
   data.page = 1
-  data.list = []
-  await getList()
+  await getList(false)
 }
 const changeStatus = async (status: string) => {
   data.status = status
   data.page = 1
-  data.list = []
-  await getList()
+  await getList(false)
 }
 
 const openInDouban = (type: string, id: string | number) => {
@@ -99,19 +106,40 @@ const openInDouban = (type: string, id: string | number) => {
       class="py-2 px-8 flex flex-col gap-2 overflow-auto"
     >
       <template v-if="total && list.length">
-        <div
-          v-for="item in list" :key="item.id"
-          class="c-list-item text-xs"
-        >
-          <div>
-            <span
-              class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
-              @click="openInDouban(data.type, JSON.parse(item.douban_data).id)"
+        <template v-if="listSign">
+          <TransitionGroup name="list" appear>
+            <div
+              v-for="item in list" :key="item.id"
+              class="c-list-item text-xs"
             >
-              {{ item.name }}
-            </span>
-          </div>
-        </div>
+              <div>
+                <span
+                  class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                  @click="openInDouban(data.type, JSON.parse(item.douban_data).id)"
+                >
+                  {{ item.name }}
+                </span>
+              </div>
+            </div>
+          </TransitionGroup>
+        </template>
+        <template v-else>
+          <TransitionGroup name="list" appear>
+            <div
+              v-for="item in list" :key="item.id"
+              class="c-list-item text-xs"
+            >
+              <div>
+                <span
+                  class="cursor-pointer hover:(underline decoration-2 underline-offset-2)"
+                  @click="openInDouban(data.type, JSON.parse(item.douban_data).id)"
+                >
+                  {{ item.name }}
+                </span>
+              </div>
+            </div>
+          </TransitionGroup>
+        </template>
       </template>
     </div>
   </div>
@@ -120,5 +148,13 @@ const openInDouban = (type: string, id: string | number) => {
 <style>
 .c-list-item:hover .hover-show{
   visibility: visible;
+}
+.list-enter-active {
+  transition: opacity 0.8s linear;
+}
+.list-enter-from,
+.list-leave-to,
+.list-leave-from {
+  opacity: 0;
 }
 </style>

@@ -11,13 +11,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/subject',
     name: 'Subject',
     component: () => import('../views/subject/Subject.vue'),
-    meta: { title: '', keepAlive: false },
+    meta: {
+      title: '条目',
+      keepAlive: false,
+      menu: true,
+    },
   },
   {
     path: '/setting',
     name: 'Setting',
     component: () => import('../views/setting/Setting.vue'),
-    meta: { title: '', keepAlive: false },
+    meta: {
+      title: '设置',
+      keepAlive: false,
+      menu: true,
+    },
   },
 ]
 
