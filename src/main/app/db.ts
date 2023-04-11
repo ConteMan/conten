@@ -1,6 +1,7 @@
-import * as path from 'path'
+import * as path from 'node:path'
+import { app } from 'electron'
 import { Sequelize } from 'sequelize'
-import Store from './store'
+import Store from '@main/app/store'
 
 export const CONFIG = {
   key: {
@@ -39,7 +40,7 @@ class DB {
   }
 
   async initSqlite3() {
-    await this.sqlite3Connect()
+    this.sqlite3Connect()
   }
 
   sqlite3Connect() {
@@ -48,7 +49,7 @@ class DB {
       if (!store)
         return false
 
-      const pathDir = store.get(CONFIG.key.sqlite3_path) as string | false ?? false
+      const pathDir = store.get(CONFIG.key.sqlite3_path) as string | undefined ?? app.getPath('userData')
       if (!pathDir)
         return false
 

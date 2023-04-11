@@ -1,5 +1,2 @@
-import type { StoreWin } from './store'
-
-export {
-  StoreWin,
-}
+export * from './store'
+export * from './window'

@@ -1,13 +1,13 @@
-import RequestCacheModel from '../models/requestCache'
-import ConfigModel from '../models/config'
-import TaskModel from '../models/task'
-import InfoModel from '../models/info'
-import LogModel from '../models/log'
-import Migration from '../models/migration'
-import Subject from '../models/subject'
-import Schedule from '../models/schedule'
+import RequestCacheModel from '@main/models/requestCache'
+import ConfigModel from '@main/models/config'
+import TaskModel from '@main/models/task'
+import InfoModel from '@main/models/info'
+import LogModel from '@main/models/log'
+import Migration from '@main/models/migration'
+import Subject from '@main/models/subject'
+import Schedule from '@main/models/schedule'
 
-import DB, { DBType } from './db'
+import DB, { DBType } from '@main/app/db'
 
 export async function sync() {
   try {

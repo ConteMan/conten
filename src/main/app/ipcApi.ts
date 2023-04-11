@@ -1,9 +1,8 @@
 import { ipcMain } from 'electron'
 import { API } from '@main/constants/index'
-
-import Subject from '@main/modules/subject'
 import { pinTop } from '@main/app/windows'
-import Store from './store'
+import Subject from '@main/modules/subject'
+import Store from '@main/app/store'
 
 export function ipcApiInit() {
   ipcMain.handle('api', async (_event, data) => {

@@ -1,31 +1,13 @@
-import * as path from 'path'
-import { BrowserWindow, app, shell } from 'electron'
+import * as path from 'node:path'
+import { BrowserWindow, shell } from 'electron'
 import { is } from '@electron-toolkit/utils'
-import _ from 'lodash'
 import { WINDOW_NAME, WINDOW_STORE_KEY } from '@main/constants'
-import Store from './store'
-
-export interface CreateWindowOptions {
-  module: string
-  center?: boolean
-  url?: string
-  x?: number
-  y?: number
-  width?: number
-  height?: number
-  alwaysOnTop?: boolean
-  maximizable?: boolean
-}
-
-export interface winModule {
-  id: number
-  url: string
-}
+import Store from '@main/app/store'
+import type { CreateWindowOptions, PinTopParams, ShowAppParams, WinModule } from '@main/types'
 
 export class WindowsMain {
   BrowserWindowsMap = new Map<number, BrowserWindow>()
-  winModulesMap = new Map<string, winModule>()
-  constructor() {}
+  winModulesMap = new Map<string, WinModule>()
 
   static instance: WindowsMain
 
@@ -36,16 +18,19 @@ export class WindowsMain {
     return this.instance
   }
 
+  // 获取窗口
   getWin(winId: number) {
     return this.BrowserWindowsMap.get(winId)
   }
 
+  // 根据模块获取窗口
   getWinByModule(moduleName: string) {
     const winInfo = this.winModulesMap.get(moduleName)
     return winInfo ? this.BrowserWindowsMap.get(winInfo.id) : false
   }
 
-  detWin(winId: number) {
+  // 删除窗口
+  delWin(winId: number) {
     const win = this.BrowserWindowsMap.get(winId)
     try {
       if (this.BrowserWindowsMap.size > 1) {
@@ -64,7 +49,8 @@ export class WindowsMain {
     catch (e) {}
   }
 
-  detWinByModule(moduleName: string) {
+  // 根据模块删除窗口
+  delWinByModule(moduleName: string) {
     const winInfo = this.winModulesMap.get(moduleName)
     if (winInfo) {
       this.winModulesMap.delete(moduleName)
@@ -75,6 +61,7 @@ export class WindowsMain {
     }
   }
 
+  // 新建窗口
   newWindow(options: CreateWindowOptions): BrowserWindow {
     if (this.winModulesMap.has(options.module)) {
       const id = this.winModulesMap.get(options.module)!.id
@@ -127,16 +114,28 @@ export class WindowsMain {
       roundedCorners: true,
     })
 
-    if (process.platform === 'darwin')
-      app.dock.setIcon(path.join(__dirname, '../../build/icon.png'))
+    // HMR for renderer base on electron-vite cli.
+    // Load the remote URL for development or the local html file for production.
+    if (is.dev && process.env.ELECTRON_RENDERER_URL) {
+      Store.getStore()?.set('test.winFile', process.env.ELECTRON_RENDERER_URL + options.url)
+
+      mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL + options.url)
+    }
+    else {
+      Store.getStore()?.set('test.winFile', path.join(__dirname, '../renderer/index.html'))
+
+      mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
+    }
 
     mainWindow.on('close', () => {
-      this.detWin(mainWindow.id)
+      this.delWin(mainWindow.id)
     })
 
-    mainWindow.on('ready-to-show', () => {
+    mainWindow.once('ready-to-show', () => {
       // eslint-disable-next-line no-console
       console.log('ready-to-show')
+      Store.getStore()?.set('test.ready-to-show', (is.dev ? 'dev' : 'production') + new Date().getTime())
+
       mainWindow.webContents.executeJavaScript(`window.winViewId=${mainWindow.id}`)
       mainWindow.webContents.executeJavaScript(`window.winViewModule="${options.module}"`)
       mainWindow.show()
@@ -153,36 +152,18 @@ export class WindowsMain {
       if (store)
         store.set(WINDOW_STORE_KEY.BOUNDS, mainWindow.getNormalBounds())
     }
-
-    mainWindow.on('resize', _.debounce(() => {
+    mainWindow.on('resize', () => {
       storeBound()
-    }, 150))
-
-    mainWindow.on('move', _.debounce(() => {
+    })
+    mainWindow.on('move', () => {
       storeBound()
-    }, 150))
-
-    // HMR for renderer base on electron-vite cli.
-    // Load the remote URL for development or the local html file for production.
-    if (is.dev && process.env.ELECTRON_RENDERER_URL) {
-      mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL + options.url)
-    }
-    else {
-      mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'), {
-        hash: options.url,
-        search: `winViewId=${mainWindow.id}`,
-      })
-    }
+    })
 
     this.BrowserWindowsMap.set(mainWindow.id, mainWindow)
     this.winModulesMap.set(options.module, { id: mainWindow.id, url: options.url || '' })
+
     return mainWindow
   }
-}
-
-export interface PinTopParams {
-  moduleName: string
-  status?: boolean
 }
 
 /**
@@ -191,7 +172,7 @@ export interface PinTopParams {
  * - @param moduleName - 窗口模块名
  * - @param status - 是否置顶
  */
-export const pinTop = (args: PinTopParams = { moduleName: WINDOW_NAME.APP, status: undefined }) => {
+export function pinTop(args: PinTopParams = { moduleName: WINDOW_NAME.APP, status: undefined }) {
   const { moduleName, status } = args
   if (!moduleName)
     return false
@@ -211,15 +192,13 @@ export const pinTop = (args: PinTopParams = { moduleName: WINDOW_NAME.APP, statu
   return false
 }
 
-export type ShowAppParams = PinTopParams
-
 /**
  * 窗口显隐
  * @param args
  * - @param moduleName - 窗口模块名
  * - @param status - 是否显示
  */
-export const showApp = (args: ShowAppParams = { moduleName: WINDOW_NAME.APP, status: undefined }) => {
+export function showApp(args: ShowAppParams = { moduleName: WINDOW_NAME.APP, status: undefined }) {
   const { moduleName } = args
   if (!moduleName)
     return false

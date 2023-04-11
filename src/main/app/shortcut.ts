@@ -1,8 +1,8 @@
 import { globalShortcut } from 'electron'
 import { SHORTCUTS } from '@main/constants'
-import { showApp } from './windows'
+import { showApp } from '@main/app/windows'
 
-export const shortcutInit = () => {
+export function shortcutInit() {
   const shortcutMap = new Map([
     [SHORTCUTS.APP_VISIBLE, showApp], // 主界面显示/隐藏
   ] as Iterable<[string, any]>)

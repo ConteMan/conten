@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import vue from '@vitejs/plugin-vue'
 import Unocss from 'unocss/vite'
@@ -12,24 +12,19 @@ export default defineConfig({
     resolve: {
       alias: {
         '@main': resolve('src/main'),
+        '@preload': resolve('src/preload'),
       },
     },
     plugins: [externalizeDepsPlugin()],
-    build: {
-      rollupOptions: {
-        external: [
-          '@electron-toolkit/utils',
-        ],
-      },
-    },
   },
   preload: {
-    plugins: [externalizeDepsPlugin()],
-    build: {
-      rollupOptions: {
-        external: ['@electron-toolkit/preload'],
+    resolve: {
+      alias: {
+        '@main': resolve('src/main'),
+        '@preload': resolve('src/preload'),
       },
     },
+    plugins: [externalizeDepsPlugin()],
   },
   renderer: {
     resolve: {

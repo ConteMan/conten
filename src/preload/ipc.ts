@@ -40,7 +40,7 @@ function WindowAppMinimize() {
 }
 function WindowAppQuit() {
   ipcMain.on('appQuit', (_event, data: PreloadOptions) => {
-    WindowsMain.getInstance().detWin(data.winViewId)
+    WindowsMain.getInstance().delWin(data.winViewId)
   })
 }
 function WindowMinSize() {
