@@ -16,6 +16,9 @@
       ],
       "@preload/*": [
         "./src/preload/*"
+      ],
+      "@constants/*": [
+        "src/main/constants/*"
       ]
     }
   }

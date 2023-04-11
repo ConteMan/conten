@@ -7,6 +7,7 @@ import { ipcApiInit } from '@main/app/ipcApi'
 import { shortcutInit } from '@main/app/shortcut'
 import ipc from '@preload/ipc'
 import Store from '@main/app/store'
+import HttpServer from '@main/modules/server'
 
 import type { CreateWindowOptions, StoreWin } from '@main/types'
 
@@ -33,6 +34,8 @@ app.whenReady().then(async () => {
   SqliteSync() // SQLite 数据库初始化
   shortcutInit() // 注册全局快捷键
   createAppWindow() // 创建窗口
+
+  HttpServer.start()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0)

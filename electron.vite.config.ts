@@ -13,6 +13,7 @@ export default defineConfig({
       alias: {
         '@main': resolve('src/main'),
         '@preload': resolve('src/preload'),
+        '@constants': resolve('src/main/constants'),
       },
     },
     plugins: [externalizeDepsPlugin()],
@@ -22,6 +23,7 @@ export default defineConfig({
       alias: {
         '@main': resolve('src/main'),
         '@preload': resolve('src/preload'),
+        '@constants': resolve('src/main/constants'),
       },
     },
     plugins: [externalizeDepsPlugin()],
