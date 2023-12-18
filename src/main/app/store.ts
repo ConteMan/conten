@@ -5,7 +5,7 @@ import ElectronStore from 'electron-store'
  * 配置文件名
  */
 export enum StoreName {
-  APP = 'contea',
+  APP = 'conten',
   DEFAULT = 'default',
 }
 
