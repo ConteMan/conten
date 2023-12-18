@@ -1,7 +1,7 @@
 {
-  "name": "contea",
-  "productName": "Contea",
-  "version": "0.3.8",
+  "name": "conten",
+  "productName": "Conten",
+  "version": "0.3.9",
   "private": true,
   "description": "Personal Desktop Tool",
   "author": {
@@ -10,10 +10,10 @@
     "url": "https://isconte.com"
   },
   "license": "MIT",
-  "homepage": "https://github.com/ConteMan/contea-desktop",
+  "homepage": "https://github.com/ConteMan/conten",
   "repository": {
     "type": "github",
-    "url": "https://github.com/ConteMan/contea-desktop"
+    "url": "https://github.com/ConteMan/conten"
   },
   "keywords": [
     "electron",
