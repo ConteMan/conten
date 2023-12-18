@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { vInfiniteScroll } from '@vueuse/components'
+import { useInfiniteScroll } from '@vueuse/core'
 import { API } from '@constants/index'
 import { ipcApi } from '@renderer/api'
 
@@ -48,6 +48,9 @@ const getList = async (append = true) => {
     }
     data.total = res.count
   }
+  else {
+    data.hasMore = false
+  }
 }
 getList()
 
@@ -75,6 +78,20 @@ const openInDouban = (type: string, id: string | number) => {
   const url = `https://${type}.douban.com/subject/${id}/`
   window.shell.openExternal(url)
 }
+
+const infiniteEl = ref<HTMLElement | null>(null)
+useInfiniteScroll(
+  infiniteEl,
+  () => {
+    loadMore()
+  },
+  {
+    distance: 10,
+    canLoadMore(_el) {
+      return data.hasMore
+    },
+  }
+)
 </script>
 
 <template>
@@ -102,7 +119,7 @@ const openInDouban = (type: string, id: string | number) => {
       </div>
     </div>
     <div
-      v-infinite-scroll="[loadMore, { distance: 10 }]"
+      ref="infiniteEl"
       class="py-2 px-8 flex flex-col gap-2 overflow-auto"
     >
       <template v-if="total && list.length">

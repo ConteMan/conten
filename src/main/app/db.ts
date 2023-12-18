@@ -60,7 +60,7 @@ class DB {
       })
 
       // eslint-disable-next-line no-console
-      console.log('[ sequelize connect ] >', true)
+      console.log('[ sequelize connect ] >', dbPath, true)
 
       return this.DBMap.set(DBType.SQLITE3, sequelize)
     }
